@@ -2,7 +2,9 @@ package cl.duoc.schoollibrary.util;
 
 public final class Validator {
 
-    private Validator() {}
+    private Validator() {
+        throw new UnsupportedOperationException("Clase utilitaria no instanciable.");
+    }
 
     public static String validarTexto(String valor, String nombreCampo, int cantidadMaxima) {
         if (valor == null || valor.isBlank()) {

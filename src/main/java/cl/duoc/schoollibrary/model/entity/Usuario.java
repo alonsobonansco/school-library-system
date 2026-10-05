@@ -1,5 +1,8 @@
 package cl.duoc.schoollibrary.model.entity;
 
+import cl.duoc.schoollibrary.util.RutValidator;
+import cl.duoc.schoollibrary.util.Validator;
+
 public class Usuario {
 
     private int id;
@@ -15,20 +18,21 @@ public class Usuario {
     // Constructor con ID
     public Usuario(int id, String nombre, String rut, String correo, String contrasenia, Rol rol) {
         this.id = id;
-        this.nombre = nombre;
-        this.rut = rut;
-        this.correo = correo;
-        this.contrasenia = contrasenia;
-        this.rol = rol;
+        this.nombre = Validator.validarTexto(nombre, "nombre de usuario", 100);
+        this.rut = RutValidator.validarRut(rut);
+        this.correo = Validator.validarEmail(correo, 100);
+        this.contrasenia = Validator.validarTexto(contrasenia, "contraseña", 100);
+        this.rol = Validator.validarObjetoNoNulo(rol, "rol");
     }
 
     // Constructor sin ID
     public Usuario(String nombre, String rut, String correo, String contrasenia, Rol rol) {
-        this.nombre = nombre;
-        this.rut = rut;
-        this.correo = correo;
-        this.contrasenia = contrasenia;
-        this.rol = rol;
+        this.id = 0;
+        this.nombre = Validator.validarTexto(nombre, "nombre de usuario", 100);
+        this.rut = RutValidator.validarRut(rut);
+        this.correo = Validator.validarEmail(correo, 100);
+        this.contrasenia = Validator.validarTexto(contrasenia, "contraseña", 100);
+        this.rol = Validator.validarObjetoNoNulo(rol, "rol");
     }
 
     public int getId() {
@@ -36,7 +40,7 @@ public class Usuario {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = Validator.validarNumeroPositivo(id, "id");
     }
 
     public String getNombre() {
@@ -44,7 +48,7 @@ public class Usuario {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = Validator.validarTexto(nombre, "nombre de usuario", 100);
     }
 
     public String getRut() {
@@ -52,7 +56,7 @@ public class Usuario {
     }
 
     public void setRut(String rut) {
-        this.rut = rut;
+        this.rut = RutValidator.validarRut(rut);
     }
 
     public String getCorreo() {
@@ -60,7 +64,7 @@ public class Usuario {
     }
 
     public void setCorreo(String correo) {
-        this.correo = correo;
+        this.correo = Validator.validarEmail(correo, 100);
     }
 
     public String getContrasenia() {
@@ -68,7 +72,7 @@ public class Usuario {
     }
 
     public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+        this.contrasenia = Validator.validarTexto(contrasenia, "contraseña", 100);
     }
 
     public Rol getRol() {
@@ -76,7 +80,7 @@ public class Usuario {
     }
 
     public void setRol(Rol rol) {
-        this.rol = rol;
+        this.rol = Validator.validarObjetoNoNulo(rol, "rol");
     }
 
     @Override

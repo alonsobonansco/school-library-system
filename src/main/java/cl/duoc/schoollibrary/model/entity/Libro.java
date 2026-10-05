@@ -1,11 +1,13 @@
 package cl.duoc.schoollibrary.model.entity;
 
+import cl.duoc.schoollibrary.util.Validator;
+
 public class Libro {
 
     private int id;
     private String titulo;
     private String autor;
-    private String isbn; // (UNIQUE)
+    private String isbn;
     private String editorial;
     private int stock;
     private Categoria categoria;
@@ -15,22 +17,23 @@ public class Libro {
     public Libro(int id, String titulo, String autor,
                  String isbn, String editorial, int stock, Categoria categoria) {
         this.id = id;
-        this.titulo = titulo;
-        this.autor = autor;
-        this.isbn = isbn;
-        this.editorial = editorial;
-        this.stock = stock;
-        this.categoria = categoria;
+        this.titulo = Validator.validarTexto(titulo, "título", 200);
+        this.autor = Validator.validarTexto(autor, "autor", 100);
+        this.isbn = Validator.validarTexto(isbn, "isbn", 20);
+        this.editorial = Validator.validarTexto(editorial, "editorial", 100);
+        this.stock = Validator.validarNumeroPositivo(stock, "stock");
+        this.categoria = Validator.validarObjetoNoNulo(categoria, "categoría");
     }
 
     public Libro(String titulo, String autor,
                  String isbn, String editorial, int stock, Categoria categoria) {
-        this.titulo = titulo;
-        this.autor = autor;
-        this.isbn = isbn;
-        this.editorial = editorial;
-        this.stock = stock;
-        this.categoria = categoria;
+        this.id = 0;
+        this.titulo = Validator.validarTexto(titulo, "título", 200);
+        this.autor = Validator.validarTexto(autor, "autor", 100);
+        this.isbn = Validator.validarTexto(isbn, "isbn", 20);
+        this.editorial = Validator.validarTexto(editorial, "editorial", 100);
+        this.stock = Validator.validarNumeroPositivo(stock, "stock");
+        this.categoria = Validator.validarObjetoNoNulo(categoria, "categoría");
     }
 
     public int getId() {
@@ -38,7 +41,7 @@ public class Libro {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = Validator.validarNumeroPositivo(id, "id");
     }
 
     public String getTitulo() {
@@ -46,7 +49,7 @@ public class Libro {
     }
 
     public void setTitulo(String titulo) {
-        this.titulo = titulo;
+        this.titulo = Validator.validarTexto(titulo, "título", 200);
     }
 
     public String getAutor() {
@@ -54,7 +57,7 @@ public class Libro {
     }
 
     public void setAutor(String autor) {
-        this.autor = autor;
+        this.autor = Validator.validarTexto(autor, "autor", 100);
     }
 
     public String getIsbn() {
@@ -62,7 +65,7 @@ public class Libro {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn;
+        this.isbn = Validator.validarTexto(isbn, "isbn", 20);
     }
 
     public String getEditorial() {
@@ -70,7 +73,7 @@ public class Libro {
     }
 
     public void setEditorial(String editorial) {
-        this.editorial = editorial;
+        this.editorial = Validator.validarTexto(editorial, "editorial", 100);
     }
 
     public int getStock() {
@@ -78,7 +81,7 @@ public class Libro {
     }
 
     public void setStock(int stock) {
-        this.stock = stock;
+        this.stock = Validator.validarNumeroPositivo(stock, "stock");
     }
 
     public Categoria getCategoria() {
@@ -86,7 +89,7 @@ public class Libro {
     }
 
     public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+        this.categoria = Validator.validarObjetoNoNulo(categoria, "categoría");
     }
 
     @Override

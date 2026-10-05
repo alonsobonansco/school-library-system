@@ -1,5 +1,7 @@
 package cl.duoc.schoollibrary.model.entity;
 
+import cl.duoc.schoollibrary.util.Validator;
+
 public class Categoria {
 
     private int id;
@@ -9,11 +11,12 @@ public class Categoria {
 
     public Categoria(int id, String nombre) {
         this.id = id;
-        this.nombre = nombre;
+        this.nombre = Validator.validarTexto(nombre, "nombre de categoría", 100);
     }
 
     public Categoria(String nombre) {
-        this.nombre = nombre;
+        this.id = 0;
+        this.nombre = Validator.validarTexto(nombre, "nombre de categoría", 100);
     }
 
     public int getId() {
@@ -21,7 +24,7 @@ public class Categoria {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = Validator.validarNumeroPositivo(id, "id");
     }
 
     public String getNombre() {
@@ -29,7 +32,7 @@ public class Categoria {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = Validator.validarTexto(nombre, "nombre de categoría", 100);
     }
 
     @Override

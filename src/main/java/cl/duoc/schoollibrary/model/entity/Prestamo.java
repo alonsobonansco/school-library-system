@@ -1,5 +1,7 @@
 package cl.duoc.schoollibrary.model.entity;
 
+import cl.duoc.schoollibrary.util.Validator;
+
 import java.time.LocalDate;
 
 public class Prestamo {
@@ -16,19 +18,20 @@ public class Prestamo {
     public Prestamo(int id, Estudiante estudiante, Libro libro,
                     LocalDate fechaPrestamo, LocalDate fechaDevolucion, boolean devuelto) {
         this.id = id;
-        this.estudiante = estudiante;
-        this.libro = libro;
-        this.fechaPrestamo = fechaPrestamo;
-        this.fechaDevolucion = fechaDevolucion;
+        this.estudiante = Validator.validarObjetoNoNulo(estudiante, "estudiante");
+        this.libro = Validator.validarObjetoNoNulo(libro, "libro");
+        this.fechaPrestamo = Validator.validarObjetoNoNulo(fechaPrestamo, "fecha de préstamo");
+        this.fechaDevolucion = Validator.validarObjetoNoNulo(fechaDevolucion, "fecha de devolución");
         this.devuelto = devuelto;
     }
 
     public Prestamo(Estudiante estudiante, Libro libro,
                     LocalDate fechaPrestamo, LocalDate fechaDevolucion, boolean devuelto) {
-        this.estudiante = estudiante;
-        this.libro = libro;
-        this.fechaPrestamo = fechaPrestamo;
-        this.fechaDevolucion = fechaDevolucion;
+        this.id = 0;
+        this.estudiante = Validator.validarObjetoNoNulo(estudiante, "estudiante");
+        this.libro = Validator.validarObjetoNoNulo(libro, "libro");
+        this.fechaPrestamo = Validator.validarObjetoNoNulo(fechaPrestamo, "fecha de préstamo");
+        this.fechaDevolucion = Validator.validarObjetoNoNulo(fechaDevolucion, "fecha de devolución");
         this.devuelto = devuelto;
     }
 
@@ -37,7 +40,7 @@ public class Prestamo {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = Validator.validarNumeroPositivo(id, "id");
     }
 
     public Estudiante getEstudiante() {
@@ -45,7 +48,7 @@ public class Prestamo {
     }
 
     public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
+        this.estudiante = Validator.validarObjetoNoNulo(estudiante, "estudiante");
     }
 
     public Libro getLibro() {
@@ -53,7 +56,7 @@ public class Prestamo {
     }
 
     public void setLibro(Libro libro) {
-        this.libro = libro;
+        this.libro = Validator.validarObjetoNoNulo(libro, "libro");
     }
 
     public LocalDate getFechaPrestamo() {
@@ -61,7 +64,7 @@ public class Prestamo {
     }
 
     public void setFechaPrestamo(LocalDate fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
+        this.fechaPrestamo = Validator.validarObjetoNoNulo(fechaPrestamo, "fecha de préstamo");
     }
 
     public LocalDate getFechaDevolucion() {
@@ -69,7 +72,7 @@ public class Prestamo {
     }
 
     public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
+        this.fechaDevolucion = Validator.validarObjetoNoNulo(fechaDevolucion, "fecha de devolución");
     }
 
     public boolean isDevuelto() {

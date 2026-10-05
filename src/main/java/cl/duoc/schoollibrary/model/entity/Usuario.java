@@ -12,8 +12,18 @@ public class Usuario {
     // Constructor vacío para posibles usos posteriores.
     public Usuario() {}
 
+    // Constructor con ID
     public Usuario(int id, String nombre, String rut, String correo, String contrasenia, Rol rol) {
         this.id = id;
+        this.nombre = nombre;
+        this.rut = rut;
+        this.correo = correo;
+        this.contrasenia = contrasenia;
+        this.rol = rol;
+    }
+
+    // Constructor sin ID
+    public Usuario(String nombre, String rut, String correo, String contrasenia, Rol rol) {
         this.nombre = nombre;
         this.rut = rut;
         this.correo = correo;

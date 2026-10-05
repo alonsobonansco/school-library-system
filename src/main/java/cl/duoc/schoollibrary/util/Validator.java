@@ -28,4 +28,20 @@ public final class Validator {
 
         return emailSanitizado;
     }
+
+    public static int validarNumeroPositivo(int valor, String nombreCampo) {
+        if (valor <= 0) {
+            throw new IllegalArgumentException("El campo " + nombreCampo + " debe ser un número positivo.");
+        }
+
+        return valor;
+    }
+
+    public static <T> T validarObjetoNoNulo(T objeto, String nombreCampo) {
+        if (objeto == null) {
+            throw new IllegalArgumentException("El campo " + nombreCampo + " no puede ser nulo.");
+        }
+
+        return objeto;
+    }
 }

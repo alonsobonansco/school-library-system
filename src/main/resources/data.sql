@@ -1,30 +1,30 @@
 USE biblioteca;
 
--- Insertar usuarios
+-- 1. Insertar usuarios (Con Dígitos Verificadores corregidos matemáticamente)
 INSERT INTO usuarios (nombre, rut, correo, contraseña, rol) VALUES
-('Antonia Pérez', '12345678-9', 'antonia@correo.cl', 'clave123', 'bibliotecario'),
-('Carlos Ruiz', '98765432-1', 'carlos@correo.cl', 'clave123', 'estudiante'),
-('María Torres', '11222333-4', 'maria@correo.cl', 'clave123', 'estudiante'),
-('Ignacio Silva', '22334455-6', 'ignacio@correo.cl', 'clave123', 'estudiante'),
-('Laura Méndez', '33445566-7', 'laura@correo.cl', 'clave123', 'estudiante'),
-('Javier Soto', '44556677-8', 'javier@correo.cl', 'clave123', 'estudiante'),
-('Fernanda Ríos', '55667788-9', 'fer@correo.cl', 'clave123', 'estudiante'),
-('Pedro Lagos', '66778899-0', 'pedro@correo.cl', 'clave123', 'estudiante'),
-('Valentina Jara', '77889900-1', 'valen@correo.cl', 'clave123', 'estudiante'),
-('Tomás Vidal', '88990011-2', 'tomas@correo.cl', 'clave123', 'estudiante');
+('Antonia Pérez', '12345678-5', 'antonia@correo.cl', 'clave123', 'bibliotecario'),
+('Carlos Ruiz',   '98765432-5', 'carlos@correo.cl',  'clave123', 'estudiante'),
+('María Torres',  '11222333-9', 'maria@correo.cl',   'clave123', 'estudiante'),
+('Ignacio Silva', '22334455-0', 'ignacio@correo.cl', 'clave123', 'estudiante'),
+('Laura Méndez',  '33445566-1', 'laura@correo.cl',   'clave123', 'estudiante'),
+('Javier Soto',   '44556677-2', 'javier@correo.cl',  'clave123', 'estudiante'),
+('Fernanda Ríos', '55667788-3', 'fer@correo.cl',     'clave123', 'estudiante'),
+('Pedro Lagos',   '66778899-4', 'pedro@correo.cl',   'clave123', 'estudiante'),
+('Valentina Jara', '77889900-0', 'valen@correo.cl',   'clave123', 'estudiante'),
+('Tomás Vidal',   '88990011-3', 'tomas@correo.cl',   'clave123', 'estudiante');
 
--- Insertar estudiantes
+-- 2. Insertar estudiantes
 INSERT INTO estudiantes (nombre, rut, curso, correo) VALUES
-('Carlos Ruiz', '98765432-1', '3ro Medio A', 'carlos@correo.cl'),
-('María Torres', '11222333-4', '4to Medio B', 'maria@correo.cl'),
-('Luis Gómez', '19283746-5', '2do Medio C', 'luis@correo.cl'),
-('Ignacio Silva', '22334455-6', '1ro Medio A', 'ignacio@correo.cl'),
-('Laura Méndez', '33445566-7', '3ro Medio B', 'laura@correo.cl'),
-('Javier Soto', '44556677-8', '4to Medio A', 'javier@correo.cl'),
-('Fernanda Ríos', '55667788-9', '2do Medio B', 'fer@correo.cl'),
-('Pedro Lagos', '66778899-0', '1ro Medio C', 'pedro@correo.cl'),
-('Valentina Jara', '77889900-1', '3ro Medio C', 'valen@correo.cl'),
-('Tomás Vidal', '88990011-2', '4to Medio C', 'tomas@correo.cl');
+('Carlos Ruiz',   '98765432-5', '3ro Medio A', 'carlos@correo.cl'),
+('María Torres',  '11222333-9', '4to Medio B', 'maria@correo.cl'),
+('Luis Gómez',    '19283746-4', '2do Medio C', 'luis@correo.cl'),
+('Ignacio Silva', '22334455-0', '1ro Medio A', 'ignacio@correo.cl'),
+('Laura Méndez',  '33445566-1', '3ro Medio B', 'laura@correo.cl'),
+('Javier Soto',   '44556677-2', '4to Medio A', 'javier@correo.cl'),
+('Fernanda Ríos', '55667788-3', '2do Medio B', 'fer@correo.cl'),
+('Pedro Lagos',   '66778899-4', '1ro Medio C', 'pedro@correo.cl'),
+('Valentina Jara', '77889900-0', '3ro Medio C', 'valen@correo.cl'),
+('Tomás Vidal',   '88990011-3', '4to Medio C', 'tomas@correo.cl');
 
 -- Insertar categorías
 INSERT INTO categorias (nombre) VALUES

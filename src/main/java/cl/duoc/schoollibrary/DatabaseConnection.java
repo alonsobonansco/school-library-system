@@ -3,7 +3,7 @@ package cl.duoc.schoollibrary;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DatabaseConnection {
+public final class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/biblioteca";
     private static final String USER = System.getenv("DB_USER");
@@ -12,6 +12,7 @@ public class DatabaseConnection {
     private static volatile Connection conexion;
 
     private DatabaseConnection() {
+        throw new UnsupportedOperationException("Clase de infraestructura no instanciable.");
     }
 
     public static Connection getInstance() throws SQLException {

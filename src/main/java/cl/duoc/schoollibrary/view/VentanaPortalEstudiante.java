@@ -25,6 +25,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
     private JTable prestamosTable;
     private DefaultTableModel tablaPrestamosModel;
     private JButton devolverLibroButton;
+    private JButton cerrarSesionButton;
 
     public VentanaPortalEstudiante() {
         super("Portal del Estudiante - Sistema de Biblioteca", 850, 550);
@@ -42,6 +43,9 @@ public class VentanaPortalEstudiante extends VentanaBase {
 
         pestaniasPanel = new JTabbedPane();
         pestaniasPanel.setFont(new Font("Arial", Font.BOLD, 13));
+
+        cerrarSesionButton = new JButton("Cerrar Sesión");
+        cerrarSesionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void inicializarPestaniaCatalogo() {
@@ -98,7 +102,15 @@ public class VentanaPortalEstudiante extends VentanaBase {
 
     private void construirLayout() {
         setLayout(new BorderLayout(10, 10));
-        add(tituloLabel, BorderLayout.NORTH);
+
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.add(tituloLabel, BorderLayout.NORTH);
+
+        JPanel panelContenederLogout = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
+        panelContenederLogout.add(cerrarSesionButton);
+        panelSuperior.add(panelContenederLogout, BorderLayout.EAST);
+
+        add(panelSuperior, BorderLayout.NORTH);
 
         JPanel panelCatalogoRoot = new JPanel(new BorderLayout(10, 10));
 
@@ -207,5 +219,9 @@ public class VentanaPortalEstudiante extends VentanaBase {
 
     public void addDevolverButtonListener(ActionListener listener) {
         devolverLibroButton.addActionListener(listener);
+    }
+
+    public void addCerrarSesionButtonListener(ActionListener listener) {
+        cerrarSesionButton.addActionListener(listener);
     }
 }

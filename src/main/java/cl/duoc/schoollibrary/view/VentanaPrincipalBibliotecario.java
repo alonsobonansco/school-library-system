@@ -15,6 +15,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
     private JMenuItem itemEstudiantes;
     private JMenuItem itemPrestamos;
     private JMenuItem itemReportes;
+    private JMenuItem itemCerrarSesion;
 
     public VentanaPrincipalBibliotecario() {
         super("Panel de Control Administrador - Sistema de Biblioteca", 850, 550);
@@ -37,6 +38,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
         itemEstudiantes = new JMenuItem("Gestión de Estudiantes");
         itemPrestamos = new JMenuItem("Control de Préstamos");
         itemReportes = new JMenuItem("Reportes y Estadísticas");
+        itemCerrarSesion = new JMenuItem("Cerrar Sesión");
 
         Font fuenteMenu = new Font("Arial", Font.PLAIN, 13);
         itemLibros.setFont(fuenteMenu);
@@ -48,6 +50,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
         menuBar.add(itemEstudiantes);
         menuBar.add(itemPrestamos);
         menuBar.add(itemReportes);
+        menuBar.add(itemCerrarSesion);
 
         setJMenuBar(menuBar);
     }
@@ -83,5 +86,9 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
 
     public void addReportesMenuListener(ActionListener listener) {
         itemReportes.addActionListener(listener);
+    }
+
+    public void addCerrarSesionMenuListener(ActionListener listener) {
+        itemCerrarSesion.addActionListener(listener);
     }
 }

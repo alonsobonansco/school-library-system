@@ -18,15 +18,15 @@ public class ControladorRegistroLibro {
     private final VentanaRegistroLibro ventanaRegistroLibro;
     private final LibroDAO libroDAO;
     private final CategoriaDAO categoriaDAO;
-    private final ControladorListaLibros controladorListaLibros;
+    private final ControladorInventarioLibros controladorInventarioLibros;
     private List<Categoria> listaCategorias = new ArrayList<>();
 
     public ControladorRegistroLibro(VentanaRegistroLibro ventanaRegistroLibro, LibroDAO libroDAO,
-                                    ControladorListaLibros controladorListaLibros) {
+                                    ControladorInventarioLibros controladorInventarioLibros) {
         this.ventanaRegistroLibro = ventanaRegistroLibro;
         this.libroDAO = libroDAO;
         this.categoriaDAO = new CategoriaDAO();
-        this.controladorListaLibros = controladorListaLibros;
+        this.controladorInventarioLibros = controladorInventarioLibros;
 
         inicializarListeners();
         cargarCategoriasDesdeBD();
@@ -98,8 +98,8 @@ public class ControladorRegistroLibro {
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     ventanaRegistroLibro.mostrarMensajeConfirmacion("Libro registrado correctamente.");
 
-                    if (controladorListaLibros != null) {
-                        controladorListaLibros.cargarDatosDesdeBD();
+                    if (controladorInventarioLibros != null) {
+                        controladorInventarioLibros.cargarDatosDesdeBD();
                     }
 
                     ventanaRegistroLibro.cerrarVentana();

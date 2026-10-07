@@ -16,6 +16,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
     private JMenuItem itemPrestamos;
     private JMenuItem itemReportes;
     private JMenuItem itemCerrarSesion;
+    private JLabel lblPlaceholder;
 
     public VentanaPrincipalBibliotecario() {
         super("Panel de Control Administrador - Sistema de Biblioteca", 850, 550);
@@ -62,7 +63,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
         JPanel panelCentral = new JPanel(new BorderLayout());
         panelCentral.setBorder(BorderFactory.createEmptyBorder(0, 40, 40, 40));
 
-        JLabel lblPlaceholder = new JLabel("Seleccione una opción del menú superior para comenzar a operar.", SwingConstants.CENTER);
+        lblPlaceholder = new JLabel("", SwingConstants.CENTER);
         lblPlaceholder.setFont(new Font("Arial", Font.ITALIC, 14));
         lblPlaceholder.setForeground(Color.GRAY);
         panelCentral.add(lblPlaceholder, BorderLayout.CENTER);
@@ -70,6 +71,14 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
         add(panelCentral, BorderLayout.CENTER);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void establecerMensajeBienvenida(String nombreAdmin) {
+        SwingUtilities.invokeLater(() -> {
+            lblPlaceholder.setText(
+                    "¡Bienvenid@ al sistema, " + nombreAdmin + "! " +
+                            "\nSeleccione una opción del menú superior para comenzar a operar.");
+        });
     }
 
     public void addLibrosMenuListener(ActionListener listener) {

@@ -148,7 +148,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
     }
 
     public void establecerNombreUsuario(String nombre) {
-        SwingUtilities.invokeLater(() -> tituloLabel.setText("Bienvenido al Portal de Autoservicio: " + nombre));
+        SwingUtilities.invokeLater(() -> tituloLabel.setText("Bienvenid@ al Portal de Autoservicio: " + nombre));
     }
 
     public void actualizarTablaLibros(List<Libro> libros) {

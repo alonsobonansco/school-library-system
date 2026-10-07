@@ -1,4 +1,4 @@
-package cl.duoc.schoollibrary;
+package cl.duoc.schoollibrary.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;

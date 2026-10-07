@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary;
 
 import cl.duoc.schoollibrary.controller.ControladorLogin;
+import cl.duoc.schoollibrary.database.DatabaseConnection;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.view.VentanaLogin;
 

@@ -1,6 +1,6 @@
 package cl.duoc.schoollibrary.model.dao;
 
-import cl.duoc.schoollibrary.DatabaseConnection;
+import cl.duoc.schoollibrary.database.DatabaseConnection;
 import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 

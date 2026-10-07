@@ -5,6 +5,8 @@ import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
+import cl.duoc.schoollibrary.view.VentanaPortalEstudiante;
+import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,16 +52,22 @@ public class ControladorLogin {
                     Usuario usuario = usuarioEncontrado.get();
 
                     javax.swing.SwingUtilities.invokeLater(() -> {
+                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido " +
+                                "al Sistema," + usuario.getNombre());
+
                         if (usuario.getRol() == Rol.bibliotecario) {
-                            ventanaLogin.mostrarMensajeConfirmacion("[AUTH SUCCESS] Bienvenido Bibliotecario: "
-                                    + usuario.getNombre());
+                            VentanaPrincipalBibliotecario ventanaPrincipalBibliotecario
+                                    = new VentanaPrincipalBibliotecario();
+                            ventanaPrincipalBibliotecario.establecerMensajeBienvenida(usuario.getNombre());
+                            ventanaPrincipalBibliotecario.setVisible(true);
+
                         } else {
-                            ventanaLogin.mostrarMensajeConfirmacion("[AUTH SUCCESS] Bienvenido Estudiante: "
-                                    + usuario.getNombre());
+                            VentanaPortalEstudiante ventanaPortalEstudiante = new VentanaPortalEstudiante();
+                            ventanaPortalEstudiante.establecerNombreUsuario(usuario.getNombre());
+                            ventanaPortalEstudiante.setVisible(true);
                         }
 
                         ventanaLogin.cerrarVentana();
-
                     });
                 } else {
                     ventanaLogin.mostrarMensajeError("Correo o contraseña incorrectos");

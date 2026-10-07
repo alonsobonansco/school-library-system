@@ -1,9 +1,8 @@
 package cl.duoc.schoollibrary;
 
-import cl.duoc.schoollibrary.controller.ControladorInventarioLibros;
-import cl.duoc.schoollibrary.model.dao.LibroDAO;
+import cl.duoc.schoollibrary.controller.ControladorLogin;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
-import cl.duoc.schoollibrary.view.VentanaInventarioLibros;
+import cl.duoc.schoollibrary.view.VentanaLogin;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -13,13 +12,11 @@ public class Main {
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-            VentanaInventarioLibros ventanaPrincipal = new VentanaInventarioLibros();
-            LibroDAO usuarioDAO = new LibroDAO();
+            VentanaLogin ventanaLogin = new VentanaLogin();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            new ControladorLogin(ventanaLogin, usuarioDAO);
 
-            ControladorInventarioLibros controladorInventarioLibros =
-                    new ControladorInventarioLibros(ventanaPrincipal, usuarioDAO);
-
-            ventanaPrincipal.setVisible(true);
+            ventanaLogin.setVisible(true);
         });
 
         try {

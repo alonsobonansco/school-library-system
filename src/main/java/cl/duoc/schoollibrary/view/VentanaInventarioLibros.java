@@ -10,14 +10,15 @@ import java.util.List;
 
 public class VentanaInventarioLibros extends VentanaBase {
 
-    private JTextField txtBuscar;
-    private JComboBox<String> comboCategorias;
-    private JTable tablaLibros;
-    private DefaultTableModel modeloTabla;
+    private JTextField buscarTextField;
+    private JComboBox<String> categoriaComboBox;
+    private JTable librosTable;
+    private DefaultTableModel modeloTable;
 
-    private JButton btnNuevo;
-    private JButton btnEditar;
-    private JButton btnEliminar;
+    private JButton agregarButton;
+    private JButton editarButton;
+    private JButton eliminarButton;
+    // private JButton atrasButton; para más adelante
 
     public VentanaInventarioLibros() {
         super("Panel de Control - Inventario de Libros", 850, 550);
@@ -27,67 +28,78 @@ public class VentanaInventarioLibros extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        txtBuscar = new JTextField(20);
-        txtBuscar.setFont(new Font("Arial", Font.PLAIN, 14));
+        buscarTextField = new JTextField(20);
+        buscarTextField.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        comboCategorias = new JComboBox<>();
-        comboCategorias.setFont(new Font("Arial", Font.PLAIN, 13));
+        categoriaComboBox = new JComboBox<>();
+        categoriaComboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 
         String[] columnas = {"ID", "Título", "Autor", "ISBN", "Editorial", "Stock", "Categoría"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
+        modeloTable = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tablaLibros = new JTable(modeloTabla);
-        tablaLibros.setFont(new Font("Arial", Font.PLAIN, 13));
-        tablaLibros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        librosTable = new JTable(modeloTable);
+        librosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        librosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
-        btnNuevo = new JButton("Añadir Libro");
-        btnNuevo.setFont(fuenteBotones);
-        btnNuevo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton = new JButton("Añadir Libro");
+        agregarButton.setFont(fuenteBotones);
+        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnEditar = new JButton("Editar Seleccionado");
-        btnEditar.setFont(fuenteBotones);
-        btnEditar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editarButton = new JButton("Editar Seleccionado");
+        editarButton.setFont(fuenteBotones);
+        editarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnEliminar = new JButton("Eliminar Catálogo");
-        btnEliminar.setFont(fuenteBotones);
-        btnEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        eliminarButton = new JButton("Eliminar Catálogo");
+        eliminarButton.setFont(fuenteBotones);
+        eliminarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        librosTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        librosTable.getColumnModel().getColumn(0).setPreferredWidth(40);
+        librosTable.getColumnModel().getColumn(5).setPreferredWidth(50);
+        librosTable.getColumnModel().getColumn(3).setPreferredWidth(110);
+        librosTable.getColumnModel().getColumn(6).setPreferredWidth(120);
+
+        librosTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+        librosTable.getColumnModel().getColumn(2).setPreferredWidth(150);
+        librosTable.getColumnModel().getColumn(4).setPreferredWidth(130);
     }
 
     private void construirLayout() {
         setLayout(new BorderLayout(10, 10));
 
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
-        JLabel lblBuscar = new JLabel("Buscar por Título / ISBN:");
-        lblBuscar.setFont(new Font("Arial", Font.BOLD, 13));
-        panelSuperior.add(lblBuscar);
-        panelSuperior.add(txtBuscar);
+        JLabel buscarLabel = new JLabel("Buscar por Título / ISBN:");
+        buscarLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        panelSuperior.add(buscarLabel);
+        panelSuperior.add(buscarTextField);
 
-        JLabel lblCategoria = new JLabel("Categoría:");
-        lblCategoria.setFont(new Font("Arial", Font.BOLD, 13));
-        panelSuperior.add(lblCategoria);
-        panelSuperior.add(comboCategorias);
+        JLabel categoriaLabel = new JLabel("Categoría:");
+        categoriaLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        panelSuperior.add(categoriaLabel);
+        panelSuperior.add(categoriaComboBox);
         add(panelSuperior, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(tablaLibros);
+        JScrollPane scrollPane = new JScrollPane(librosTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        panelInferior.add(btnNuevo);
-        panelInferior.add(btnEditar);
-        panelInferior.add(btnEliminar);
+        panelInferior.add(agregarButton);
+        panelInferior.add(editarButton);
+        panelInferior.add(eliminarButton);
         add(panelInferior, BorderLayout.SOUTH);
     }
 
     public void actualizarTabla(List<Libro> libros) {
         SwingUtilities.invokeLater(() -> {
-            modeloTabla.setRowCount(0);
+            modeloTable.setRowCount(0);
             for (Libro l : libros) {
                 Object[] fila = {
                         l.getId(),
@@ -98,33 +110,33 @@ public class VentanaInventarioLibros extends VentanaBase {
                         l.getStock(),
                         l.getCategoria().getNombre()
                 };
-                modeloTabla.addRow(fila);
+                modeloTable.addRow(fila);
             }
         });
     }
 
     public void poblarComboBoxCategorias(List<String> nombresCategorias) {
         SwingUtilities.invokeLater(() -> {
-            comboCategorias.removeAllItems();
-            comboCategorias.addItem("Todas");
+            categoriaComboBox.removeAllItems();
+            categoriaComboBox.addItem("Todas");
             for (String cat : nombresCategorias) {
-                comboCategorias.addItem(cat);
+                categoriaComboBox.addItem(cat);
             }
         });
     }
 
     public String getTextoBusqueda() {
-        return txtBuscar.getText().trim();
+        return buscarTextField.getText().trim();
     }
 
     public String getCategoriaSeleccionada() {
-        return (String) comboCategorias.getSelectedItem();
+        return (String) categoriaComboBox.getSelectedItem();
     }
 
     public Integer getIdLibroSeleccionado() {
-        int filaSeleccionada = tablaLibros.getSelectedRow();
+        int filaSeleccionada = librosTable.getSelectedRow();
         if (filaSeleccionada == -1) return null;
-        return (Integer) modeloTabla.getValueAt(filaSeleccionada, 0);
+        return (Integer) modeloTable.getValueAt(filaSeleccionada, 0);
     }
 
     /**
@@ -137,7 +149,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     }
 
     public void addBusquedaDocumentListener(Runnable accion) {
-        txtBuscar.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        buscarTextField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
                 accion.run();
@@ -156,18 +168,18 @@ public class VentanaInventarioLibros extends VentanaBase {
     }
 
     public void addCategoriaComboListener(ActionListener listener) {
-        comboCategorias.addActionListener(listener);
+        categoriaComboBox.addActionListener(listener);
     }
 
     public void addNuevoButtonListener(ActionListener listener) {
-        btnNuevo.addActionListener(listener);
+        agregarButton.addActionListener(listener);
     }
 
     public void addEditarButtonListener(ActionListener listener) {
-        btnEditar.addActionListener(listener);
+        editarButton.addActionListener(listener);
     }
 
     public void addEliminarButtonListener(ActionListener listener) {
-        btnEliminar.addActionListener(listener);
+        eliminarButton.addActionListener(listener);
     }
 }

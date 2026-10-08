@@ -18,7 +18,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     private JButton agregarButton;
     private JButton editarButton;
     private JButton eliminarButton;
-    // private JButton atrasButton; para más adelante
+    private JButton atrasButton;
 
     public VentanaInventarioLibros() {
         super("Panel de Control - Inventario de Libros", 850, 550);
@@ -59,6 +59,10 @@ public class VentanaInventarioLibros extends VentanaBase {
         eliminarButton.setFont(fuenteBotones);
         eliminarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        atrasButton = new JButton("Atrás");
+        atrasButton.setFont(fuenteBotones);
+        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         librosTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         librosTable.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -94,6 +98,7 @@ public class VentanaInventarioLibros extends VentanaBase {
         panelInferior.add(agregarButton);
         panelInferior.add(editarButton);
         panelInferior.add(eliminarButton);
+        panelInferior.add(atrasButton);
         add(panelInferior, BorderLayout.SOUTH);
     }
 
@@ -181,5 +186,9 @@ public class VentanaInventarioLibros extends VentanaBase {
 
     public void addEliminarButtonListener(ActionListener listener) {
         eliminarButton.addActionListener(listener);
+    }
+
+    public void addAtrasButtonListener(ActionListener listener) {
+        atrasButton.addActionListener(listener);
     }
 }

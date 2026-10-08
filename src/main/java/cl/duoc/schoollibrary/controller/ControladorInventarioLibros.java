@@ -57,6 +57,8 @@ public class ControladorInventarioLibros {
         });
 
         ventanaInventarioLibros.addEliminarButtonListener(e -> procesarEliminacionCatalogo());
+
+        ventanaInventarioLibros.addAtrasButtonListener(e -> ventanaInventarioLibros.cerrarVentana());
     }
 
     public void cargarDatosDesdeBD() {

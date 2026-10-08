@@ -49,6 +49,7 @@ public class ControladorPortalEstudiante {
 
         vista.addSolicitarButtonListener(e -> procesarSolicitudPrestamo());
         vista.addDevolverButtonListener(e -> procesarDevolucionLibro());
+        vista.addCerrarSesionButtonListener(e -> procesarCerrarSesion());
     }
 
     public void cargarCatalogoLibros() {
@@ -161,5 +162,9 @@ public class ControladorPortalEstudiante {
                 vista.mostrarMensajeError("Fallo al procesar devolución: " + ex.getMessage());
             }
         }).start();
+    }
+
+    private void procesarCerrarSesion() {
+        CoordinadorNavegacion.getInstancia().mostrarLogin();
     }
 }

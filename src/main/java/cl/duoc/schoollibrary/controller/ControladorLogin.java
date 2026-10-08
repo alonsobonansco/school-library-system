@@ -7,7 +7,6 @@ import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.VentanaPortalEstudiante;
 import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
 
 import java.awt.event.ActionEvent;
@@ -59,10 +58,7 @@ public class ControladorLogin {
                                 "al Sistema," + usuario.getNombre());
 
                         if (usuario.getRol() == Rol.bibliotecario) {
-                            VentanaPrincipalBibliotecario ventanaPrincipalBibliotecario
-                                    = new VentanaPrincipalBibliotecario();
-                            ventanaPrincipalBibliotecario.establecerMensajeBienvenida(usuario.getNombre());
-                            ventanaPrincipalBibliotecario.setVisible(true);
+                            CoordinadorNavegacion.getInstancia().mostrarPrincipalBibliotecario(usuario);
 
                         } else {
                             try {
@@ -74,14 +70,8 @@ public class ControladorLogin {
                                                 trim().equalsIgnoreCase(usuario.getCorreo().trim()))
                                         .findFirst();
 
-                                if (estudianteEncontrado.isPresent()) {
-                                    Estudiante estudiante = estudianteEncontrado.get();
-                                    VentanaPortalEstudiante ventanaPortalEstudiante = new VentanaPortalEstudiante();
-                                    ventanaPortalEstudiante.establecerNombreUsuario(estudiante.getNombre());
-
-                                    new ControladorPortalEstudiante(ventanaPortalEstudiante, estudiante);
-                                    ventanaPortalEstudiante.setVisible(true);
-                                }
+                                estudianteEncontrado.ifPresent(
+                                        e -> CoordinadorNavegacion.getInstancia().mostrarPortalEstudiante(e));
                             } catch (DataAccessException ex) {
                                 ventanaLogin.mostrarMensajeError("Error al acceder a la base de datos: " + ex.getMessage());
                             }

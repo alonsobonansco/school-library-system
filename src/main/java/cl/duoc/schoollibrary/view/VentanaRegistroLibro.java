@@ -146,7 +146,8 @@ public class VentanaRegistroLibro extends VentanaBase {
         });
     }
 
-    public void prellenarFormulario(String titulo, String autor, String isbn, String editorial, String stock, String categoria) {
+    public void prellenarFormulario(String titulo, String autor, String isbn,
+                                    String editorial, String stock, String categoria) {
         SwingUtilities.invokeLater(() -> {
             tituloTextField.setText(titulo);
             autorTextField.setText(autor);

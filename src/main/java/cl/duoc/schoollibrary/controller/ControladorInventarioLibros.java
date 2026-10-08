@@ -104,18 +104,9 @@ public class ControladorInventarioLibros {
             VentanaRegistroLibro ventanaRegistro = new VentanaRegistroLibro();
 
             ControladorRegistroLibro controladorRegistroLibro =
-                    new ControladorRegistroLibro(ventanaRegistro, libroDAO, this);
+                    new ControladorRegistroLibro(ventanaRegistro, libroDAO, this, libroAEditar);
 
-            if (libroAEditar != null) {
-                ventanaRegistro.prellenarFormulario(
-                        libroAEditar.getTitulo(),
-                        libroAEditar.getAutor(),
-                        libroAEditar.getIsbn(),
-                        libroAEditar.getEditorial(),
-                        String.valueOf(libroAEditar.getStock()),
-                        libroAEditar.getCategoria().getNombre()
-                );
-            }
+
 
             ventanaRegistro.setVisible(true);
         });

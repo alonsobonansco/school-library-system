@@ -17,16 +17,18 @@ public class ControladorRegistroLibro {
 
     private final VentanaRegistroLibro ventanaRegistroLibro;
     private final LibroDAO libroDAO;
+    private final Libro libroAEditar;
     private final CategoriaDAO categoriaDAO;
     private final ControladorInventarioLibros controladorInventarioLibros;
     private List<Categoria> listaCategorias = new ArrayList<>();
 
     public ControladorRegistroLibro(VentanaRegistroLibro ventanaRegistroLibro, LibroDAO libroDAO,
-                                    ControladorInventarioLibros controladorInventarioLibros) {
+                                    ControladorInventarioLibros controladorInventarioLibros, Libro libroAEditar) {
         this.ventanaRegistroLibro = ventanaRegistroLibro;
         this.libroDAO = libroDAO;
         this.categoriaDAO = new CategoriaDAO();
         this.controladorInventarioLibros = controladorInventarioLibros;
+        this.libroAEditar = libroAEditar;
 
         inicializarListeners();
         cargarCategoriasDesdeBD();
@@ -39,18 +41,37 @@ public class ControladorRegistroLibro {
                 procesarRegistroLibro();
             }
         });
+
+        ventanaRegistroLibro.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                if (controladorInventarioLibros != null) {
+                    controladorInventarioLibros.cargarDatosDesdeBD();
+                }
+            }
+        });
     }
 
     private void cargarCategoriasDesdeBD() {
-        new Thread (() -> {
+        new Thread(() -> {
             try {
                 listaCategorias = categoriaDAO.read();
-
                 List<String> nombresCategorias = listaCategorias.stream()
                         .map(Categoria::getNombre)
                         .toList();
 
                 ventanaRegistroLibro.poblarCategorias(nombresCategorias);
+
+                if (libroAEditar != null) {
+                    ventanaRegistroLibro.prellenarFormulario(
+                            libroAEditar.getTitulo(),
+                            libroAEditar.getAutor(),
+                            libroAEditar.getIsbn(),
+                            libroAEditar.getEditorial(),
+                            String.valueOf(libroAEditar.getStock()),
+                            libroAEditar.getCategoria().getNombre()
+                    );
+                }
 
             } catch (DataAccessException e) {
                 ventanaRegistroLibro.mostrarMensajeError("Error al cargar las categorías: " + e.getMessage());
@@ -80,20 +101,29 @@ public class ControladorRegistroLibro {
             return;
         }
 
-        Optional<Categoria> categoriaSeleccionada = listaCategorias.stream()
-                .filter(c -> c.getNombre().equalsIgnoreCase(categoria))
-                .findFirst();
-
-        if (categoriaSeleccionada.isEmpty()) {
-            ventanaRegistroLibro.mostrarMensajeError("La categoría seleccionada no es válida.");
-            return;
-        }
-
-        Libro nuevoLibro = new Libro(titulo, autor, isbn, editorial, stock, categoriaSeleccionada.get());
-
         new Thread(() -> {
             try {
-                libroDAO.create(nuevoLibro);
+                Optional<Categoria> categoriaSeleccionada = listaCategorias.stream()
+                        .filter(c -> c.getNombre().equalsIgnoreCase(categoria))
+                        .findFirst();
+
+                if (categoriaSeleccionada.isEmpty()) {
+                    ventanaRegistroLibro.mostrarMensajeError("La categoría seleccionada no es válida.");
+                    return;
+                }
+
+                if (libroAEditar == null) {
+                    Libro nuevoLibro = new Libro(titulo, autor, isbn, editorial, stock, categoriaSeleccionada.get());
+                    libroDAO.create(nuevoLibro);
+                } else {
+                    libroAEditar.setTitulo(titulo);
+                    libroAEditar.setAutor(autor);
+                    libroAEditar.setIsbn(isbn);
+                    libroAEditar.setEditorial(editorial);
+                    libroAEditar.setStock(stock);
+                    libroAEditar.setCategoria(categoriaSeleccionada.get());
+                    libroDAO.update(libroAEditar);
+                }
 
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     ventanaRegistroLibro.mostrarMensajeConfirmacion("Libro registrado correctamente.");

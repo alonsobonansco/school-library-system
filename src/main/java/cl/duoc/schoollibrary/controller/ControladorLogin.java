@@ -1,11 +1,12 @@
 package cl.duoc.schoollibrary.controller;
 
 import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
+import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.VentanaPortalEstudiante;
 import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
 
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ public class ControladorLogin {
 
     private final VentanaLogin ventanaLogin;
     private final UsuarioDAO usuarioDAO;
+    private EstudianteDAO estudianteDAO;
 
     public ControladorLogin(VentanaLogin ventanaLogin, UsuarioDAO usuarioDAO) {
         this.ventanaLogin = ventanaLogin;
@@ -56,15 +58,23 @@ public class ControladorLogin {
                                 "al Sistema," + usuario.getNombre());
 
                         if (usuario.getRol() == Rol.bibliotecario) {
-                            VentanaPrincipalBibliotecario ventanaPrincipalBibliotecario
-                                    = new VentanaPrincipalBibliotecario();
-                            ventanaPrincipalBibliotecario.establecerMensajeBienvenida(usuario.getNombre());
-                            ventanaPrincipalBibliotecario.setVisible(true);
+                            CoordinadorNavegacion.getInstancia().mostrarPrincipalBibliotecario(usuario);
 
                         } else {
-                            VentanaPortalEstudiante ventanaPortalEstudiante = new VentanaPortalEstudiante();
-                            ventanaPortalEstudiante.establecerNombreUsuario(usuario.getNombre());
-                            ventanaPortalEstudiante.setVisible(true);
+                            try {
+                                EstudianteDAO estudianteDAO = new EstudianteDAO();
+                                List<Estudiante> estudiantes = estudianteDAO.read();
+
+                                Optional<Estudiante> estudianteEncontrado = estudiantes.stream()
+                                        .filter(e -> e.getCorreo().
+                                                trim().equalsIgnoreCase(usuario.getCorreo().trim()))
+                                        .findFirst();
+
+                                estudianteEncontrado.ifPresent(
+                                        e -> CoordinadorNavegacion.getInstancia().mostrarPortalEstudiante(e));
+                            } catch (DataAccessException ex) {
+                                ventanaLogin.mostrarMensajeError("Error al acceder a la base de datos: " + ex.getMessage());
+                            }
                         }
 
                         ventanaLogin.cerrarVentana();

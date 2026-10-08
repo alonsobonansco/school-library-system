@@ -12,7 +12,6 @@ public final class DatabaseConnection {
     private static volatile Connection conexion;
 
     private DatabaseConnection() {
-        throw new UnsupportedOperationException("Clase de infraestructura no instanciable.");
     }
 
     public static Connection getInstance() throws SQLException {

@@ -224,4 +224,13 @@ public class VentanaPortalEstudiante extends VentanaBase {
     public void addCerrarSesionButtonListener(ActionListener listener) {
         cerrarSesionButton.addActionListener(listener);
     }
+
+    public int getFilaSeleccionadaLibro() {
+        return librosTable.getSelectedRow();
+    }
+
+    public Integer getFilaSeleccionadaPrestamo() {
+        // ?
+        return prestamosTable.getSelectedRow() != -1 ? prestamosTable.getSelectedRow() : null;
+    }
 }

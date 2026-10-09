@@ -68,7 +68,7 @@ public final class CoordinadorNavegacion {
             VentanaPrincipalBibliotecario vistaAdmin = new VentanaPrincipalBibliotecario();
             vistaAdmin.establecerMensajeBienvenida(sesion.getNombre());
 
-            // Aquí irá ControladorPrincipalBibliotecario
+            new ControladorPrincipalBibliotecario(vistaAdmin);
 
             ventanaActiva = vistaAdmin;
             ventanaActiva.setVisible(true);

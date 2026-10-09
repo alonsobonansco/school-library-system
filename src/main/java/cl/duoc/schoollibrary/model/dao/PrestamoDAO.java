@@ -7,7 +7,9 @@ import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.model.entity.Prestamo;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,55 +19,33 @@ public class PrestamoDAO {
      * Registra un préstamo en el sistema y descuenta automáticamente el stock del libro.
      * Utiliza un bloque transaccional manual (commit/rollback) para asegurar la integridad de datos.
      */
-    public synchronized void create(Prestamo prestamo) {
+    public void create(Prestamo prestamo) throws DataAccessException {
         String sqlPrestamo = "INSERT INTO prestamos (id_estudiante, id_libro, fecha_prestamo, fecha_devolucion, devuelto)" +
                 " VALUES (?, ?, ?, ?, ?)";
         String sqlStock = "UPDATE libros SET stock = stock - 1 WHERE id = ? AND stock > 0";
 
-        Connection conn = null;
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
 
-        try {
-            conn = DatabaseConnection.getInstance();
-            conn.setAutoCommit(false);
+            try (PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
+                psStock.setInt(1, prestamo.getLibro().getId());
+                int filasAfectadas = psStock.executeUpdate();
 
-            try (PreparedStatement psPrestamo = conn.prepareStatement(sqlPrestamo);
-                 PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
-
+                if (filasAfectadas != 1) {
+                    throw new RuntimeException("No hay stock disponible para el libro con ID: " + prestamo.getLibro().getId());
+                }
+            }
+            try (PreparedStatement psPrestamo = conn.prepareStatement(sqlPrestamo)) {
                 psPrestamo.setInt(1, prestamo.getEstudiante().getId());
                 psPrestamo.setInt(2, prestamo.getLibro().getId());
                 psPrestamo.setDate(3, Date.valueOf(prestamo.getFechaPrestamo()));
                 psPrestamo.setDate(4, Date.valueOf(prestamo.getFechaDevolucion()));
                 psPrestamo.setBoolean(5, prestamo.isDevuelto());
                 psPrestamo.executeUpdate();
-
-                psStock.setInt(1, prestamo.getLibro().getId());
-                int filasAfectadas = psStock.executeUpdate();
-
-                if (filasAfectadas == 0) {
-                    throw new SQLException("No hay stock disponible para el libro con ID: " + prestamo.getLibro().getId());
-                }
-
-                conn.commit();
-
             }
-
-        } catch (SQLException ex) {
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException rollbackEx) {
-                    // Aquí es.
-                    ex.addSuppressed(rollbackEx);
-                }
-            }
-
-            throw new DataAccessException("Error al crear el préstamo y actualizar el stock", ex);
-        }
+        });
     }
 
-    public synchronized List<Prestamo> read() {
-        List<Prestamo> prestamos = new ArrayList<>();
-
+    public List<Prestamo> read() throws DataAccessException {
         String sql = """
                 SELECT 
                     p.id, p.fecha_prestamo, p.fecha_devolucion, p.devuelto,
@@ -79,14 +59,13 @@ public class PrestamoDAO {
                 INNER JOIN categorias c ON l.id_categoria = c.id
                 """;
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
+        return DatabaseConnection.getInstance().ejecutarConsulta(conn -> {
+            List<Prestamo> prestamos = new ArrayList<>();
 
             try (PreparedStatement ps = conn.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
-
                     Categoria categoria = new Categoria(
                             rs.getInt("id_categoria"),
                             rs.getString("nombre_categoria")
@@ -123,46 +102,28 @@ public class PrestamoDAO {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al leer los préstamos", ex);
-        }
-
-        return prestamos;
+            return prestamos;
+        });
     }
 
-    public synchronized void registrarDevolucion(int idPrestamo, int idLibro) {
+    public void registrarDevolucion(int idPrestamo, int idLibro) throws DataAccessException {
         String sqlPrestamo = "UPDATE prestamos SET devuelto = TRUE WHERE id = ?";
         String sqlStock = "UPDATE libros SET stock = stock + 1 WHERE id = ?";
 
-        Connection conn = null;
-
-        try {
-            conn = DatabaseConnection.getInstance();
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement psPrestamo = conn.prepareStatement(sqlPrestamo);
-                 PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
+            try (PreparedStatement psPrestamo = conn.prepareStatement(sqlPrestamo)) {
                 psPrestamo.setInt(1, idPrestamo);
-                psPrestamo.executeUpdate();
+                int filasAfectadas = psPrestamo.executeUpdate();
 
-                psStock.setInt(1, idLibro);
-                psStock.executeUpdate();
-
-                conn.commit();
-            }
-
-        } catch (SQLException ex) {
-            if (conn != null) {
-                try {
-                    conn.rollback();
-
-                } catch (SQLException rollbackEx) {
-                    ex.addSuppressed(rollbackEx);
+                if (filasAfectadas == 1) {
+                    try (PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
+                        psStock.setInt(1, idLibro);
+                        psStock.executeUpdate();
+                    }
+                } else {
+                    throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
                 }
             }
-
-            throw new DataAccessException("Error al registrar la devolución del préstamo", ex);
-        }
+        });
     }
 }

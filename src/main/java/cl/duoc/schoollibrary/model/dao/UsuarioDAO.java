@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary.model.dao;
 
 import cl.duoc.schoollibrary.database.DatabaseConnection;
+import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 
@@ -12,10 +13,10 @@ import java.util.List;
 
 public class UsuarioDAO {
 
-    public void create(Usuario usuario) {
+    public void create(Usuario usuario) throws DataAccessException {
         String sql = "INSERT INTO usuarios (nombre, rut, correo, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
 
-        DatabaseConnection.getInstance().ejecutarTransaccionVoid((Connection conn) -> {
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getRut());
@@ -27,10 +28,10 @@ public class UsuarioDAO {
         });
     }
 
-    public List<Usuario> read() {
+    public List<Usuario> read() throws DataAccessException {
         String sql = "SELECT * FROM usuarios";
 
-        return DatabaseConnection.getInstance().ejecutarConsulta((Connection conn) -> {
+        return DatabaseConnection.getInstance().ejecutarConsulta(conn -> {
             List<Usuario> usuarios = new ArrayList<>();
 
             try (PreparedStatement ps = conn.prepareStatement(sql);
@@ -57,10 +58,10 @@ public class UsuarioDAO {
         });
     }
 
-    public void update(Usuario usuario) {
+    public void update(Usuario usuario) throws DataAccessException {
         String sql = "UPDATE usuarios SET nombre = ?, rut = ?, correo = ?, contraseña = ?, rol = ? WHERE id = ?";
 
-        DatabaseConnection.getInstance().ejecutarTransaccionVoid((Connection conn) -> {
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getRut());
@@ -73,10 +74,10 @@ public class UsuarioDAO {
         });
     }
 
-    public void delete(int idUsuario) {
+    public void delete(int idUsuario) throws DataAccessException {
         String sql = "DELETE FROM usuarios WHERE id = ?";
 
-        DatabaseConnection.getInstance().ejecutarTransaccionVoid((Connection conn) -> {
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, idUsuario);
                 ps.executeUpdate();

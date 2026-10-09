@@ -2,9 +2,8 @@ package cl.duoc.schoollibrary.controller;
 
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
-import cl.duoc.schoollibrary.view.VentanaGestionEstudiantes;
-import cl.duoc.schoollibrary.view.VentanaInventarioLibros;
-import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
+import cl.duoc.schoollibrary.model.dao.PrestamoDAO;
+import cl.duoc.schoollibrary.view.*;
 
 public class ControladorPrincipalBibliotecario {
 
@@ -18,6 +17,7 @@ public class ControladorPrincipalBibliotecario {
     private void inicializarListeners() {
         ventanaPrincipalBibliotecario.addLibrosMenuListener(e -> abrirVentanaLibros());
         ventanaPrincipalBibliotecario.addEstudiantesMenuListener(e -> abrirVentanaEstudiantes());
+        ventanaPrincipalBibliotecario.addPrestamosMenuListener(e -> abrirVentanaPrestamos());
     }
 
     private void abrirVentanaLibros() {
@@ -37,6 +37,15 @@ public class ControladorPrincipalBibliotecario {
 
             new ControladorGestionEstudiantes(ventanaGestionEstudiantes, estudianteDAO);
             ventanaGestionEstudiantes.setVisible(true);
+        });
+    }
+
+    private void abrirVentanaPrestamos() {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            VentanaControlPrestamos ventanaControlPrestamos = new VentanaControlPrestamos();
+
+            new ControladorControlPrestamos(ventanaControlPrestamos);
+            ventanaControlPrestamos.setVisible(true);
         });
     }
 }

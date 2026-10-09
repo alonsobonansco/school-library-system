@@ -78,6 +78,7 @@ public final class DatabaseConnection {
     private Connection obtenerConexion() throws SQLException {
         if (conexion == null || conexion.isClosed()) {
             conexion = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("¡Conexión Singleton inicializada con éxito!");
         }
 
         return conexion;

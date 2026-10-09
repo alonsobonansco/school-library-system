@@ -6,7 +6,6 @@ import cl.duoc.schoollibrary.database.DatabaseConnection;
 public class Main {
     public static void main(String[] args) {
 
-        DatabaseConnection.getInstance();
         System.out.println("[Sistema] Iniciando la aplicación SchoolLibrary...");
         CoordinadorNavegacion.getInstancia().mostrarLogin();
     }

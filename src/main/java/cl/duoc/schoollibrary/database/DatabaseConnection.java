@@ -5,9 +5,11 @@ import cl.duoc.schoollibrary.exception.DataAccessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public final class DatabaseConnection {
 
+    private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
     private static final String URL = "jdbc:mysql://localhost:3306/biblioteca";
     private static final String USER = System.getenv("DB_USER");
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
@@ -50,7 +52,7 @@ public final class DatabaseConnection {
                     try {
                         conn.setAutoCommit(true);
                     } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        LOGGER.severe("Error al restablecer el auto-commit: " + ex.getMessage());
                     }
                 }
             }

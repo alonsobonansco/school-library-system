@@ -1,32 +1,13 @@
 package cl.duoc.schoollibrary;
 
-import cl.duoc.schoollibrary.controller.ControladorLogin;
+import cl.duoc.schoollibrary.controller.CoordinadorNavegacion;
 import cl.duoc.schoollibrary.database.DatabaseConnection;
-import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
-import cl.duoc.schoollibrary.view.VentanaLogin;
-
-import javax.swing.*;
-import java.sql.SQLException;
 
 public class Main {
-
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> {
-            VentanaLogin ventanaLogin = new VentanaLogin();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            new ControladorLogin(ventanaLogin, usuarioDAO);
-
-            ventanaLogin.setVisible(true);
-        });
-
-        try {
-            DatabaseConnection.getInstance();
-
-            System.out.println("[Sistema] Iniciando la aplicación SchoolLibrary...");
-
-        } catch (SQLException ex) {
-            System.out.println("Error en la conexión a la base de datos: " + ex.getMessage());
-        }
+        DatabaseConnection.getInstance();
+        System.out.println("[Sistema] Iniciando la aplicación SchoolLibrary...");
+        CoordinadorNavegacion.getInstancia().mostrarLogin();
     }
 }

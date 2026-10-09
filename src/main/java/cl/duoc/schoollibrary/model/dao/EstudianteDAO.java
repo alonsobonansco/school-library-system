@@ -4,21 +4,17 @@ import cl.duoc.schoollibrary.database.DatabaseConnection;
 import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EstudianteDAO {
 
-    public synchronized void create(Estudiante estudiante) {
+    public void create(Estudiante estudiante) throws DataAccessException {
         String sql = "INSERT INTO estudiantes (nombre, rut, curso, correo) VALUES (?, ?, ?, ?)";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, estudiante.getNombre());
                 ps.setString(2, estudiante.getRut());
@@ -26,21 +22,15 @@ public class EstudianteDAO {
                 ps.setString(4, estudiante.getCorreo());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al crear el estudiante", ex);
-        }
-
+        });
     }
 
-    public synchronized List<Estudiante> read() {
+    public List<Estudiante> read() throws DataAccessException {
         List<Estudiante> estudiantes = new ArrayList<>();
 
         String sql = "SELECT * FROM estudiantes";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        return DatabaseConnection.getInstance().ejecutarConsulta(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
 
@@ -57,20 +47,14 @@ public class EstudianteDAO {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al leer los estudiantes", ex);
-        }
-
-        return estudiantes;
-
+            return estudiantes;
+        });
     }
 
-    public synchronized void update(Estudiante estudiante) {
+    public void update(Estudiante estudiante) throws DataAccessException {
         String sql = "UPDATE estudiantes SET nombre = ?, rut = ?, curso = ?, correo = ? WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
                 ps.setString(1, estudiante.getNombre());
@@ -80,27 +64,18 @@ public class EstudianteDAO {
                 ps.setInt(5, estudiante.getId());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al actualizar el estudiante", ex);
-        }
-
+        });
     }
 
-    public synchronized void delete(int idEstudiante) {
+    public void delete(int idEstudiante) throws DataAccessException {
         String sql = "DELETE FROM estudiantes WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
                 ps.setInt(1, idEstudiante);
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al eliminar el estudiante", ex);
-        }
+        });
     }
 }

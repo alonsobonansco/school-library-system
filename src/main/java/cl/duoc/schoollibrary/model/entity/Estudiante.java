@@ -71,12 +71,6 @@ public class Estudiante {
 
     @Override
     public String toString() {
-        return "Estudiante{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", rut='" + rut + '\'' +
-                ", curso='" + curso + '\'' +
-                ", correo='" + correo + '\'' +
-                '}';
+        return "Estudiante: " + nombre + " - Rut: " + rut;
     }
 }

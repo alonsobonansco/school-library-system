@@ -18,6 +18,8 @@ public class ControladorPrincipalBibliotecario {
         ventanaPrincipalBibliotecario.addLibrosMenuListener(e -> abrirVentanaLibros());
         ventanaPrincipalBibliotecario.addEstudiantesMenuListener(e -> abrirVentanaEstudiantes());
         ventanaPrincipalBibliotecario.addPrestamosMenuListener(e -> abrirVentanaPrestamos());
+
+        ventanaPrincipalBibliotecario.addCerrarSesionMenuListener(e -> procesarCerrarSesion());
     }
 
     private void abrirVentanaLibros() {
@@ -47,5 +49,9 @@ public class ControladorPrincipalBibliotecario {
             new ControladorControlPrestamos(ventanaControlPrestamos);
             ventanaControlPrestamos.setVisible(true);
         });
+    }
+
+    private void procesarCerrarSesion() {
+        CoordinadorNavegacion.getInstancia().mostrarLogin();
     }
 }

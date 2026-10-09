@@ -1,10 +1,10 @@
-package cl.duoc.schoollibrary.controller;
+package cl.duoc.schoollibrary.controller.bibliotecario;
 
 import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
-import cl.duoc.schoollibrary.view.VentanaGestionEstudiantes;
-import cl.duoc.schoollibrary.view.VentanaRegistroEstudiante;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionEstudiantes;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroEstudiante;
 
 import javax.swing.*;
 import java.util.ArrayList;

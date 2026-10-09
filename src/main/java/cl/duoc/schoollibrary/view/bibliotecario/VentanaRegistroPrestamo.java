@@ -1,7 +1,8 @@
-package cl.duoc.schoollibrary.view;
+package cl.duoc.schoollibrary.view.bibliotecario;
 
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Libro;
+import cl.duoc.schoollibrary.view.VentanaBase;
 
 import javax.swing.*;
 import java.awt.*;

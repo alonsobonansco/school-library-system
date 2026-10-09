@@ -1,11 +1,11 @@
-package cl.duoc.schoollibrary.controller;
+package cl.duoc.schoollibrary.controller.bibliotecario;
 
 import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.dao.CategoriaDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
 import cl.duoc.schoollibrary.model.entity.Categoria;
 import cl.duoc.schoollibrary.model.entity.Libro;
-import cl.duoc.schoollibrary.view.VentanaRegistroLibro;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroLibro;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

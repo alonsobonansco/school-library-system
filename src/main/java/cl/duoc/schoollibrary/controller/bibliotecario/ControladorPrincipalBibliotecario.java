@@ -1,8 +1,9 @@
-package cl.duoc.schoollibrary.controller;
+package cl.duoc.schoollibrary.controller.bibliotecario;
 
+import cl.duoc.schoollibrary.controller.CoordinadorNavegacion;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
-import cl.duoc.schoollibrary.view.*;
+import cl.duoc.schoollibrary.view.bibliotecario.*;
 
 public class ControladorPrincipalBibliotecario {
 

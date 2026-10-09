@@ -1,11 +1,13 @@
 package cl.duoc.schoollibrary.controller;
 
+import cl.duoc.schoollibrary.controller.bibliotecario.ControladorPrincipalBibliotecario;
+import cl.duoc.schoollibrary.controller.estudiante.ControladorPortalEstudiante;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.VentanaPortalEstudiante;
-import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
+import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaPrincipalBibliotecario;
 
 import javax.swing.*;
 

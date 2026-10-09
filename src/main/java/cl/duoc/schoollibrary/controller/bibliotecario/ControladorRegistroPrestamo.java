@@ -1,4 +1,4 @@
-package cl.duoc.schoollibrary.controller;
+package cl.duoc.schoollibrary.controller.bibliotecario;
 
 import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
@@ -7,7 +7,7 @@ import cl.duoc.schoollibrary.model.dao.PrestamoDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.model.entity.Prestamo;
-import cl.duoc.schoollibrary.view.VentanaRegistroPrestamo;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroPrestamo;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,7 +1,8 @@
-package cl.duoc.schoollibrary.view;
+package cl.duoc.schoollibrary.view.estudiante;
 
 import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.model.entity.Prestamo;
+import cl.duoc.schoollibrary.view.VentanaBase;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

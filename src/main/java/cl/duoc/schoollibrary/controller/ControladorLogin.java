@@ -7,7 +7,6 @@ import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.VentanaPrincipalBibliotecario;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.List;
 
 public class VentanaReportes extends VentanaBase {
@@ -64,7 +65,7 @@ public class VentanaReportes extends VentanaBase {
             }
         };
         tablaLibrosActivos = new JTable(modeloLibrosActivos);
-        configurarEstiloTabla(tablaLibrosActivos, new int[]{40, 240, 180, 110});
+        configurarEstiloTabla(tablaLibrosActivos, new int[]{40, 240, 150, 140});
     }
 
     private void configurarEstiloTabla(JTable tabla, int[] anchos) {
@@ -153,12 +154,23 @@ public class VentanaReportes extends VentanaBase {
     public void actualizarLibrosActivos(List<Prestamo> prestamos) {
         SwingUtilities.invokeLater(() -> {
             modeloLibrosActivos.setRowCount(0);
+
+            LocalDate hoy = LocalDate.now();
+
             for (Prestamo p : prestamos) {
+                LocalDate vencimiento = p.getFechaDevolucion();
+
+                String vencimientoStr = vencimiento.toString();
+
+                if (!p.isDevuelto() && vencimiento.isBefore(hoy)) {
+                    vencimientoStr += "   [ATRASADO]";
+                }
+
                 Object[] fila = {
                         p.getId(),
                         p.getLibro().getTitulo(),
                         p.getEstudiante().getNombre(),
-                        p.getFechaDevolucion()
+                        vencimientoStr
                 };
                 modeloLibrosActivos.addRow(fila);
             }

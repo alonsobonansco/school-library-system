@@ -5,21 +5,18 @@ import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.entity.Categoria;
 import cl.duoc.schoollibrary.model.entity.Libro;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO {
 
-    public synchronized void create(Libro libro) {
+    public void create(Libro libro) throws DataAccessException {
         String sql = "INSERT INTO libros (titulo, autor, isbn, editorial, stock, id_categoria)" +
                 " VALUES (?, ?, ?, ?, ?, ?)";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -31,21 +28,16 @@ public class LibroDAO {
                 ps.setInt(6, libro.getCategoria().getId());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al crear el libro", ex);
-        }
+        });
     }
 
-    public synchronized List<Libro> read() {
-        List<Libro> libros = new ArrayList<>();
-
+    public List<Libro> read() throws DataAccessException {
         String sql = "SELECT l.id, l.titulo, l.autor, l.isbn, l.editorial, l.stock, l.id_categoria, " +
                 "c.nombre AS nombre_categoria" +
                 " FROM libros l INNER JOIN categorias c ON l.id_categoria = c.id";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
+        return DatabaseConnection.getInstance().ejecutarConsulta(conn -> {
+            List<Libro> libros = new ArrayList<>();
 
             try (PreparedStatement ps = conn.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
@@ -71,23 +63,18 @@ public class LibroDAO {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al leer los libros", ex);
-        }
-
-        return libros;
+            return libros;
+        });
     }
 
-    public synchronized void update(Libro libro) {
+    public void update(Libro libro) throws DataAccessException {
         String sql = "UPDATE libros" +
                 " SET titulo = ?, autor = ?, isbn = ?, editorial = ?, stock = ?, id_categoria = ?" +
                 " WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setString(1, libro.getTitulo());
                 ps.setString(2, libro.getAutor());
                 ps.setString(3, libro.getIsbn());
@@ -97,26 +84,17 @@ public class LibroDAO {
                 ps.setInt(7, libro.getId());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al actualizar el libro", ex);
-        }
+        });
     }
 
-    public synchronized void delete(int idLibro) {
+    public void delete(int idLibro) throws DataAccessException {
         String sql = "DELETE FROM libros WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setInt(1, idLibro);
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al eliminar el libro", ex);
-        }
+        });
     }
 }

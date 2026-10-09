@@ -8,20 +8,16 @@ import cl.duoc.schoollibrary.model.entity.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO {
 
-    public synchronized void create(Usuario usuario) {
+    public void create(Usuario usuario) throws DataAccessException {
         String sql = "INSERT INTO usuarios (nombre, rut, correo, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getRut());
                 ps.setString(3, usuario.getCorreo());
@@ -29,26 +25,21 @@ public class UsuarioDAO {
                 ps.setString(5, usuario.getRol().name());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al crear el usuario", ex);
-        }
+        });
     }
 
-    public synchronized List<Usuario> read() {
-        List<Usuario> usuarios = new ArrayList<>();
-
+    public List<Usuario> read() throws DataAccessException {
         String sql = "SELECT * FROM usuarios";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
+        return DatabaseConnection.getInstance().ejecutarConsulta(conn -> {
+            List<Usuario> usuarios = new ArrayList<>();
 
             try (PreparedStatement ps = conn.prepareStatement(sql);
                  ResultSet rs = ps.executeQuery()) {
 
                 while (rs.next()) {
                     String textoRol = rs.getString("rol");
-                    Rol rolEnum = Rol.valueOf(textoRol.toLowerCase().trim());
+                    Rol rolEnum = Rol.valueOf(textoRol.trim());
 
                     Usuario usuario = new Usuario(
                             rs.getInt("id"),
@@ -63,21 +54,15 @@ public class UsuarioDAO {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al leer los usuarios", ex);
-        }
-
-        return usuarios;
+            return usuarios;
+        });
     }
 
-    public synchronized void update(Usuario usuario) {
+    public void update(Usuario usuario) throws DataAccessException {
         String sql = "UPDATE usuarios SET nombre = ?, rut = ?, correo = ?, contraseña = ?, rol = ? WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getRut());
                 ps.setString(3, usuario.getCorreo());
@@ -86,26 +71,17 @@ public class UsuarioDAO {
                 ps.setInt(6, usuario.getId());
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al actualizar el usuario", ex);
-        }
+        });
     }
 
-    public synchronized void delete(int idUsuario) {
+    public void delete(int idUsuario) throws DataAccessException {
         String sql = "DELETE FROM usuarios WHERE id = ?";
 
-        try {
-            Connection conn = DatabaseConnection.getInstance();
-
+        DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setInt(1, idUsuario);
                 ps.executeUpdate();
             }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error al eliminar el usuario", ex);
-        }
+        });
     }
 }

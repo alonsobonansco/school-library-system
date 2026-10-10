@@ -74,7 +74,7 @@ public class ControladorPortalEstudiante {
         );
     }
 
-    public void cargarPrestamosActivos() {
+    private void cargarPrestamosActivos() {
         AppThreadPool.ejecutarCarga(
                 () -> {
                     List<Prestamo> todosLosPrestamos = prestamoDAO.read();

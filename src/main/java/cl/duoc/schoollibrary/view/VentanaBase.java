@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary.view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 
@@ -19,6 +20,15 @@ public abstract class VentanaBase extends JFrame {
         setResizable(false);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    protected DefaultTableModel crearModeloTablaNoEditable(String[] columnas) {
+        return new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     }
 
     public void mostrarMensajeConfirmacion(String mensaje) {

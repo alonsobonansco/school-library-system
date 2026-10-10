@@ -38,12 +38,7 @@ public class VentanaGestionEstudiantes extends VentanaBase {
         buscarTextField.setFont(FUENTE_CAMPO.deriveFont(14f));
 
         String[] columnas = {"ID", "RUT", "Nombre Completo", "Curso", "Correo Electrónico"};
-        estudiantesTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        estudiantesTableModel = crearModeloTablaNoEditable(columnas);
 
         estudiantesTable = new JTable(estudiantesTableModel);
         estudiantesTable.setFont(FUENTE_CAMPO.deriveFont(13f));

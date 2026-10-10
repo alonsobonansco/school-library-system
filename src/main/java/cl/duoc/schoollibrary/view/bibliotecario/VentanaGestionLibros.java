@@ -37,12 +37,7 @@ public class VentanaGestionLibros extends VentanaBase {
         categoriaComboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 
         String[] columnas = {"ID", "Título", "Autor", "ISBN", "Editorial", "Stock", "Categoría"};
-        librosTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        librosTableModel = crearModeloTablaNoEditable(columnas);
 
         librosTable = new JTable(librosTableModel);
         librosTable.setFont(FUENTE_CAMPO.deriveFont(13f));

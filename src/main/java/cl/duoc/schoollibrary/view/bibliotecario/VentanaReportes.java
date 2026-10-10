@@ -35,12 +35,7 @@ public class VentanaReportes extends VentanaBase {
         atrasButton.setCursor(CURSOR_CLICK);
 
         String[] columnasTopLibros = {"Título Libro", "Cantidad Préstamos"};
-        topLibrosTableModel = new DefaultTableModel(columnasTopLibros, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        topLibrosTableModel = crearModeloTablaNoEditable(columnasTopLibros);
         topLibrosTable = new JTable(topLibrosTableModel);
         configurarEstiloTabla(topLibrosTable, new int[]{180, 60});
 
@@ -48,22 +43,12 @@ public class VentanaReportes extends VentanaBase {
         estudiantesComboBox.setFont(FUENTE_CAMPO);
 
         String[] columnasHistorialEstudiante = {"Título Libro", "Estado"};
-        historialEstudianteTableModel = new DefaultTableModel(columnasHistorialEstudiante, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        historialEstudianteTableModel = crearModeloTablaNoEditable(columnasHistorialEstudiante);
         historialEstudianteTable = new JTable(historialEstudianteTableModel);
         configurarEstiloTabla(historialEstudianteTable, new int[]{160, 80});
 
         String[] columnasLibrosActivos = {"ID", "Título Libro", "Alumno Responsable", "Vencimiento"};
-        librosActivosTableModel = new DefaultTableModel(columnasLibrosActivos, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        librosActivosTableModel = crearModeloTablaNoEditable(columnasLibrosActivos);
         librosActivosTable = new JTable(librosActivosTableModel);
         configurarEstiloTabla(librosActivosTable, new int[]{40, 240, 150, 140});
     }

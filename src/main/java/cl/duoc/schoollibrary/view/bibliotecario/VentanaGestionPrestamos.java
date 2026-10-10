@@ -27,12 +27,7 @@ public class VentanaGestionPrestamos extends VentanaBase {
     private void inicializarComponentes() {
         String[] columnas = {
                 "ID", "RUT Alumno", "Nombre Alumno", "Título del Libro", "Fecha Salida", "Fecha Vencimiento", "Estado"};
-        prestamosTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        prestamosTableModel = crearModeloTablaNoEditable(columnas);
 
         prestamosTable = new JTable(prestamosTableModel);
         prestamosTable.setFont(FUENTE_CAMPO);

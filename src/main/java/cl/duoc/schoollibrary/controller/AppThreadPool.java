@@ -37,6 +37,10 @@ public final class AppThreadPool {
         });
     }
 
+    public static void shutdown() {
+        if (!executor.isShutdown()) executor.shutdownNow();
+    }
+
     @FunctionalInterface
     public interface TareaSecundaria<T> {
         T ejecutar() throws Exception;

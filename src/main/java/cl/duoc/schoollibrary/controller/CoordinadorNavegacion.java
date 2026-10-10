@@ -10,6 +10,8 @@ import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaPrincipalBibliotecario;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Orquestador central del ciclo de vida y navegación de la suite de software.
@@ -39,6 +41,13 @@ public final class CoordinadorNavegacion {
             VentanaLogin vistaLogin = new VentanaLogin();
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             new ControladorLogin(vistaLogin, usuarioDAO);
+
+            vistaLogin.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    AppThreadPool.shutdown();
+                }
+            });
 
             ventanaActiva = vistaLogin;
             ventanaActiva.setVisible(true);

@@ -2,14 +2,16 @@ package cl.duoc.schoollibrary.view;
 
 import javax.swing.*;
 
+
 public abstract class VentanaBase extends JFrame {
 
     public VentanaBase(String titulo, int ancho, int alto) {
         setTitle(titulo);
         setSize(ancho, alto);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public void mostrarMensajeConfirmacion(String mensaje) {

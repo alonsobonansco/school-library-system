@@ -9,6 +9,8 @@ import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionLibros;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroLibro;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,17 @@ public class ControladorGestionLibros {
     private void inicializarListeners() {
         ventanaGestionLibros.addBusquedaDocumentListener(this::aplicarFiltros);
         ventanaGestionLibros.addCategoriaComboListener(e -> aplicarFiltros());
-        ventanaGestionLibros.addAgregarListener(e -> abrirFormularioRegistro(null));
+        ventanaGestionLibros.addAgregarListener(e -> {
+            ventanaGestionLibros.setAccionesHabilitadas(false);
+            abrirFormularioRegistro(null);
+        });
         ventanaGestionLibros.addEditarListener(e -> {
             Libro seleccionado = ventanaGestionLibros.getLibroSeleccionadoEnTabla(listaLibrosEnMemoria);
             if (seleccionado == null) {
                 ventanaGestionLibros.mostrarMensajeError("Debe seleccionar un libro de la tabla para modificarlo.");
                 return;
             }
+            ventanaGestionLibros.setAccionesHabilitadas(false);
             abrirFormularioRegistro(seleccionado);
         });
         ventanaGestionLibros.addEliminarListener(e -> procesarEliminacionCatalogo());
@@ -92,6 +98,12 @@ public class ControladorGestionLibros {
 
     private void abrirFormularioRegistro(Libro libroAEditar) {
         VentanaRegistroLibro ventanaRegistro = new VentanaRegistroLibro();
+        ventanaRegistro.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                ventanaGestionLibros.setAccionesHabilitadas(true);
+            }
+        });
         new ControladorRegistroLibro(ventanaRegistro, libroDAO, this, libroAEditar);
         ventanaRegistro.setVisible(true);
     }
@@ -105,24 +117,29 @@ public class ControladorGestionLibros {
             return;
         }
 
-        if (ventanaGestionLibros.confirmarEliminacion("catálogo")) {
-            AppThreadPool.ejecutarAccion(
-                    () -> libroDAO.delete(idLibro),
-                    () -> {
-                        ventanaGestionLibros.mostrarMensajeConfirmacion(
-                                "El título ha sido removido del catálogo exitosamente.");
-                        cargarLibrosDesdeBD();
-                    },
-                    ex -> {
-                        if (ex instanceof RestriccionIntegridadException) {
-                            ventanaGestionLibros.mostrarMensajeError(
-                                    "No es posible eliminar este título porque " +
-                                            "cuenta con un historial de préstamos asociado.");
-                        } else {
-                            ventanaGestionLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage());
-                        }
+        if (!ventanaGestionLibros.confirmarEliminacion("catálogo")) return;
+
+        ventanaGestionLibros.setAccionesHabilitadas(false);
+
+        AppThreadPool.ejecutarAccion(
+                () -> libroDAO.delete(idLibro),
+                () -> {
+                    ventanaGestionLibros.mostrarMensajeConfirmacion(
+                            "El título ha sido removido del catálogo exitosamente.");
+                    cargarLibrosDesdeBD();
+                    ventanaGestionLibros.setAccionesHabilitadas(true);
+                },
+                ex -> {
+                    if (ex instanceof RestriccionIntegridadException) {
+                        ventanaGestionLibros.mostrarMensajeError(
+                                "No es posible eliminar este título porque " +
+                                        "cuenta con un historial de préstamos asociado.");
+                    } else {
+                        ventanaGestionLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage());
                     }
-            );
-        }
+                    ventanaGestionLibros.setAccionesHabilitadas(true);
+                }
+        );
+
     }
 }

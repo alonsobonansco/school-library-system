@@ -87,7 +87,7 @@ public class ControladorPortalEstudiante {
                     ventanaPortalEstudiante.actualizarTablaPrestamos(prestamos);
                 },
                 ex -> ventanaPortalEstudiante.mostrarMensajeError(
-                        "Error al cargar tus préstamos: " + ex.getMessage())
+                        "Error al cargar los préstamos activos: " + ex.getMessage())
         );
     }
 
@@ -111,14 +111,15 @@ public class ControladorPortalEstudiante {
     private void procesarSolicitudPrestamo() {
         int filaSeleccionada = ventanaPortalEstudiante.getFilaSeleccionadaLibro();
         if (filaSeleccionada == -1) {
-            ventanaPortalEstudiante.mostrarMensajeError("Por favor, seleccione un libro del catálogo para solicitarlo.");
+            ventanaPortalEstudiante.mostrarMensajeError("Debe seleccionar un libro del catálogo para solicitarlo.");
             return;
         }
 
         Libro libroSeleccionado = listaLibrosEnMemoria.get(filaSeleccionada);
 
         if (libroSeleccionado.getStock() <= 0) {
-            ventanaPortalEstudiante.mostrarMensajeError("Lo sentimos, el libro '" + libroSeleccionado.getTitulo() + "' se encuentra agotado.");
+            ventanaPortalEstudiante.mostrarMensajeError(
+                    "Lo sentimos, el libro '" + libroSeleccionado.getTitulo() + "' se encuentra agotado.");
             return;
         }
 
@@ -131,7 +132,7 @@ public class ControladorPortalEstudiante {
                 () -> prestamoDAO.create(nuevoPrestamo),
                 () -> {
                     ventanaPortalEstudiante.mostrarMensajeConfirmacion(
-                            "¡Préstamo registrado!\nTienes hasta el " + vencimiento + " para devolverlo.");
+                            "Préstamo registrado\nTienes hasta el " + vencimiento + " para devolverlo.");
                     cargarLibrosDesdeBD();
                     cargarPrestamosActivos();
                 },
@@ -147,7 +148,7 @@ public class ControladorPortalEstudiante {
             return;
         }
 
-        if (!ventanaPortalEstudiante.confirmarEliminacion("préstamo y retornar el libro al inventario físico")) {
+        if (!ventanaPortalEstudiante.confirmarDevolucion()) {
             return;
         }
 
@@ -164,7 +165,8 @@ public class ControladorPortalEstudiante {
                     cargarLibrosDesdeBD();
                     cargarPrestamosActivos();
                 },
-                ex -> ventanaPortalEstudiante.mostrarMensajeError("Fallo al procesar devolución: " + ex.getMessage())
+                ex -> ventanaPortalEstudiante.mostrarMensajeError(
+                        "Fallo al procesar devolución: " + ex.getMessage())
         );
     }
 

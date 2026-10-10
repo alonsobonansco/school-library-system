@@ -39,9 +39,19 @@ public abstract class VentanaBase extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public boolean confirmarDevolucion() {
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro/a de que desea registrar la devolución?",
+                "Confirmar Devolución",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        return opcion == JOptionPane.YES_OPTION;
+    }
+
     public boolean confirmarEliminacion(String mensaje) {
         int opcion = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro de que desea eliminar el " + mensaje + " seleccionado?",
+                "¿Está seguro/a de que desea eliminar el " + mensaje + "?",
                 "Confirmar Eliminación",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);

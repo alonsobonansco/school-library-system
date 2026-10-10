@@ -31,7 +31,7 @@ public class ControladorGestionEstudiantes {
             int fila = ventanaGestionEstudiantes.getFilaSeleccionada();
             if (fila == -1) {
                 ventanaGestionEstudiantes.mostrarMensajeError(
-                        "Por favor, seleccione un alumno de la tabla para modificar su perfil.");
+                        "Debe seleccionar un alumno de la tabla para modificar su perfil.");
                 return;
             }
             Estudiante seleccionado = listaEstudiantesEnMemoria.get(fila);
@@ -92,7 +92,7 @@ public class ControladorGestionEstudiantes {
             return;
         }
 
-        if (!ventanaGestionEstudiantes.confirmarEliminacion("estudiante seleccionado del sistema escolar")) {
+        if (!ventanaGestionEstudiantes.confirmarEliminacion("estudiante del sistema")) {
             return;
         }
 

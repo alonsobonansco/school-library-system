@@ -61,7 +61,7 @@ public class ControladorGestionPrestamos {
             return;
         }
 
-        if (!ventanaGestionPrestamos.confirmarEliminacion("préstamo y retornar la copia al stock físico disponible")) {
+        if (!ventanaGestionPrestamos.confirmarDevolucion()) {
             return;
         }
 

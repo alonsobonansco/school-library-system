@@ -100,7 +100,7 @@ public class ControladorGestionLibros {
         Integer idLibro = ventanaGestionLibros.getIdLibroSeleccionado();
         if (idLibro == null) {
             ventanaGestionLibros.mostrarMensajeError(
-                    "Por favor, seleccione un título de la tabla para eliminarlo del catálogo.");
+                    "Debe seleccionar un título de la tabla para eliminarlo del catálogo.");
             return;
         }
 

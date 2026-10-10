@@ -32,6 +32,7 @@ public class ControladorRegistroEstudiante {
                 }
             }
         });
+        ventanaRegistroEstudiante.addVolverAtrasListener(e -> ventanaRegistroEstudiante.cerrarVentana());
     }
 
     private void procesarGuardadoEstudiante() {

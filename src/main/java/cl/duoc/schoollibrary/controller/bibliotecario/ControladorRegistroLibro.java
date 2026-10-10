@@ -42,6 +42,7 @@ public class ControladorRegistroLibro {
                 }
             }
         });
+        ventanaRegistroLibro.addVolverAtrasListener(e -> ventanaRegistroLibro.cerrarVentana());
     }
 
     private void cargarCategoriasDesdeBD() {

@@ -15,15 +15,15 @@ import java.util.List;
 public class ControladorRegistroPrestamo {
 
     private final VentanaRegistroPrestamo ventanaRegistroPrestamo;
-    private final ControladorControlPrestamos controladorControlPrestamos;
+    private final ControladorGestionPrestamos controladorGestionPrestamos;
     private final PrestamoDAO prestamoDAO = new PrestamoDAO();
     private final LibroDAO libroDAO = new LibroDAO();
     private final EstudianteDAO estudianteDAO = new EstudianteDAO();
 
     public ControladorRegistroPrestamo(VentanaRegistroPrestamo ventanaRegistroPrestamo,
-                                       ControladorControlPrestamos controladorControlPrestamos) {
+                                       ControladorGestionPrestamos controladorGestionPrestamos) {
         this.ventanaRegistroPrestamo = ventanaRegistroPrestamo;
-        this.controladorControlPrestamos = controladorControlPrestamos;
+        this.controladorGestionPrestamos = controladorGestionPrestamos;
 
         inicializarListeners();
         cargarCombosDesdeBD();
@@ -35,8 +35,8 @@ public class ControladorRegistroPrestamo {
         ventanaRegistroPrestamo.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (controladorControlPrestamos != null) {
-                    controladorControlPrestamos.cargarPrestamosDesdeBD();
+                if (controladorGestionPrestamos != null) {
+                    controladorGestionPrestamos.cargarPrestamosDesdeBD();
                 }
             }
         });

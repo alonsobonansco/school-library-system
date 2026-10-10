@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class VentanaInventarioLibros extends VentanaBase {
+public class VentanaGestionLibros extends VentanaBase {
 
     private JTextField buscarTextField;
     private JComboBox<String> categoriaComboBox;
@@ -22,7 +22,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     private JButton eliminarButton;
     private JButton atrasButton;
 
-    public VentanaInventarioLibros() {
+    public VentanaGestionLibros() {
         super("Panel de Control - Inventario de Libros", 850, 550);
 
         inicializarComponentes();

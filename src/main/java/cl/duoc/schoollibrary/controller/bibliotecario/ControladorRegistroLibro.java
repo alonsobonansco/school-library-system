@@ -17,15 +17,15 @@ public class ControladorRegistroLibro {
     private final LibroDAO libroDAO;
     private final Libro libroAEditar;
     private final CategoriaDAO categoriaDAO;
-    private final ControladorInventarioLibros controladorInventarioLibros;
+    private final ControladorGestionLibros controladorGestionLibros;
     private List<Categoria> listaCategorias = new ArrayList<>();
 
     public ControladorRegistroLibro(VentanaRegistroLibro ventanaRegistroLibro, LibroDAO libroDAO,
-                                    ControladorInventarioLibros controladorInventarioLibros, Libro libroAEditar) {
+                                    ControladorGestionLibros controladorGestionLibros, Libro libroAEditar) {
         this.ventanaRegistroLibro = ventanaRegistroLibro;
         this.libroDAO = libroDAO;
         this.categoriaDAO = new CategoriaDAO();
-        this.controladorInventarioLibros = controladorInventarioLibros;
+        this.controladorGestionLibros = controladorGestionLibros;
         this.libroAEditar = libroAEditar;
 
         inicializarListeners();
@@ -37,8 +37,8 @@ public class ControladorRegistroLibro {
         ventanaRegistroLibro.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (controladorInventarioLibros != null) {
-                    controladorInventarioLibros.cargarLibrosDesdeBD();
+                if (controladorGestionLibros != null) {
+                    controladorGestionLibros.cargarLibrosDesdeBD();
                 }
             }
         });

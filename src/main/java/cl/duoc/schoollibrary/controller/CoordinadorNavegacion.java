@@ -1,12 +1,12 @@
 package cl.duoc.schoollibrary.controller;
 
-import cl.duoc.schoollibrary.controller.bibliotecario.ControladorPrincipalBibliotecario;
+import cl.duoc.schoollibrary.controller.bibliotecario.ControladorPortalBibliotecario;
 import cl.duoc.schoollibrary.controller.estudiante.ControladorPortalEstudiante;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.bibliotecario.VentanaPrincipalBibliotecario;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaPortalBibliotecario;
 import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
 
 import javax.swing.*;
@@ -72,9 +72,9 @@ public final class CoordinadorNavegacion {
         SwingUtilities.invokeLater(() -> {
             destruirVentanaActiva();
 
-            VentanaPrincipalBibliotecario vistaAdmin = new VentanaPrincipalBibliotecario();
+            VentanaPortalBibliotecario vistaAdmin = new VentanaPortalBibliotecario();
             vistaAdmin.establecerMensajeFondo(sesion.getNombre());
-            new ControladorPrincipalBibliotecario(vistaAdmin);
+            new ControladorPortalBibliotecario(vistaAdmin);
 
             cerrarProcesos(vistaAdmin);
             ventanaActiva = vistaAdmin;

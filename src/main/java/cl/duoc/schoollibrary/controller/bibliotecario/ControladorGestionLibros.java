@@ -5,7 +5,7 @@ import cl.duoc.schoollibrary.model.dao.CategoriaDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
 import cl.duoc.schoollibrary.model.entity.Categoria;
 import cl.duoc.schoollibrary.model.entity.Libro;
-import cl.duoc.schoollibrary.view.bibliotecario.VentanaInventarioLibros;
+import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionLibros;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroLibro;
 
 import java.util.ArrayList;
@@ -15,15 +15,15 @@ import java.util.List;
  * Cerebro administrativo encargado de coordinar la lectura, filtrado reactivo
  * en memoria y operaciones destructivas del catálogo de inventario de libros.
  */
-public class ControladorInventarioLibros {
+public class ControladorGestionLibros {
 
-    private final VentanaInventarioLibros ventanaInventarioLibros;
+    private final VentanaGestionLibros ventanaGestionLibros;
     private final LibroDAO libroDAO;
     private final CategoriaDAO categoriaDAO;
     private List<Libro> listaLibrosEnMemoria = new ArrayList<>();
 
-    public ControladorInventarioLibros(VentanaInventarioLibros ventanaInventarioLibros, LibroDAO libroDAO) {
-        this.ventanaInventarioLibros = ventanaInventarioLibros;
+    public ControladorGestionLibros(VentanaGestionLibros ventanaGestionLibros, LibroDAO libroDAO) {
+        this.ventanaGestionLibros = ventanaGestionLibros;
         this.libroDAO = libroDAO;
         this.categoriaDAO = new CategoriaDAO();
 
@@ -33,19 +33,19 @@ public class ControladorInventarioLibros {
     }
 
     private void inicializarListeners() {
-        ventanaInventarioLibros.addBusquedaDocumentListener(this::aplicarFiltros);
-        ventanaInventarioLibros.addCategoriaComboListener(e -> aplicarFiltros());
-        ventanaInventarioLibros.addAgregarListener(e -> abrirFormularioRegistro(null));
-        ventanaInventarioLibros.addEditarListener(e -> {
-            Libro seleccionado = ventanaInventarioLibros.getLibroSeleccionadoEnTabla(listaLibrosEnMemoria);
+        ventanaGestionLibros.addBusquedaDocumentListener(this::aplicarFiltros);
+        ventanaGestionLibros.addCategoriaComboListener(e -> aplicarFiltros());
+        ventanaGestionLibros.addAgregarListener(e -> abrirFormularioRegistro(null));
+        ventanaGestionLibros.addEditarListener(e -> {
+            Libro seleccionado = ventanaGestionLibros.getLibroSeleccionadoEnTabla(listaLibrosEnMemoria);
             if (seleccionado == null) {
-                ventanaInventarioLibros.mostrarMensajeError("Debe seleccionar un libro de la tabla para modificarlo.");
+                ventanaGestionLibros.mostrarMensajeError("Debe seleccionar un libro de la tabla para modificarlo.");
                 return;
             }
             abrirFormularioRegistro(seleccionado);
         });
-        ventanaInventarioLibros.addEliminarListener(e -> procesarEliminacionCatalogo());
-        ventanaInventarioLibros.addVolverAtrasListener(e -> ventanaInventarioLibros.cerrarVentana());
+        ventanaGestionLibros.addEliminarListener(e -> procesarEliminacionCatalogo());
+        ventanaGestionLibros.addVolverAtrasListener(e -> ventanaGestionLibros.cerrarVentana());
     }
 
     public void cargarLibrosDesdeBD() {
@@ -53,9 +53,9 @@ public class ControladorInventarioLibros {
                 libroDAO::read,
                 libros -> {
                     listaLibrosEnMemoria = libros;
-                    ventanaInventarioLibros.actualizarTabla(libros);
+                    ventanaGestionLibros.actualizarTabla(libros);
                 },
-                ex -> ventanaInventarioLibros.mostrarMensajeError(
+                ex -> ventanaGestionLibros.mostrarMensajeError(
                         "Error al cargar inventario: " + ex.getMessage())
         );
     }
@@ -65,16 +65,16 @@ public class ControladorInventarioLibros {
                 categoriaDAO::read,
                 categorias -> {
                     List<String> nombres = categorias.stream().map(Categoria::getNombre).toList();
-                    ventanaInventarioLibros.poblarCategorias(nombres);
+                    ventanaGestionLibros.poblarCategorias(nombres);
                 },
-                ex -> ventanaInventarioLibros.mostrarMensajeError(
+                ex -> ventanaGestionLibros.mostrarMensajeError(
                         "Error al inicializar filtros: " + ex.getMessage())
         );
     }
 
     private void aplicarFiltros() {
-        String textoBuscado = ventanaInventarioLibros.getTextoBusqueda().toLowerCase().trim();
-        String categoriaSeleccionada = ventanaInventarioLibros.getCategoriaSeleccionada();
+        String textoBuscado = ventanaGestionLibros.getTextoBusqueda().toLowerCase().trim();
+        String categoriaSeleccionada = ventanaGestionLibros.getCategoriaSeleccionada();
 
         if (categoriaSeleccionada == null) return;
 
@@ -86,7 +86,7 @@ public class ControladorInventarioLibros {
                         l.getCategoria().getNombre().equalsIgnoreCase(categoriaSeleccionada))
                 .toList();
 
-        ventanaInventarioLibros.actualizarTabla(librosFiltrados);
+        ventanaGestionLibros.actualizarTabla(librosFiltrados);
     }
 
     private void abrirFormularioRegistro(Libro libroAEditar) {
@@ -97,22 +97,22 @@ public class ControladorInventarioLibros {
 
     private void procesarEliminacionCatalogo() {
         // Integer permite retornar null cuando no se selecciona una fila, a diferencia de int (primitivo).
-        Integer idLibro = ventanaInventarioLibros.getIdLibroSeleccionado();
+        Integer idLibro = ventanaGestionLibros.getIdLibroSeleccionado();
         if (idLibro == null) {
-            ventanaInventarioLibros.mostrarMensajeError(
+            ventanaGestionLibros.mostrarMensajeError(
                     "Por favor, seleccione un título de la tabla para eliminarlo del catálogo.");
             return;
         }
 
-        if (ventanaInventarioLibros.confirmarEliminacion("catálogo")) {
+        if (ventanaGestionLibros.confirmarEliminacion("catálogo")) {
             AppThreadPool.ejecutarAccion(
                     () -> libroDAO.delete(idLibro),
                     () -> {
-                        ventanaInventarioLibros.mostrarMensajeConfirmacion(
+                        ventanaGestionLibros.mostrarMensajeConfirmacion(
                                 "El título ha sido removido del catálogo exitosamente.");
                         cargarLibrosDesdeBD();
                     },
-                    ex -> ventanaInventarioLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage())
+                    ex -> ventanaGestionLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage())
             );
         }
     }

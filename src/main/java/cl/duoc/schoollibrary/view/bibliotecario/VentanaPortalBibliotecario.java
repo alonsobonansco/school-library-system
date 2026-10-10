@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  * Pantalla raíz e interfaz principal para el Administrador / Bibliotecario.
  * Provee la barra de navegación global de la suite mediante JMenuBar.
  */
-public class VentanaPrincipalBibliotecario extends VentanaBase {
+public class VentanaPortalBibliotecario extends VentanaBase {
 
     private JLabel tituloLabel;
     private JMenuItem itemLibros;
@@ -20,7 +20,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
     private JMenuItem itemCerrarSesion;
     private JLabel lblPlaceholder;
 
-    public VentanaPrincipalBibliotecario() {
+    public VentanaPortalBibliotecario() {
         super("Panel de Control Administrador - Sistema de Biblioteca", 850, 550);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

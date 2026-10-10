@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class VentanaControlPrestamos extends VentanaBase {
+public class VentanaGestionPrestamos extends VentanaBase {
 
     private JTable prestamosTable;
     private DefaultTableModel prestamosTableModel;
@@ -17,7 +17,7 @@ public class VentanaControlPrestamos extends VentanaBase {
     private JButton registrarDevolucionButton;
     private JButton atrasButton;
 
-    public VentanaControlPrestamos() {
+    public VentanaGestionPrestamos() {
         super("Panel de Control - Control de Préstamos y Devoluciones", 850, 550);
 
         inicializarComponentes();

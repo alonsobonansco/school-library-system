@@ -196,8 +196,8 @@ public class VentanaPortalEstudiante extends VentanaBase {
         return librosTable.getSelectedRow();
     }
 
-    public Integer getFilaSeleccionadaPrestamo() {
-        return prestamosTable.getSelectedRow() != -1 ? prestamosTable.getSelectedRow() : null;
+    public int getFilaSeleccionadaPrestamo() {
+        return prestamosTable.getSelectedRow();
     }
 
     public void addBusquedaDocumentListener(Runnable accion) {

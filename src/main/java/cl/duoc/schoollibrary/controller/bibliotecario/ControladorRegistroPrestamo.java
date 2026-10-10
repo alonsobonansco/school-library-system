@@ -79,12 +79,13 @@ public class ControladorRegistroPrestamo {
         LocalDate hoy = LocalDate.now();
         LocalDate vencimiento = hoy.plusDays(7);
 
-        Prestamo nuevoPrestamo = new Prestamo(0, estudianteSeleccionado, libroSeleccionado, hoy, vencimiento, false);
+        Prestamo nuevoPrestamo
+                = new Prestamo(0, estudianteSeleccionado, libroSeleccionado, hoy, vencimiento, false);
 
         AppThreadPool.ejecutarAccion(
                 () -> prestamoDAO.create(nuevoPrestamo),
                 () -> {
-                    ventanaRegistroPrestamo.mostrarMensajeConfirmacion("¡Préstamo asignado con éxito en la Base de Datos!");
+                    ventanaRegistroPrestamo.mostrarMensajeConfirmacion("Préstamo asignado con éxito en la Base de Datos");
                     ventanaRegistroPrestamo.getComboLibros().removeItem(libroSeleccionado);
                     ventanaRegistroPrestamo.cerrarVentana();
                 },

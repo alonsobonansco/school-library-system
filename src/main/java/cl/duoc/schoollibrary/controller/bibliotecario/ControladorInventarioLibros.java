@@ -35,8 +35,8 @@ public class ControladorInventarioLibros {
     private void inicializarListeners() {
         ventanaInventarioLibros.addBusquedaDocumentListener(this::aplicarFiltros);
         ventanaInventarioLibros.addCategoriaComboListener(e -> aplicarFiltros());
-        ventanaInventarioLibros.addNuevoButtonListener(e -> abrirFormularioRegistro(null));
-        ventanaInventarioLibros.addEditarButtonListener(e -> {
+        ventanaInventarioLibros.addAgregarListener(e -> abrirFormularioRegistro(null));
+        ventanaInventarioLibros.addEditarListener(e -> {
             Libro seleccionado = ventanaInventarioLibros.getLibroSeleccionadoEnTabla(listaLibrosCache);
             if (seleccionado == null) {
                 ventanaInventarioLibros.mostrarMensajeError("Debe seleccionar un libro de la tabla para modificarlo.");
@@ -44,8 +44,8 @@ public class ControladorInventarioLibros {
             }
             abrirFormularioRegistro(seleccionado);
         });
-        ventanaInventarioLibros.addEliminarButtonListener(e -> procesarEliminacionCatalogo());
-        ventanaInventarioLibros.addAtrasButtonListener(e -> ventanaInventarioLibros.cerrarVentana());
+        ventanaInventarioLibros.addEliminarListener(e -> procesarEliminacionCatalogo());
+        ventanaInventarioLibros.addVolverAtrasListener(e -> ventanaInventarioLibros.cerrarVentana());
     }
 
     public void cargarDatosDesdeBD() {

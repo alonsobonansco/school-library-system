@@ -4,6 +4,8 @@ import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.view.VentanaBase;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -15,7 +17,6 @@ public class VentanaInventarioLibros extends VentanaBase {
     private JComboBox<String> categoriaComboBox;
     private JTable librosTable;
     private DefaultTableModel modeloTable;
-
     private JButton agregarButton;
     private JButton editarButton;
     private JButton eliminarButton;
@@ -65,15 +66,13 @@ public class VentanaInventarioLibros extends VentanaBase {
         atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         librosTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
         librosTable.getColumnModel().getColumn(0).setPreferredWidth(40);
-        librosTable.getColumnModel().getColumn(5).setPreferredWidth(50);
-        librosTable.getColumnModel().getColumn(3).setPreferredWidth(110);
-        librosTable.getColumnModel().getColumn(6).setPreferredWidth(120);
-
         librosTable.getColumnModel().getColumn(1).setPreferredWidth(250);
         librosTable.getColumnModel().getColumn(2).setPreferredWidth(150);
+        librosTable.getColumnModel().getColumn(3).setPreferredWidth(110);
         librosTable.getColumnModel().getColumn(4).setPreferredWidth(130);
+        librosTable.getColumnModel().getColumn(5).setPreferredWidth(50);
+        librosTable.getColumnModel().getColumn(6).setPreferredWidth(120);
     }
 
     private void construirLayout() {
@@ -104,31 +103,27 @@ public class VentanaInventarioLibros extends VentanaBase {
     }
 
     public void actualizarTabla(List<Libro> libros) {
-        SwingUtilities.invokeLater(() -> {
-            modeloTable.setRowCount(0);
-            for (Libro l : libros) {
-                Object[] fila = {
-                        l.getId(),
-                        l.getTitulo(),
-                        l.getAutor(),
-                        l.getIsbn(),
-                        l.getEditorial(),
-                        l.getStock(),
-                        l.getCategoria().getNombre()
-                };
-                modeloTable.addRow(fila);
-            }
-        });
+        modeloTable.setRowCount(0);
+        for (Libro l : libros) {
+            Object[] fila = {
+                    l.getId(),
+                    l.getTitulo(),
+                    l.getAutor(),
+                    l.getIsbn(),
+                    l.getEditorial(),
+                    l.getStock(),
+                    l.getCategoria().getNombre()
+            };
+            modeloTable.addRow(fila);
+        }
     }
 
     public void poblarComboBoxCategorias(List<String> nombresCategorias) {
-        SwingUtilities.invokeLater(() -> {
-            categoriaComboBox.removeAllItems();
-            categoriaComboBox.addItem("Todas");
-            for (String cat : nombresCategorias) {
-                categoriaComboBox.addItem(cat);
-            }
-        });
+        categoriaComboBox.removeAllItems();
+        categoriaComboBox.addItem("Todas");
+        for (String categoria : nombresCategorias) {
+            categoriaComboBox.addItem(categoria);
+        }
     }
 
     public String getTextoBusqueda() {
@@ -148,26 +143,26 @@ public class VentanaInventarioLibros extends VentanaBase {
     /**
      * Captura las filas completas seleccionadas para enviar los datos listos al prellenado.
      */
-    public Libro getLibroSeleccionadoEnTabla(List<Libro> cacheGlobal) {
+    public Libro getLibroSeleccionadoEnTabla(List<Libro> librosCargados) {
         Integer id = getIdLibroSeleccionado();
         if (id == null) return null;
-        return cacheGlobal.stream().filter(l -> l.getId() == id).findFirst().orElse(null);
+        return librosCargados.stream().filter(l -> l.getId() == id).findFirst().orElse(null);
     }
 
     public void addBusquedaDocumentListener(Runnable accion) {
-        buscarTextField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        buscarTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 accion.run();
             }
 
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 accion.run();
             }
 
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 accion.run();
             }
         });
@@ -177,19 +172,19 @@ public class VentanaInventarioLibros extends VentanaBase {
         categoriaComboBox.addActionListener(listener);
     }
 
-    public void addNuevoButtonListener(ActionListener listener) {
+    public void addAgregarListener(ActionListener listener) {
         agregarButton.addActionListener(listener);
     }
 
-    public void addEditarButtonListener(ActionListener listener) {
+    public void addEditarListener(ActionListener listener) {
         editarButton.addActionListener(listener);
     }
 
-    public void addEliminarButtonListener(ActionListener listener) {
+    public void addEliminarListener(ActionListener listener) {
         eliminarButton.addActionListener(listener);
     }
 
-    public void addAtrasButtonListener(ActionListener listener) {
+    public void addVolverAtrasListener(ActionListener listener) {
         atrasButton.addActionListener(listener);
     }
 }

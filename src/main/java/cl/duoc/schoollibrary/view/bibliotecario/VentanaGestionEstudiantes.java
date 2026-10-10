@@ -4,6 +4,8 @@ import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.view.VentanaBase;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -15,14 +17,14 @@ import java.util.List;
  */
 public class VentanaGestionEstudiantes extends VentanaBase {
 
-    private JTextField txtBuscar;
-    private JTable tablaEstudiantes;
-    private DefaultTableModel modeloTabla;
+    private JTextField buscarTextField;
+    private JTable estudiantesTable;
+    private DefaultTableModel estudiantesTableModel;
 
-    private JButton btnNuevo;
-    private JButton btnEditar;
-    private JButton btnEliminar;
-    private JButton btnAtras;
+    private JButton agregarButton;
+    private JButton editarButton;
+    private JButton eliminarButton;
+    private JButton atrasButton;
 
     public VentanaGestionEstudiantes() {
         super("Panel de Control - Gestión de Estudiantes", 850, 550);
@@ -32,47 +34,47 @@ public class VentanaGestionEstudiantes extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        txtBuscar = new JTextField(20);
-        txtBuscar.setFont(new Font("Arial", Font.PLAIN, 14));
+        buscarTextField = new JTextField(20);
+        buscarTextField.setFont(new Font("Arial", Font.PLAIN, 14));
 
         String[] columnas = {"ID", "RUT", "Nombre Completo", "Curso", "Correo Electrónico"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
+        estudiantesTableModel = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tablaEstudiantes = new JTable(modeloTabla);
-        tablaEstudiantes.setFont(new Font("Arial", Font.PLAIN, 13));
-        tablaEstudiantes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        estudiantesTable = new JTable(estudiantesTableModel);
+        estudiantesTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        estudiantesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        tablaEstudiantes.getTableHeader().setReorderingAllowed(false);
-        tablaEstudiantes.getTableHeader().setResizingAllowed(false);
+        estudiantesTable.getTableHeader().setReorderingAllowed(false);
+        estudiantesTable.getTableHeader().setResizingAllowed(false);
 
-        tablaEstudiantes.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tablaEstudiantes.getColumnModel().getColumn(0).setPreferredWidth(40);
-        tablaEstudiantes.getColumnModel().getColumn(1).setPreferredWidth(100);
-        tablaEstudiantes.getColumnModel().getColumn(2).setPreferredWidth(260);
-        tablaEstudiantes.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tablaEstudiantes.getColumnModel().getColumn(4).setPreferredWidth(230);
+        estudiantesTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        estudiantesTable.getColumnModel().getColumn(0).setPreferredWidth(40);
+        estudiantesTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        estudiantesTable.getColumnModel().getColumn(2).setPreferredWidth(260);
+        estudiantesTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        estudiantesTable.getColumnModel().getColumn(4).setPreferredWidth(230);
 
         Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
-        btnNuevo = new JButton("Registrar Alumno");
-        btnNuevo.setFont(fuenteBotones);
-        btnNuevo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton = new JButton("Registrar Alumno");
+        agregarButton.setFont(fuenteBotones);
+        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnEditar = new JButton("Modificar Perfil");
-        btnEditar.setFont(fuenteBotones);
-        btnEditar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editarButton = new JButton("Editar Perfil");
+        editarButton.setFont(fuenteBotones);
+        editarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnEliminar = new JButton("Dar de Baja");
-        btnEliminar.setFont(fuenteBotones);
-        btnEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        eliminarButton = new JButton("Dar de Baja");
+        eliminarButton.setFont(fuenteBotones);
+        eliminarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnAtras = new JButton("Atrás");
-        btnAtras.setFont(fuenteBotones);
-        btnAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton = new JButton("Atrás");
+        atrasButton.setFont(fuenteBotones);
+        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void construirLayout() {
@@ -81,83 +83,81 @@ public class VentanaGestionEstudiantes extends VentanaBase {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(15, 15, 5, 15));
 
-        JPanel panelBusquedaInterior = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        JLabel lblBuscar = new JLabel("Filtrar por Nombre / RUT:");
+        JPanel panelBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        JLabel lblBuscar = new JLabel("Buscar por Nombre / RUT:");
         lblBuscar.setFont(new Font("Arial", Font.BOLD, 13));
-        panelBusquedaInterior.add(lblBuscar);
-        panelBusquedaInterior.add(txtBuscar);
-        panelSuperior.add(panelBusquedaInterior, BorderLayout.WEST);
+        panelBusqueda.add(lblBuscar);
+        panelBusqueda.add(buscarTextField);
+        panelSuperior.add(panelBusqueda, BorderLayout.WEST);
 
         add(panelSuperior, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(tablaEstudiantes);
+        JScrollPane scrollPane = new JScrollPane(estudiantesTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        panelInferior.add(btnNuevo);
-        panelInferior.add(btnEditar);
-        panelInferior.add(btnEliminar);
-        panelInferior.add(btnAtras);
+        panelInferior.add(agregarButton);
+        panelInferior.add(editarButton);
+        panelInferior.add(eliminarButton);
+        panelInferior.add(atrasButton);
         add(panelInferior, BorderLayout.SOUTH);
     }
 
     public void actualizarTabla(List<Estudiante> estudiantes) {
-        SwingUtilities.invokeLater(() -> {
-            modeloTabla.setRowCount(0);
-            for (Estudiante e : estudiantes) {
-                Object[] fila = {e.getId(), e.getRut(), e.getNombre(), e.getCurso(), e.getCorreo()};
-                modeloTabla.addRow(fila);
-            }
-        });
+        estudiantesTableModel.setRowCount(0);
+        for (Estudiante e : estudiantes) {
+            Object[] fila = {e.getId(), e.getRut(), e.getNombre(), e.getCurso(), e.getCorreo()};
+            estudiantesTableModel.addRow(fila);
+        }
     }
 
     public String getTextoBusqueda() {
-        return txtBuscar.getText().trim();
+        return buscarTextField.getText().trim();
     }
 
     public Integer getIdEstudianteSeleccionado() {
-        int fila = tablaEstudiantes.getSelectedRow();
+        int fila = estudiantesTable.getSelectedRow();
         if (fila == -1) return null;
-        return (Integer) modeloTabla.getValueAt(fila, 0);
+        return (Integer) estudiantesTableModel.getValueAt(fila, 0);
     }
 
     public int getFilaSeleccionada() {
-        return tablaEstudiantes.getSelectedRow();
+        return estudiantesTable.getSelectedRow();
     }
 
     public void addBusquedaDocumentListener(Runnable accion) {
-        txtBuscar.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        buscarTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 accion.run();
             }
 
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 accion.run();
             }
 
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 accion.run();
             }
         });
     }
 
-    public void addNuevoButtonListener(ActionListener listener) {
-        btnNuevo.addActionListener(listener);
+    public void addAgregarListener(ActionListener listener) {
+        agregarButton.addActionListener(listener);
     }
 
-    public void addEditarButtonListener(ActionListener listener) {
-        btnEditar.addActionListener(listener);
+    public void addEditarListener(ActionListener listener) {
+        editarButton.addActionListener(listener);
     }
 
-    public void addEliminarButtonListener(ActionListener listener) {
-        btnEliminar.addActionListener(listener);
+    public void addEliminarListener(ActionListener listener) {
+        eliminarButton.addActionListener(listener);
     }
 
-    public void addAtrasButtonListener(ActionListener listener) {
-        btnAtras.addActionListener(listener);
+    public void addVolverAtrasListener(ActionListener listener) {
+        atrasButton.addActionListener(listener);
     }
 }

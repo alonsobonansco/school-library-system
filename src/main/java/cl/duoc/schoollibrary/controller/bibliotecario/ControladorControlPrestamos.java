@@ -25,9 +25,9 @@ public class ControladorControlPrestamos {
     }
 
     private void inicializarListeners() {
-        ventanaControlPrestamos.addNuevoPrestamoListener(e -> abrirFormularioAsignacion());
-        ventanaControlPrestamos.addDevolucionListener(e -> procesarDevolucion());
-        ventanaControlPrestamos.addAtrasListener(e -> ventanaControlPrestamos.cerrarVentana());
+        ventanaControlPrestamos.addRegistrarPrestamoListener(e -> abrirFormularioAsignacion());
+        ventanaControlPrestamos.addRegistrarDevolucionListener(e -> procesarDevolucion());
+        ventanaControlPrestamos.addVolverAtrasListener(e -> ventanaControlPrestamos.cerrarVentana());
     }
 
     public void cargarPrestamosDesdeBD() {
@@ -51,7 +51,7 @@ public class ControladorControlPrestamos {
     private void procesarDevolucion() {
         int filaSeleccionada = ventanaControlPrestamos.getFilaSeleccionada();
         if (filaSeleccionada == -1) {
-            ventanaControlPrestamos.mostrarMensajeError("Por favor, seleccione un préstamo de la tabla para registrar su devolución.");
+            ventanaControlPrestamos.mostrarMensajeError("Debe seleccionar un préstamo de la tabla para registrar su devolución.");
             return;
         }
 

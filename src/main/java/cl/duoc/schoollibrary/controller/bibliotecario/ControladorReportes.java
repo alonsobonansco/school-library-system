@@ -31,7 +31,7 @@ public class ControladorReportes {
     }
 
     private void inicializarListeners() {
-        ventanaReportes.addAtrasListener(e -> ventanaReportes.cerrarVentana());
+        ventanaReportes.addVolverAtrasListener(e -> ventanaReportes.cerrarVentana());
         ventanaReportes.addComboAlumnoListener(e -> filtrarHistorialAlumnoEnMemoria());
     }
 

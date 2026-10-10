@@ -26,8 +26,8 @@ public class ControladorGestionEstudiantes {
 
     private void inicializarListeners() {
         ventanaGestionEstudiantes.addBusquedaDocumentListener(this::aplicarFiltrosMemoria);
-        ventanaGestionEstudiantes.addNuevoButtonListener(e -> abrirFormularioFlotante(null));
-        ventanaGestionEstudiantes.addEditarButtonListener(e -> {
+        ventanaGestionEstudiantes.addAgregarListener(e -> abrirFormularioFlotante(null));
+        ventanaGestionEstudiantes.addEditarListener(e -> {
             int fila = ventanaGestionEstudiantes.getFilaSeleccionada();
             if (fila == -1) {
                 ventanaGestionEstudiantes.mostrarMensajeError(
@@ -37,8 +37,8 @@ public class ControladorGestionEstudiantes {
             Estudiante seleccionado = listaEstudiantesCache.get(fila);
             abrirFormularioFlotante(seleccionado);
         });
-        ventanaGestionEstudiantes.addEliminarButtonListener(e -> procesarBajaEstudiante());
-        ventanaGestionEstudiantes.addAtrasButtonListener(e -> ventanaGestionEstudiantes.cerrarVentana());
+        ventanaGestionEstudiantes.addEliminarListener(e -> procesarBajaEstudiante());
+        ventanaGestionEstudiantes.addVolverAtrasListener(e -> ventanaGestionEstudiantes.cerrarVentana());
     }
 
     public void cargarEstudiantesDesdeBD() {

@@ -12,7 +12,6 @@ public class VentanaRegistroEstudiante extends VentanaBase {
     private JTextField nombreTextField;
     private JTextField cursoTextField;
     private JTextField correoTextField;
-
     private JButton guardarButton;
     private JButton atrasButton;
 

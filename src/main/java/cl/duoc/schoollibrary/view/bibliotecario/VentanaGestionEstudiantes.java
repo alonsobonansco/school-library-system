@@ -154,4 +154,11 @@ public class VentanaGestionEstudiantes extends VentanaBase {
     public void addVolverAtrasListener(ActionListener listener) {
         atrasButton.addActionListener(listener);
     }
+
+    public void setAccionesHabilitadas(boolean habilitado) {
+        agregarButton.setEnabled(habilitado);
+        editarButton.setEnabled(habilitado);
+        eliminarButton.setEnabled(habilitado);
+        atrasButton.setEnabled(habilitado);
+    }
 }

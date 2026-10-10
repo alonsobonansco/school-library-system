@@ -7,6 +7,8 @@ import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionEstudiantes;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroEstudiante;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +29,20 @@ public class ControladorGestionEstudiantes {
 
     private void inicializarListeners() {
         ventanaGestionEstudiantes.addBusquedaDocumentListener(this::aplicarFiltrosMemoria);
-        ventanaGestionEstudiantes.addAgregarListener(e -> abrirFormularioFlotante(null));
+        ventanaGestionEstudiantes.addAgregarListener(e -> {
+            ventanaGestionEstudiantes.setAccionesHabilitadas(false);
+            abrirFormularioRegistro(null);
+        });
         ventanaGestionEstudiantes.addEditarListener(e -> {
-            int fila = ventanaGestionEstudiantes.getFilaSeleccionada();
-            if (fila == -1) {
+            int filaSeleccionada = ventanaGestionEstudiantes.getFilaSeleccionada();
+            if (filaSeleccionada == -1) {
                 ventanaGestionEstudiantes.mostrarMensajeError(
                         "Debe seleccionar un alumno de la tabla para modificar su perfil.");
                 return;
             }
-            Estudiante seleccionado = listaEstudiantesEnMemoria.get(fila);
-            abrirFormularioFlotante(seleccionado);
+            ventanaGestionEstudiantes.setAccionesHabilitadas(false);
+            Estudiante estudianteSeleccionado = listaEstudiantesEnMemoria.get(filaSeleccionada);
+            abrirFormularioRegistro(estudianteSeleccionado);
         });
         ventanaGestionEstudiantes.addEliminarListener(e -> procesarBajaEstudiante());
         ventanaGestionEstudiantes.addVolverAtrasListener(e -> ventanaGestionEstudiantes.cerrarVentana());
@@ -68,8 +74,14 @@ public class ControladorGestionEstudiantes {
         ventanaGestionEstudiantes.actualizarTabla(filtrados);
     }
 
-    private void abrirFormularioFlotante(Estudiante estudianteAEditar) {
+    private void abrirFormularioRegistro(Estudiante estudianteAEditar) {
         VentanaRegistroEstudiante ventanaRegistroEstudiante = new VentanaRegistroEstudiante();
+        ventanaRegistroEstudiante.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                ventanaGestionEstudiantes.setAccionesHabilitadas(true);
+            }
+        });
         new ControladorRegistroEstudiante(
                 ventanaRegistroEstudiante, estudianteDAO, this, estudianteAEditar);
 
@@ -97,12 +109,15 @@ public class ControladorGestionEstudiantes {
             return;
         }
 
+        ventanaGestionEstudiantes.setAccionesHabilitadas(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> estudianteDAO.delete(idEstudiante),
                 () -> {
                     ventanaGestionEstudiantes.mostrarMensajeConfirmacion(
                             "El estudiante ha sido dado de baja exitosamente.");
                     cargarEstudiantesDesdeBD();
+                    ventanaGestionEstudiantes.setAccionesHabilitadas(true);
                 },
                 ex -> {
                     if (ex instanceof RestriccionIntegridadException) {
@@ -114,6 +129,7 @@ public class ControladorGestionEstudiantes {
                                 "Error al eliminar registro: " + ex.getMessage()
                         );
                     }
+                    ventanaGestionEstudiantes.setAccionesHabilitadas(true);
                 }
         );
     }

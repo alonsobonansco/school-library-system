@@ -82,6 +82,8 @@ public class ControladorRegistroPrestamo {
         Prestamo nuevoPrestamo
                 = new Prestamo(0, estudianteSeleccionado, libroSeleccionado, hoy, vencimiento, false);
 
+        ventanaRegistroPrestamo.setFormularioHabilitado(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> prestamoDAO.create(nuevoPrestamo),
                 () -> {
@@ -89,7 +91,10 @@ public class ControladorRegistroPrestamo {
                     ventanaRegistroPrestamo.getLibrosCombo().removeItem(libroSeleccionado);
                     ventanaRegistroPrestamo.cerrarVentana();
                 },
-                ex -> ventanaRegistroPrestamo.mostrarMensajeError(ex.getMessage())
+                ex -> {
+                    ventanaRegistroPrestamo.mostrarMensajeError(ex.getMessage());
+                    ventanaRegistroPrestamo.setFormularioHabilitado(true);
+                }
         );
     }
 }

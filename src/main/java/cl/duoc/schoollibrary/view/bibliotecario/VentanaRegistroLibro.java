@@ -153,4 +153,9 @@ public class VentanaRegistroLibro extends VentanaBase {
     public void addVolverAtrasListener(ActionListener listener) {
         atrasButton.addActionListener(listener);
     }
+
+    public void setFormularioHabilitado(boolean habilitado) {
+        guardarButton.setEnabled(habilitado);
+        atrasButton.setEnabled(habilitado);
+    }
 }

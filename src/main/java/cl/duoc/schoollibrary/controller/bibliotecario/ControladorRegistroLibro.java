@@ -94,6 +94,8 @@ public class ControladorRegistroLibro {
             return;
         }
 
+        ventanaRegistroLibro.setFormularioHabilitado(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> {
                     Optional<Categoria> categoriaSeleccionada = listaCategorias.stream()
@@ -121,7 +123,10 @@ public class ControladorRegistroLibro {
                     ventanaRegistroLibro.mostrarMensajeConfirmacion("Libro registrado correctamente.");
                     ventanaRegistroLibro.cerrarVentana();
                 },
-                ex -> ventanaRegistroLibro.mostrarMensajeError("Error al registrar el libro: " + ex.getMessage())
+                ex -> {
+                    ventanaRegistroLibro.mostrarMensajeError("Error al registrar el libro: " + ex.getMessage());
+                    ventanaRegistroLibro.setFormularioHabilitado(true);
+                }
         );
     }
 }

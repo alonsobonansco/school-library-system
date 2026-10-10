@@ -47,6 +47,8 @@ public class ControladorRegistroEstudiante {
             return;
         }
 
+        ventanaRegistroEstudiante.setFormularioHabilitado(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> {
                     if (estudianteAEditar == null) {
@@ -69,6 +71,7 @@ public class ControladorRegistroEstudiante {
                 ex -> {
                     ventanaRegistroEstudiante.mostrarMensajeError("Error al persistir el estudiante: "
                             + ex.getMessage());
+                    ventanaRegistroEstudiante.setFormularioHabilitado(true);
                 }
         );
     }

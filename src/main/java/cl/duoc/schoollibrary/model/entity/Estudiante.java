@@ -71,6 +71,6 @@ public class Estudiante {
 
     @Override
     public String toString() {
-        return "Estudiante: " + nombre + " - Rut: " + rut;
+        return nombre + " - Rut: " + rut;
     }
 }

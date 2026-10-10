@@ -42,27 +42,34 @@ public class VentanaRegistroPrestamo extends VentanaBase {
 
     private void construirLayout() {
         JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35));
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(15, 45, 10, 45));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 8, 10, 8);
         gbc.weightx = 1.0;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel alumnoLabel = new JLabel("Seleccionar Alumno:");
+        gbc.insets = new Insets(6, 0, 4, 0);
+        JLabel alumnoLabel = new JLabel("Estudiante:");
         alumnoLabel.setFont(FUENTE_LABEL);
         panelFormulario.add(alumnoLabel, gbc);
-        gbc.gridx = 1;
-        panelFormulario.add(estudiantesComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel librosLabel = new JLabel("Seleccionar Libro:");
+        gbc.insets = new Insets(0, 0, 16, 0);
+        panelFormulario.add(estudiantesComboBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 0, 4, 0);
+        JLabel librosLabel = new JLabel("Libro:");
         librosLabel.setFont(FUENTE_LABEL);
         panelFormulario.add(librosLabel, gbc);
-        gbc.gridx = 1;
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.insets = new Insets(0, 0, 10, 0);
         panelFormulario.add(librosComboBox, gbc);
 
         add(panelFormulario, BorderLayout.CENTER);

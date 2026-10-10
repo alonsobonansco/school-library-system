@@ -94,6 +94,6 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro: " + titulo + " - Autor: " + autor + " - Editorial: " + editorial;
+        return "Título: " + titulo + " - Autor: " + autor + " - Editorial: " + editorial;
     }
 }

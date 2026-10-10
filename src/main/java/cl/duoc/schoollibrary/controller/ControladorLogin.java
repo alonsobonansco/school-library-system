@@ -72,11 +72,11 @@ public class ControladorLogin {
                     }
 
                     if (perfilAutenticado instanceof Usuario usuarioAdmin) {
-                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido al Sistema, " + usuarioAdmin.getNombre());
+                        ventanaLogin.mostrarMensajeConfirmacion("Acceso concedido\nBienvenido/a al Sistema");
                         CoordinadorNavegacion.getInstancia().mostrarPrincipalBibliotecario(usuarioAdmin);
                         ventanaLogin.cerrarVentana();
                     } else if (perfilAutenticado instanceof Estudiante estudianteAlumno) {
-                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido al Portal, " + estudianteAlumno.getNombre());
+                        ventanaLogin.mostrarMensajeConfirmacion("Acceso concedido\nBienvenido/a al Portal");
                         CoordinadorNavegacion.getInstancia().mostrarPortalEstudiante(estudianteAlumno);
                         ventanaLogin.cerrarVentana();
                     }

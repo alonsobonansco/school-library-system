@@ -22,6 +22,7 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
 
     public VentanaPrincipalBibliotecario() {
         super("Panel de Control Administrador - Sistema de Biblioteca", 850, 550);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         inicializarComponentes();
         inicializarMenuBar();
@@ -75,11 +76,11 @@ public class VentanaPrincipalBibliotecario extends VentanaBase {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void establecerMensajeBienvenida(String nombreAdmin) {
+    public void establecerMensajeFondo(String nombreAdmin) {
         SwingUtilities.invokeLater(() -> {
             lblPlaceholder.setText(
-                    "¡Bienvenid@ al sistema, " + nombreAdmin + "! " +
-                            "\nSeleccione una opción del menú superior para comenzar a operar.");
+                    "Bienvenido/a al sistema, " + nombreAdmin + ". " +
+                            "Seleccione una opción del menú superior para comenzar a operar.");
         });
     }
 

@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary.controller.bibliotecario;
 
 import cl.duoc.schoollibrary.controller.AppThreadPool;
+import cl.duoc.schoollibrary.exception.RestriccionIntegridadException;
 import cl.duoc.schoollibrary.model.dao.CategoriaDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
 import cl.duoc.schoollibrary.model.entity.Categoria;
@@ -112,7 +113,15 @@ public class ControladorGestionLibros {
                                 "El título ha sido removido del catálogo exitosamente.");
                         cargarLibrosDesdeBD();
                     },
-                    ex -> ventanaGestionLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage())
+                    ex -> {
+                        if (ex instanceof RestriccionIntegridadException) {
+                            ventanaGestionLibros.mostrarMensajeError(
+                                    "No es posible eliminar este título porque " +
+                                            "cuenta con un historial de préstamos asociado.");
+                        } else {
+                            ventanaGestionLibros.mostrarMensajeError("Error al eliminar: " + ex.getMessage());
+                        }
+                    }
             );
         }
     }

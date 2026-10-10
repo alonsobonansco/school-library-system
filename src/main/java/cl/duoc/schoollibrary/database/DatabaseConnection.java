@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary.database;
 
 import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.exception.RestriccionIntegridadException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,6 +39,15 @@ public final class DatabaseConnection {
                 conn.commit();
                 return resultado;
 
+            } catch (RestriccionIntegridadException ex) {
+                if (conn != null) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException rollbackEx) {
+                        ex.addSuppressed(rollbackEx);
+                    }
+                }
+                throw ex;
             } catch (SQLException | RuntimeException ex) {
                 if (conn != null) {
                     try {
@@ -71,6 +81,8 @@ public final class DatabaseConnection {
             try {
                 Connection conn = obtenerConexion();
                 return operacion.ejecutar(conn);
+            } catch (RestriccionIntegridadException ex) {
+                throw ex;
             } catch (SQLException | RuntimeException ex) {
                 throw new DataAccessException("Error al ejecutar la consulta: " + ex.getMessage(), ex);
             }

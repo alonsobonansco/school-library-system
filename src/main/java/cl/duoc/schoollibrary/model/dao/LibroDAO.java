@@ -2,11 +2,13 @@ package cl.duoc.schoollibrary.model.dao;
 
 import cl.duoc.schoollibrary.database.DatabaseConnection;
 import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.exception.RestriccionIntegridadException;
 import cl.duoc.schoollibrary.model.entity.Categoria;
 import cl.duoc.schoollibrary.model.entity.Libro;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +96,11 @@ public class LibroDAO {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, idLibro);
                 ps.executeUpdate();
+            } catch (SQLException ex) {
+                if (ex.getErrorCode() == 1451) {
+                    throw new RestriccionIntegridadException("El libro posee historial operativo vinculado.", ex);
+                }
+                throw ex;
             }
         });
     }

@@ -1,6 +1,7 @@
 package cl.duoc.schoollibrary.controller.bibliotecario;
 
 import cl.duoc.schoollibrary.controller.AppThreadPool;
+import cl.duoc.schoollibrary.exception.RestriccionIntegridadException;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionEstudiantes;
@@ -103,9 +104,17 @@ public class ControladorGestionEstudiantes {
                             "El estudiante ha sido dado de baja exitosamente.");
                     cargarEstudiantesDesdeBD();
                 },
-                ex -> ventanaGestionEstudiantes.mostrarMensajeError(
-                        "Error al eliminar registro: " + ex.getMessage()
-                )
+                ex -> {
+                    if (ex instanceof RestriccionIntegridadException) {
+                        ventanaGestionEstudiantes.mostrarMensajeError(
+                                "No es posible dar de baja a este estudiante porque" +
+                                        " posee registros de préstamos asociados.");
+                    } else {
+                        ventanaGestionEstudiantes.mostrarMensajeError(
+                                "Error al eliminar registro: " + ex.getMessage()
+                        );
+                    }
+                }
         );
     }
 }

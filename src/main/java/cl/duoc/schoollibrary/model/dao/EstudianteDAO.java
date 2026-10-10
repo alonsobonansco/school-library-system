@@ -2,10 +2,12 @@ package cl.duoc.schoollibrary.model.dao;
 
 import cl.duoc.schoollibrary.database.DatabaseConnection;
 import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.exception.RestriccionIntegridadException;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,12 @@ public class EstudianteDAO {
 
                 ps.setInt(1, idEstudiante);
                 ps.executeUpdate();
+            } catch (SQLException ex) {
+                if (ex.getErrorCode() == 1451) {
+                    throw new RestriccionIntegridadException(
+                            "El estudiante cuenta con deudas o préstamos históricos registrados.", ex);
+                }
+                throw ex;
             }
         });
     }

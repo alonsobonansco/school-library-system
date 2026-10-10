@@ -11,12 +11,11 @@ import java.util.List;
 
 public class VentanaControlPrestamos extends VentanaBase {
 
-    private JTable tablaPrestamos;
-    private DefaultTableModel modeloTabla;
-
-    private JButton btnNuevoPrestamo;
-    private JButton btnRegistrarDevolucion;
-    private JButton btnAtras;
+    private JTable prestamosTable;
+    private DefaultTableModel prestamosTableModel;
+    private JButton agregarButton;
+    private JButton registrarDevolucionButton;
+    private JButton atrasButton;
 
     public VentanaControlPrestamos() {
         super("Panel de Control - Control de Préstamos y Devoluciones", 850, 550);
@@ -26,43 +25,43 @@ public class VentanaControlPrestamos extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        String[] columnas = {"ID Préstamo", "RUT Estudiante", "Nombre Alumno", "Título del Libro", "Fecha Salida", "Fecha Vencimiento", "Estado"};
-        modeloTabla = new DefaultTableModel(columnas, 0) {
+        String[] columnas = {"ID", "RUT Alumno", "Nombre Alumno", "Título del Libro", "Fecha Salida", "Fecha Vencimiento", "Estado"};
+        prestamosTableModel = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tablaPrestamos = new JTable(modeloTabla);
-        tablaPrestamos.setFont(new Font("Arial", Font.PLAIN, 13));
-        tablaPrestamos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        prestamosTable = new JTable(prestamosTableModel);
+        prestamosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        prestamosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        tablaPrestamos.getTableHeader().setReorderingAllowed(false);
-        tablaPrestamos.getTableHeader().setResizingAllowed(false);
+        prestamosTable.getTableHeader().setReorderingAllowed(false);
+        prestamosTable.getTableHeader().setResizingAllowed(false);
 
-        tablaPrestamos.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tablaPrestamos.getColumnModel().getColumn(0).setPreferredWidth(70);   // ID
-        tablaPrestamos.getColumnModel().getColumn(1).setPreferredWidth(90);   // RUT
-        tablaPrestamos.getColumnModel().getColumn(2).setPreferredWidth(160);  // Alumno
-        tablaPrestamos.getColumnModel().getColumn(3).setPreferredWidth(210);  // Libro (Espacioso)
-        tablaPrestamos.getColumnModel().getColumn(4).setPreferredWidth(90);   // Salida
-        tablaPrestamos.getColumnModel().getColumn(5).setPreferredWidth(110);  // Vencimiento
-        tablaPrestamos.getColumnModel().getColumn(6).setPreferredWidth(100);  // Estado semántico
+        prestamosTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        prestamosTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        prestamosTable.getColumnModel().getColumn(1).setPreferredWidth(90);
+        prestamosTable.getColumnModel().getColumn(2).setPreferredWidth(140);
+        prestamosTable.getColumnModel().getColumn(3).setPreferredWidth(210);
+        prestamosTable.getColumnModel().getColumn(4).setPreferredWidth(90);
+        prestamosTable.getColumnModel().getColumn(5).setPreferredWidth(130);
+        prestamosTable.getColumnModel().getColumn(6).setPreferredWidth(100);
 
         Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
 
-        btnNuevoPrestamo = new JButton("Asignar Nuevo Préstamo");
-        btnNuevoPrestamo.setFont(fuenteBotones);
-        btnNuevoPrestamo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton = new JButton("Asignar Nuevo Préstamo");
+        agregarButton.setFont(fuenteBotones);
+        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnRegistrarDevolucion = new JButton("Registrar Devolución");
-        btnRegistrarDevolucion.setFont(fuenteBotones);
-        btnRegistrarDevolucion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registrarDevolucionButton = new JButton("Registrar Devolución");
+        registrarDevolucionButton.setFont(fuenteBotones);
+        registrarDevolucionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnAtras = new JButton("Atrás");
-        btnAtras.setFont(fuenteBotones);
-        btnAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton = new JButton("Atrás");
+        atrasButton.setFont(fuenteBotones);
+        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void construirLayout() {
@@ -76,50 +75,48 @@ public class VentanaControlPrestamos extends VentanaBase {
         panelSuperior.add(lblTituloSeccion, BorderLayout.WEST);
         add(panelSuperior, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(tablaPrestamos);
+        JScrollPane scrollPane = new JScrollPane(prestamosTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
-        panelInferior.add(btnNuevoPrestamo);
-        panelInferior.add(btnRegistrarDevolucion);
-        panelInferior.add(btnAtras);
+        panelInferior.add(agregarButton);
+        panelInferior.add(registrarDevolucionButton);
+        panelInferior.add(atrasButton);
         add(panelInferior, BorderLayout.SOUTH);
     }
 
     public void actualizarTabla(List<Prestamo> prestamos) {
-        SwingUtilities.invokeLater(() -> {
-            modeloTabla.setRowCount(0);
-            for (Prestamo p : prestamos) {
-                String estado = p.isDevuelto() ? "DEVUELTO" : "VIGENTE";
+        prestamosTableModel.setRowCount(0);
+        for (Prestamo p : prestamos) {
+            String estado = p.isDevuelto() ? "DEVUELTO" : "VIGENTE";
 
-                Object[] fila = {
-                        p.getId(),
-                        p.getEstudiante().getRut(),
-                        p.getEstudiante().getNombre(),
-                        p.getLibro().getTitulo(),
-                        p.getFechaPrestamo(),
-                        p.getFechaDevolucion(),
-                        estado
-                };
-                modeloTabla.addRow(fila);
-            }
-        });
+            Object[] fila = {
+                    p.getId(),
+                    p.getEstudiante().getRut(),
+                    p.getEstudiante().getNombre(),
+                    p.getLibro().getTitulo(),
+                    p.getFechaPrestamo(),
+                    p.getFechaDevolucion(),
+                    estado
+            };
+            prestamosTableModel.addRow(fila);
+        }
     }
 
     public int getFilaSeleccionada() {
-        return tablaPrestamos.getSelectedRow();
+        return prestamosTable.getSelectedRow();
     }
 
-    public void addNuevoPrestamoListener(ActionListener listener) {
-        btnNuevoPrestamo.addActionListener(listener);
+    public void addRegistrarPrestamoListener(ActionListener listener) {
+        agregarButton.addActionListener(listener);
     }
 
-    public void addDevolucionListener(ActionListener listener) {
-        btnRegistrarDevolucion.addActionListener(listener);
+    public void addRegistrarDevolucionListener(ActionListener listener) {
+        registrarDevolucionButton.addActionListener(listener);
     }
 
-    public void addAtrasListener(ActionListener listener) {
-        btnAtras.addActionListener(listener);
+    public void addVolverAtrasListener(ActionListener listener) {
+        atrasButton.addActionListener(listener);
     }
 }

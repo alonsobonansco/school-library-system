@@ -73,7 +73,7 @@ public final class CoordinadorNavegacion {
             destruirVentanaActiva();
 
             VentanaPrincipalBibliotecario vistaAdmin = new VentanaPrincipalBibliotecario();
-            vistaAdmin.establecerMensajeBienvenida(sesion.getNombre());
+            vistaAdmin.establecerMensajeFondo(sesion.getNombre());
             new ControladorPrincipalBibliotecario(vistaAdmin);
 
             cerrarProcesos(vistaAdmin);

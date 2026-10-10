@@ -13,8 +13,7 @@ public class ControladorControlPrestamos {
 
     private final VentanaControlPrestamos ventanaControlPrestamos;
     private final PrestamoDAO prestamoDAO;
-
-    private List<Prestamo> listaPrestamosCache = new ArrayList<>();
+    private List<Prestamo> listaPrestamosEnMemoria = new ArrayList<>();
 
     public ControladorControlPrestamos(VentanaControlPrestamos ventanaControlPrestamos) {
         this.ventanaControlPrestamos = ventanaControlPrestamos;
@@ -25,16 +24,16 @@ public class ControladorControlPrestamos {
     }
 
     private void inicializarListeners() {
-        ventanaControlPrestamos.addNuevoPrestamoListener(e -> abrirFormularioAsignacion());
-        ventanaControlPrestamos.addDevolucionListener(e -> procesarDevolucion());
-        ventanaControlPrestamos.addAtrasListener(e -> ventanaControlPrestamos.cerrarVentana());
+        ventanaControlPrestamos.addRegistrarPrestamoListener(e -> abrirFormularioAsignacion());
+        ventanaControlPrestamos.addRegistrarDevolucionListener(e -> procesarDevolucion());
+        ventanaControlPrestamos.addVolverAtrasListener(e -> ventanaControlPrestamos.cerrarVentana());
     }
 
     public void cargarPrestamosDesdeBD() {
         AppThreadPool.ejecutarCarga(
                 prestamoDAO::read,
                 prestamos -> {
-                    listaPrestamosCache = prestamos;
+                    this.listaPrestamosEnMemoria = prestamos;
                     ventanaControlPrestamos.actualizarTabla(prestamos);
                 },
                 ex -> ventanaControlPrestamos.mostrarMensajeError(
@@ -51,11 +50,11 @@ public class ControladorControlPrestamos {
     private void procesarDevolucion() {
         int filaSeleccionada = ventanaControlPrestamos.getFilaSeleccionada();
         if (filaSeleccionada == -1) {
-            ventanaControlPrestamos.mostrarMensajeError("Por favor, seleccione un préstamo de la tabla para registrar su devolución.");
+            ventanaControlPrestamos.mostrarMensajeError("Debe seleccionar un préstamo de la tabla para registrar su devolución.");
             return;
         }
 
-        Prestamo prestamoAEditar = listaPrestamosCache.get(filaSeleccionada);
+        Prestamo prestamoAEditar = listaPrestamosEnMemoria.get(filaSeleccionada);
 
         if (prestamoAEditar.isDevuelto()) {
             ventanaControlPrestamos.mostrarMensajeError("El préstamo seleccionado ya figura como DEVUELTO en el sistema.");

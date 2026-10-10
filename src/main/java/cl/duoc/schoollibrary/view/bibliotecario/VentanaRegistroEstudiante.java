@@ -8,13 +8,12 @@ import java.awt.event.ActionListener;
 
 public class VentanaRegistroEstudiante extends VentanaBase {
 
-    private JTextField txtRut;
-    private JTextField txtNombre;
-    private JTextField txtCurso;
-    private JTextField txtCorreo;
-
-    private JButton btnGuardar;
-    private JButton btnAtras;
+    private JTextField rutTextField;
+    private JTextField nombreTextField;
+    private JTextField cursoTextField;
+    private JTextField correoTextField;
+    private JButton guardarButton;
+    private JButton atrasButton;
 
     public VentanaRegistroEstudiante() {
         super("Registro de Estudiante", 450, 350);
@@ -26,26 +25,26 @@ public class VentanaRegistroEstudiante extends VentanaBase {
     private void inicializarComponentes() {
         Font fuenteCampos = new Font("Arial", Font.PLAIN, 12);
 
-        txtRut = new JTextField(15);
-        txtRut.setFont(fuenteCampos);
+        rutTextField = new JTextField(15);
+        rutTextField.setFont(fuenteCampos);
 
-        txtNombre = new JTextField(15);
-        txtNombre.setFont(fuenteCampos);
+        nombreTextField = new JTextField(15);
+        nombreTextField.setFont(fuenteCampos);
 
-        txtCurso = new JTextField(15);
-        txtCurso.setFont(fuenteCampos);
+        cursoTextField = new JTextField(15);
+        cursoTextField.setFont(fuenteCampos);
 
-        txtCorreo = new JTextField(15);
-        txtCorreo.setFont(fuenteCampos);
+        correoTextField = new JTextField(15);
+        correoTextField.setFont(fuenteCampos);
 
         Font fuenteBotones = new Font("Arial", Font.BOLD, 12);
-        btnGuardar = new JButton("Guardar");
-        btnGuardar.setFont(fuenteBotones);
-        btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        guardarButton = new JButton("Guardar");
+        guardarButton.setFont(fuenteBotones);
+        guardarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnAtras = new JButton("Atrás");
-        btnAtras.setFont(fuenteBotones);
-        btnAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton = new JButton("Atrás");
+        atrasButton.setFont(fuenteBotones);
+        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void construirLayout() {
@@ -61,28 +60,26 @@ public class VentanaRegistroEstudiante extends VentanaBase {
 
         agregarComponenteForm(panelFormulario, new JLabel("RUT:"), gbc, 0, 0, fuenteLabels);
         gbc.gridx = 1;
-        panelFormulario.add(txtRut, gbc);
+        panelFormulario.add(rutTextField, gbc);
 
         agregarComponenteForm(panelFormulario, new JLabel("Nombre Completo:"), gbc, 0, 1, fuenteLabels);
         gbc.gridx = 1;
-        panelFormulario.add(txtNombre, gbc);
+        panelFormulario.add(nombreTextField, gbc);
 
         agregarComponenteForm(panelFormulario, new JLabel("Curso:"), gbc, 0, 2, fuenteLabels);
         gbc.gridx = 1;
-        panelFormulario.add(txtCurso, gbc);
+        panelFormulario.add(cursoTextField, gbc);
 
         agregarComponenteForm(panelFormulario, new JLabel("Correo Electrónico:"), gbc, 0, 3, fuenteLabels);
         gbc.gridx = 1;
-        panelFormulario.add(txtCorreo, gbc);
+        panelFormulario.add(correoTextField, gbc);
 
         add(panelFormulario, BorderLayout.CENTER);
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnAtras);
+        panelBotones.add(guardarButton);
+        panelBotones.add(atrasButton);
         add(panelBotones, BorderLayout.SOUTH);
-
-        btnAtras.addActionListener(e -> cerrarVentana());
     }
 
     private void agregarComponenteForm(JPanel panel, JLabel label, GridBagConstraints gbc, int x, int y, Font fuente) {
@@ -93,31 +90,33 @@ public class VentanaRegistroEstudiante extends VentanaBase {
     }
 
     public String getRutInput() {
-        return txtRut.getText().trim();
+        return rutTextField.getText().trim();
     }
 
     public String getNombreInput() {
-        return txtNombre.getText().trim();
+        return nombreTextField.getText().trim();
     }
 
     public String getCursoInput() {
-        return txtCurso.getText().trim();
+        return cursoTextField.getText().trim();
     }
 
     public String getCorreoInput() {
-        return txtCorreo.getText().trim();
+        return correoTextField.getText().trim();
     }
 
     public void prellenarFormulario(String rut, String nombre, String curso, String correo) {
-        SwingUtilities.invokeLater(() -> {
-            txtRut.setText(rut);
-            txtNombre.setText(nombre);
-            txtCurso.setText(curso);
-            txtCorreo.setText(correo);
-        });
+        rutTextField.setText(rut);
+        nombreTextField.setText(nombre);
+        cursoTextField.setText(curso);
+        correoTextField.setText(correo);
     }
 
     public void addGuardarListener(ActionListener listener) {
-        btnGuardar.addActionListener(listener);
+        guardarButton.addActionListener(listener);
+    }
+
+    public void addVolverAtrasListener(ActionListener listener) {
+        atrasButton.addActionListener(listener);
     }
 }

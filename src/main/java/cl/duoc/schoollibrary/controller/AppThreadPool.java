@@ -11,10 +11,6 @@ public final class AppThreadPool {
     private AppThreadPool() {
     }
 
-    public static ExecutorService getExecutor() {
-        return executor;
-    }
-
     public static <T> void ejecutarCarga(TareaSecundaria<T> tarea, TareaInterfaz<T> exito, TareaError error) {
         executor.submit(() -> {
             try {

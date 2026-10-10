@@ -15,15 +15,15 @@ import java.util.List;
 public class ControladorRegistroPrestamo {
 
     private final VentanaRegistroPrestamo ventanaRegistroPrestamo;
-    private final ControladorControlPrestamos controladorListaMaestra;
+    private final ControladorControlPrestamos controladorControlPrestamos;
     private final PrestamoDAO prestamoDAO = new PrestamoDAO();
     private final LibroDAO libroDAO = new LibroDAO();
     private final EstudianteDAO estudianteDAO = new EstudianteDAO();
 
     public ControladorRegistroPrestamo(VentanaRegistroPrestamo ventanaRegistroPrestamo,
-                                       ControladorControlPrestamos controladorListaMaestra) {
+                                       ControladorControlPrestamos controladorControlPrestamos) {
         this.ventanaRegistroPrestamo = ventanaRegistroPrestamo;
-        this.controladorListaMaestra = controladorListaMaestra;
+        this.controladorControlPrestamos = controladorControlPrestamos;
 
         inicializarListeners();
         cargarCombosDesdeBD();
@@ -35,8 +35,8 @@ public class ControladorRegistroPrestamo {
         ventanaRegistroPrestamo.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (controladorListaMaestra != null) {
-                    controladorListaMaestra.cargarPrestamosDesdeBD();
+                if (controladorControlPrestamos != null) {
+                    controladorControlPrestamos.cargarPrestamosDesdeBD();
                 }
             }
         });
@@ -46,7 +46,7 @@ public class ControladorRegistroPrestamo {
         AppThreadPool.ejecutarCarga(
                 estudianteDAO::read,
                 estudiantes -> {
-                    ventanaRegistroPrestamo.poblarComboEstudiantes(estudiantes);
+                    ventanaRegistroPrestamo.poblarEstudiantes(estudiantes);
 
                     AppThreadPool.ejecutarCarga(
                             libroDAO::read,
@@ -54,7 +54,7 @@ public class ControladorRegistroPrestamo {
                                 List<Libro> librosConStock = libros.stream()
                                         .filter(l -> l.getStock() > 0)
                                         .toList();
-                                ventanaRegistroPrestamo.poblarComboLibros(librosConStock);
+                                ventanaRegistroPrestamo.poblarLibros(librosConStock);
                             },
                             ex -> ventanaRegistroPrestamo.mostrarMensajeError(
                                     "Fallo al cargar libros: " + ex.getMessage()
@@ -68,8 +68,8 @@ public class ControladorRegistroPrestamo {
     }
 
     private void procesarAsignacionPrestamo() {
-        Estudiante estudianteSeleccionado = (Estudiante) ventanaRegistroPrestamo.getComboEstudiantes().getSelectedItem();
-        Libro libroSeleccionado = (Libro) ventanaRegistroPrestamo.getComboLibros().getSelectedItem();
+        Estudiante estudianteSeleccionado = (Estudiante) ventanaRegistroPrestamo.getEstudiantesCombo().getSelectedItem();
+        Libro libroSeleccionado = (Libro) ventanaRegistroPrestamo.getLibrosCombo().getSelectedItem();
 
         if (estudianteSeleccionado == null || libroSeleccionado == null) {
             ventanaRegistroPrestamo.mostrarMensajeError("Debe seleccionar un estudiante y un título obligatoriamente.");
@@ -79,13 +79,14 @@ public class ControladorRegistroPrestamo {
         LocalDate hoy = LocalDate.now();
         LocalDate vencimiento = hoy.plusDays(7);
 
-        Prestamo nuevoPrestamo = new Prestamo(0, estudianteSeleccionado, libroSeleccionado, hoy, vencimiento, false);
+        Prestamo nuevoPrestamo
+                = new Prestamo(0, estudianteSeleccionado, libroSeleccionado, hoy, vencimiento, false);
 
         AppThreadPool.ejecutarAccion(
                 () -> prestamoDAO.create(nuevoPrestamo),
                 () -> {
-                    ventanaRegistroPrestamo.mostrarMensajeConfirmacion("¡Préstamo asignado con éxito en la Base de Datos!");
-                    ventanaRegistroPrestamo.getComboLibros().removeItem(libroSeleccionado);
+                    ventanaRegistroPrestamo.mostrarMensajeConfirmacion("Préstamo asignado con éxito en la Base de Datos");
+                    ventanaRegistroPrestamo.getLibrosCombo().removeItem(libroSeleccionado);
                     ventanaRegistroPrestamo.cerrarVentana();
                 },
                 ex -> ventanaRegistroPrestamo.mostrarMensajeError(ex.getMessage())

@@ -82,16 +82,5 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = Validator.validarObjetoNoNulo(rol, "rol");
     }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", rut='" + rut + '\'' +
-                ", correo='" + correo + '\'' +
-                ", rol=" + rol +
-                '}';
-    }
 }
 

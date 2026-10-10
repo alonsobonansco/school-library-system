@@ -13,7 +13,7 @@ public class ControladorGestionEstudiantes {
 
     private final VentanaGestionEstudiantes ventanaGestionEstudiantes;
     private final EstudianteDAO estudianteDAO;
-    private List<Estudiante> listaEstudiantesCache = new ArrayList<>();
+    private List<Estudiante> listaEstudiantesEnMemoria = new ArrayList<>();
 
     public ControladorGestionEstudiantes(VentanaGestionEstudiantes ventanaGestionEstudiantes,
                                          EstudianteDAO estudianteDAO) {
@@ -26,26 +26,26 @@ public class ControladorGestionEstudiantes {
 
     private void inicializarListeners() {
         ventanaGestionEstudiantes.addBusquedaDocumentListener(this::aplicarFiltrosMemoria);
-        ventanaGestionEstudiantes.addNuevoButtonListener(e -> abrirFormularioFlotante(null));
-        ventanaGestionEstudiantes.addEditarButtonListener(e -> {
+        ventanaGestionEstudiantes.addAgregarListener(e -> abrirFormularioFlotante(null));
+        ventanaGestionEstudiantes.addEditarListener(e -> {
             int fila = ventanaGestionEstudiantes.getFilaSeleccionada();
             if (fila == -1) {
                 ventanaGestionEstudiantes.mostrarMensajeError(
                         "Por favor, seleccione un alumno de la tabla para modificar su perfil.");
                 return;
             }
-            Estudiante seleccionado = listaEstudiantesCache.get(fila);
+            Estudiante seleccionado = listaEstudiantesEnMemoria.get(fila);
             abrirFormularioFlotante(seleccionado);
         });
-        ventanaGestionEstudiantes.addEliminarButtonListener(e -> procesarBajaEstudiante());
-        ventanaGestionEstudiantes.addAtrasButtonListener(e -> ventanaGestionEstudiantes.cerrarVentana());
+        ventanaGestionEstudiantes.addEliminarListener(e -> procesarBajaEstudiante());
+        ventanaGestionEstudiantes.addVolverAtrasListener(e -> ventanaGestionEstudiantes.cerrarVentana());
     }
 
     public void cargarEstudiantesDesdeBD() {
         AppThreadPool.ejecutarCarga(
                 estudianteDAO::read,
                 estudiantes -> {
-                    this.listaEstudiantesCache = estudiantes;
+                    this.listaEstudiantesEnMemoria = estudiantes;
                     // Se prefiere actualizar la tabla con la lista que se recibe.
                     ventanaGestionEstudiantes.actualizarTabla(estudiantes);
                 },
@@ -58,7 +58,7 @@ public class ControladorGestionEstudiantes {
     private void aplicarFiltrosMemoria() {
         String texto = ventanaGestionEstudiantes.getTextoBusqueda().toLowerCase().trim();
 
-        List<Estudiante> filtrados = listaEstudiantesCache.stream()
+        List<Estudiante> filtrados = listaEstudiantesEnMemoria.stream()
                 .filter(e -> texto.isBlank() ||
                         e.getNombre().toLowerCase().contains(texto) ||
                         e.getRut().toLowerCase().contains(texto))

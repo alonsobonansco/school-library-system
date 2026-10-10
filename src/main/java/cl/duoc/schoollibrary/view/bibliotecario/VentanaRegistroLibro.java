@@ -10,15 +10,13 @@ import java.util.List;
 
 public class VentanaRegistroLibro extends VentanaBase {
 
-    private JLabel tituloLabel; //NECESARIO?
+    private JLabel tituloLabel;
     private JTextField tituloTextField;
     private JTextField autorTextField;
     private JTextField isbnTextField;
-    private JTextField categoriaTextField;
     private JTextField editorialTextField;
     private JTextField stockTextField;
     private JComboBox<String> categoriaComboBox;
-
     private JButton guardarButton;
     private JButton atrasButton;
 
@@ -41,8 +39,6 @@ public class VentanaRegistroLibro extends VentanaBase {
         autorTextField.setFont(fuenteCampos);
         isbnTextField = new JTextField(15);
         isbnTextField.setFont(fuenteCampos);
-        categoriaTextField = new JTextField(15);
-        categoriaTextField.setFont(fuenteCampos);
         editorialTextField = new JTextField(15);
         editorialTextField.setFont(fuenteCampos);
         stockTextField = new JTextField(15);
@@ -69,32 +65,32 @@ public class VentanaRegistroLibro extends VentanaBase {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(4, 8, 4, 8); // Reducimos el espaciado para que respire en 350px de alto
+        gbc.insets = new Insets(4, 8, 4, 8);
         gbc.weightx = 1.0;
 
-        Font fuenteLabels = new Font("Arial", Font.BOLD, 12);
+        Font fuente = new Font("Arial", Font.BOLD, 12);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Título:"), gbc, 0, 0, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Título:"), gbc, 0, 0, fuente);
         gbc.gridx = 1;
         panelFormulario.add(tituloTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Autor:"), gbc, 0, 1, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Autor:"), gbc, 0, 1, fuente);
         gbc.gridx = 1;
         panelFormulario.add(autorTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("ISBN:"), gbc, 0, 2, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("ISBN:"), gbc, 0, 2, fuente);
         gbc.gridx = 1;
         panelFormulario.add(isbnTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Editorial:"), gbc, 0, 3, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Editorial:"), gbc, 0, 3, fuente);
         gbc.gridx = 1;
         panelFormulario.add(editorialTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Stock:"), gbc, 0, 4, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Stock:"), gbc, 0, 4, fuente);
         gbc.gridx = 1;
         panelFormulario.add(stockTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Categoría:"), gbc, 0, 5, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Categoría:"), gbc, 0, 5, fuente);
         gbc.gridx = 1;
         panelFormulario.add(categoriaComboBox, gbc);
 
@@ -104,8 +100,6 @@ public class VentanaRegistroLibro extends VentanaBase {
         panelBotones.add(guardarButton);
         panelBotones.add(atrasButton);
         add(panelBotones, BorderLayout.SOUTH);
-
-        atrasButton.addActionListener(e -> cerrarVentana());
     }
 
     private void agregarComponenteForm(JPanel panel, JLabel label, GridBagConstraints gbc, int x, int y, Font fuente) {
@@ -140,27 +134,27 @@ public class VentanaRegistroLibro extends VentanaBase {
     }
 
     public void poblarCategorias(List<String> categorias) {
-        SwingUtilities.invokeLater(() -> {
-            categoriaComboBox.removeAllItems();
-            for (String cat : categorias) {
-                categoriaComboBox.addItem(cat);
-            }
-        });
+        categoriaComboBox.removeAllItems();
+        for (String categoria : categorias) {
+            categoriaComboBox.addItem(categoria);
+        }
     }
 
     public void prellenarFormulario(String titulo, String autor, String isbn,
                                     String editorial, String stock, String categoria) {
-        SwingUtilities.invokeLater(() -> {
-            tituloTextField.setText(titulo);
-            autorTextField.setText(autor);
-            isbnTextField.setText(isbn);
-            editorialTextField.setText(editorial);
-            stockTextField.setText(stock);
-            categoriaComboBox.setSelectedItem(categoria);
-        });
+        tituloTextField.setText(titulo);
+        autorTextField.setText(autor);
+        isbnTextField.setText(isbn);
+        editorialTextField.setText(editorial);
+        stockTextField.setText(stock);
+        categoriaComboBox.setSelectedItem(categoria);
     }
 
     public void addGuardarListener(ActionListener listener) {
         guardarButton.addActionListener(listener);
+    }
+
+    public void addVolverAtrasListener(ActionListener listener) {
+        atrasButton.addActionListener(listener);
     }
 }

@@ -11,19 +11,15 @@ public abstract class VentanaBase extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     public void mostrarMensajeConfirmacion(String mensaje) {
-        SwingUtilities.invokeLater(() -> {
             JOptionPane.showMessageDialog(this, mensaje, "Proceso Exitoso", JOptionPane.INFORMATION_MESSAGE);
-        });
     }
 
     public void mostrarMensajeError(String mensaje) {
-        SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(this, mensaje, "Error del Sistema", JOptionPane.ERROR_MESSAGE);
-        });
+            JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public boolean confirmarEliminacion(String mensaje) {
@@ -37,6 +33,6 @@ public abstract class VentanaBase extends JFrame {
     }
 
     public void cerrarVentana() {
-        SwingUtilities.invokeLater(this::dispose);
+        this.dispose();
     }
 }

@@ -38,7 +38,7 @@ public class ControladorRegistroLibro {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
                 if (controladorInventarioLibros != null) {
-                    controladorInventarioLibros.cargarDatosDesdeBD();
+                    controladorInventarioLibros.cargarLibrosDesdeBD();
                 }
             }
         });

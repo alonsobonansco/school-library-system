@@ -18,7 +18,7 @@ public class ControladorReportes {
     private final VentanaReportes ventanaReportes;
     private final PrestamoDAO prestamoDAO;
     private final EstudianteDAO estudianteDAO;
-    private List<Prestamo> listaGlobalPrestamosCache = new ArrayList<>();
+    private List<Prestamo> listaPrestamosEnMemoria = new ArrayList<>();
 
 
     public ControladorReportes(VentanaReportes ventanaReportes) {
@@ -39,13 +39,13 @@ public class ControladorReportes {
         AppThreadPool.ejecutarCarga(
                 () -> {
                     List<Estudiante> estudiantes = estudianteDAO.read();
-                    listaGlobalPrestamosCache = prestamoDAO.read();
+                    listaPrestamosEnMemoria = prestamoDAO.read();
 
-                    List<Prestamo> librosActivos = listaGlobalPrestamosCache.stream()
+                    List<Prestamo> librosActivos = listaPrestamosEnMemoria.stream()
                             .filter(p -> !p.isDevuelto())
                             .toList();
 
-                    Map<String, Long> conteoPorTitulo = listaGlobalPrestamosCache.stream()
+                    Map<String, Long> conteoPorTitulo = listaPrestamosEnMemoria.stream()
                             .collect(Collectors.groupingBy(
                                     p -> p.getLibro().getTitulo(),
                                     Collectors.counting()
@@ -63,7 +63,7 @@ public class ControladorReportes {
                     return new DatosReporte(estudiantes, librosActivos, topLibros);
                 },
                 resultado -> {
-                    ventanaReportes.poblarComboAlumnos(resultado.estudiantes());
+                    ventanaReportes.poblarAlumnos(resultado.estudiantes());
                     ventanaReportes.actualizarLibrosActivos(resultado.librosActivos());
                     ventanaReportes.actualizarTopLibros(resultado.topLibros());
 
@@ -77,7 +77,7 @@ public class ControladorReportes {
         Estudiante seleccionado = ventanaReportes.getAlumnoSeleccionado();
         if (seleccionado == null) return;
 
-        List<Prestamo> historialFiltrado = listaGlobalPrestamosCache.stream()
+        List<Prestamo> historialFiltrado = listaPrestamosEnMemoria.stream()
                 .filter(p -> p.getEstudiante().getId() == seleccionado.getId())
                 .toList();
 

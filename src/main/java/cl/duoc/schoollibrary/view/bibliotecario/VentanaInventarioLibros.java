@@ -16,7 +16,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     private JTextField buscarTextField;
     private JComboBox<String> categoriaComboBox;
     private JTable librosTable;
-    private DefaultTableModel modeloTable;
+    private DefaultTableModel librosTableModel;
     private JButton agregarButton;
     private JButton editarButton;
     private JButton eliminarButton;
@@ -37,14 +37,14 @@ public class VentanaInventarioLibros extends VentanaBase {
         categoriaComboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 
         String[] columnas = {"ID", "Título", "Autor", "ISBN", "Editorial", "Stock", "Categoría"};
-        modeloTable = new DefaultTableModel(columnas, 0) {
+        librosTableModel = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        librosTable = new JTable(modeloTable);
+        librosTable = new JTable(librosTableModel);
         librosTable.setFont(new Font("Arial", Font.PLAIN, 13));
         librosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -103,7 +103,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     }
 
     public void actualizarTabla(List<Libro> libros) {
-        modeloTable.setRowCount(0);
+        librosTableModel.setRowCount(0);
         for (Libro l : libros) {
             Object[] fila = {
                     l.getId(),
@@ -114,11 +114,11 @@ public class VentanaInventarioLibros extends VentanaBase {
                     l.getStock(),
                     l.getCategoria().getNombre()
             };
-            modeloTable.addRow(fila);
+            librosTableModel.addRow(fila);
         }
     }
 
-    public void poblarComboBoxCategorias(List<String> nombresCategorias) {
+    public void poblarCategorias(List<String> nombresCategorias) {
         categoriaComboBox.removeAllItems();
         categoriaComboBox.addItem("Todas");
         for (String categoria : nombresCategorias) {
@@ -137,7 +137,7 @@ public class VentanaInventarioLibros extends VentanaBase {
     public Integer getIdLibroSeleccionado() {
         int filaSeleccionada = librosTable.getSelectedRow();
         if (filaSeleccionada == -1) return null;
-        return (Integer) modeloTable.getValueAt(filaSeleccionada, 0);
+        return (Integer) librosTableModel.getValueAt(filaSeleccionada, 0);
     }
 
     /**

@@ -130,7 +130,7 @@ public class VentanaReportes extends VentanaBase {
         add(panelContenedor, BorderLayout.CENTER);
     }
 
-    public void poblarComboAlumnos(List<Estudiante> estudiantes) {
+    public void poblarAlumnos(List<Estudiante> estudiantes) {
         estudiantesComboBox.removeAllItems();
         for (Estudiante e : estudiantes) {
             estudiantesComboBox.addItem(e);

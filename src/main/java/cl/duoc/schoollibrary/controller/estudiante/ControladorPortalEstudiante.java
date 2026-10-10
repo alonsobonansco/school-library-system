@@ -25,8 +25,8 @@ public class ControladorPortalEstudiante {
     private final CategoriaDAO categoriaDAO;
     private final PrestamoDAO prestamoDAO;
     private final Estudiante alumnoLogueado;
-    private List<Libro> listaLibrosCache = new ArrayList<>();
-    private List<Prestamo> listaPrestamosCache = new ArrayList<>();
+    private List<Libro> listaLibrosEnMemoria = new ArrayList<>();
+    private List<Prestamo> listaPrestamosEnMemoria = new ArrayList<>();
 
     public ControladorPortalEstudiante(VentanaPortalEstudiante ventanaPortalEstudiante, Estudiante alumnoLogueado) {
         this.ventanaPortalEstudiante = ventanaPortalEstudiante;
@@ -37,7 +37,7 @@ public class ControladorPortalEstudiante {
 
         inicializarListeners();
         cargarCategoriasDesdeBD();
-        cargarCatalogoLibros();
+        cargarLibrosDesdeBD();
         cargarPrestamosActivos();
         this.ventanaPortalEstudiante.establecerNombreUsuario(alumnoLogueado.getNombre());
     }
@@ -55,18 +55,18 @@ public class ControladorPortalEstudiante {
                 categoriaDAO::read,
                 categorias -> {
                     List<String> nombres = categorias.stream().map(Categoria::getNombre).toList();
-                    ventanaPortalEstudiante.poblarComboBoxCategorias(nombres);
+                    ventanaPortalEstudiante.poblarCategorias(nombres);
                 },
                 ex -> ventanaPortalEstudiante.mostrarMensajeError(
                         "Error al iniciar filtros de categorías: " + ex.getMessage())
         );
     }
 
-    private void cargarCatalogoLibros() {
+    private void cargarLibrosDesdeBD() {
         AppThreadPool.ejecutarCarga(
                 libroDAO::read,
                 libros -> {
-                    listaLibrosCache = libros;
+                    listaLibrosEnMemoria = libros;
                     ventanaPortalEstudiante.actualizarTablaLibros(libros);
                 },
                 ex -> ventanaPortalEstudiante.mostrarMensajeError(
@@ -83,7 +83,7 @@ public class ControladorPortalEstudiante {
                             .toList();
                 },
                 prestamos -> {
-                    this.listaPrestamosCache = prestamos;
+                    this.listaPrestamosEnMemoria = prestamos;
                     ventanaPortalEstudiante.actualizarTablaPrestamos(prestamos);
                 },
                 ex -> ventanaPortalEstudiante.mostrarMensajeError(
@@ -97,7 +97,7 @@ public class ControladorPortalEstudiante {
 
         if (categoriaSeleccionada == null) return;
 
-        List<Libro> librosFiltrados = listaLibrosCache.stream()
+        List<Libro> librosFiltrados = listaLibrosEnMemoria.stream()
                 .filter(l -> textoBuscado.isBlank() ||
                         l.getTitulo().toLowerCase().contains(textoBuscado) ||
                         l.getIsbn().contains(textoBuscado))
@@ -115,7 +115,7 @@ public class ControladorPortalEstudiante {
             return;
         }
 
-        Libro libroSeleccionado = listaLibrosCache.get(filaSeleccionada);
+        Libro libroSeleccionado = listaLibrosEnMemoria.get(filaSeleccionada);
 
         if (libroSeleccionado.getStock() <= 0) {
             ventanaPortalEstudiante.mostrarMensajeError("Lo sentimos, el libro '" + libroSeleccionado.getTitulo() + "' se encuentra agotado.");
@@ -132,7 +132,7 @@ public class ControladorPortalEstudiante {
                 () -> {
                     ventanaPortalEstudiante.mostrarMensajeConfirmacion(
                             "¡Préstamo registrado!\nTienes hasta el " + vencimiento + " para devolverlo.");
-                    cargarCatalogoLibros();
+                    cargarLibrosDesdeBD();
                     cargarPrestamosActivos();
                 },
                 (Exception ex) -> ventanaPortalEstudiante.mostrarMensajeError(ex.getMessage())
@@ -151,7 +151,7 @@ public class ControladorPortalEstudiante {
             return;
         }
 
-        Prestamo prestamoAEditar = listaPrestamosCache.get(filaSeleccionada);
+        Prestamo prestamoAEditar = listaPrestamosEnMemoria.get(filaSeleccionada);
 
         int idPrestamo = prestamoAEditar.getId();
         int idLibro = prestamoAEditar.getLibro().getId();
@@ -161,7 +161,7 @@ public class ControladorPortalEstudiante {
                 () -> {
                     ventanaPortalEstudiante.mostrarMensajeConfirmacion(
                             "El libro ha sido devuelto al inventario de la biblioteca con éxito.");
-                    cargarCatalogoLibros();
+                    cargarLibrosDesdeBD();
                     cargarPrestamosActivos();
                 },
                 ex -> ventanaPortalEstudiante.mostrarMensajeError("Fallo al procesar devolución: " + ex.getMessage())

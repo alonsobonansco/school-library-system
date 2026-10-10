@@ -12,10 +12,10 @@ import java.util.List;
 
 public class VentanaRegistroPrestamo extends VentanaBase {
 
-    private JComboBox<Estudiante> comboEstudiantes;
-    private JComboBox<Libro> comboLibros;
-    private JButton btnGuardar;
-    private JButton btnAtras;
+    private JComboBox<Estudiante> estudiantesComboBox;
+    private JComboBox<Libro> librosComboBox;
+    private JButton guardarButton;
+    private JButton atrasButton;
 
     public VentanaRegistroPrestamo() {
         super("Asignación de Nuevo Préstamo", 480, 280);
@@ -25,26 +25,26 @@ public class VentanaRegistroPrestamo extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        comboEstudiantes = new JComboBox<>();
-        comboEstudiantes.setFont(new Font("Arial", Font.PLAIN, 12));
+        estudiantesComboBox = new JComboBox<>();
+        estudiantesComboBox.setFont(new Font("Arial", Font.PLAIN, 12));
 
-        comboLibros = new JComboBox<>();
-        comboLibros.setFont(new Font("Arial", Font.PLAIN, 12));
+        librosComboBox = new JComboBox<>();
+        librosComboBox.setFont(new Font("Arial", Font.PLAIN, 12));
 
         Font fuenteBotones = new Font("Arial", Font.BOLD, 12);
 
-        btnGuardar = new JButton("Registrar Préstamo");
-        btnGuardar.setFont(fuenteBotones);
-        btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        guardarButton = new JButton("Registrar Préstamo");
+        guardarButton.setFont(fuenteBotones);
+        guardarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        btnAtras = new JButton("Cancelar");
-        btnAtras.setFont(fuenteBotones);
-        btnAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton = new JButton("Cancelar");
+        atrasButton.setFont(fuenteBotones);
+        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void construirLayout() {
-        JPanel panelForm = new JPanel(new GridBagLayout());
-        panelForm.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35));
+        JPanel panelFormulario = new JPanel(new GridBagLayout());
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(20, 35, 10, 35));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -57,51 +57,51 @@ public class VentanaRegistroPrestamo extends VentanaBase {
         gbc.gridy = 0;
         JLabel lblEst = new JLabel("Seleccionar Alumno:");
         lblEst.setFont(fuenteLabels);
-        panelForm.add(lblEst, gbc);
+        panelFormulario.add(lblEst, gbc);
         gbc.gridx = 1;
-        panelForm.add(comboEstudiantes, gbc);
+        panelFormulario.add(estudiantesComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         JLabel lblLib = new JLabel("Seleccionar Libro:");
         lblLib.setFont(fuenteLabels);
-        panelForm.add(lblLib, gbc);
+        panelFormulario.add(lblLib, gbc);
         gbc.gridx = 1;
-        panelForm.add(comboLibros, gbc);
+        panelFormulario.add(librosComboBox, gbc);
 
-        add(panelForm, BorderLayout.CENTER);
+        add(panelFormulario, BorderLayout.CENTER);
 
-        JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 15));
-        panelAcciones.add(btnGuardar);
-        panelAcciones.add(btnAtras);
-        add(panelAcciones, BorderLayout.SOUTH);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 15));
+        panel.add(guardarButton);
+        panel.add(atrasButton);
+        add(panel, BorderLayout.SOUTH);
     }
 
-    public void poblarComboEstudiantes(List<Estudiante> estudiantes) {
-        comboEstudiantes.removeAllItems();
-        for (Estudiante e : estudiantes) comboEstudiantes.addItem(e);
-
-    }
-
-    public void poblarComboLibros(List<Libro> libros) {
-        comboLibros.removeAllItems();
-        for (Libro l : libros) comboLibros.addItem(l);
+    public void poblarEstudiantes(List<Estudiante> estudiantes) {
+        estudiantesComboBox.removeAllItems();
+        for (Estudiante e : estudiantes) estudiantesComboBox.addItem(e);
 
     }
 
-    public JComboBox<Estudiante> getComboEstudiantes() {
-        return comboEstudiantes;
+    public void poblarLibros(List<Libro> libros) {
+        librosComboBox.removeAllItems();
+        for (Libro l : libros) librosComboBox.addItem(l);
+
     }
 
-    public JComboBox<Libro> getComboLibros() {
-        return comboLibros;
+    public JComboBox<Estudiante> getEstudiantesCombo() {
+        return estudiantesComboBox;
+    }
+
+    public JComboBox<Libro> getLibrosCombo() {
+        return librosComboBox;
     }
 
     public void addGuardarListener(ActionListener listener) {
-        btnGuardar.addActionListener(listener);
+        guardarButton.addActionListener(listener);
     }
 
     public void addVolverAtrasListener(ActionListener listener) {
-        btnAtras.addActionListener(listener);
+        atrasButton.addActionListener(listener);
     }
 }

@@ -10,13 +10,14 @@ public class ControladorRegistroEstudiante {
     private final VentanaRegistroEstudiante ventanaRegistroEstudiante;
     private final EstudianteDAO estudianteDAO;
     private final Estudiante estudianteAEditar;
-    private final ControladorGestionEstudiantes controladorLista;
+    private final ControladorGestionEstudiantes controladorGestionEstudiantes;
 
     public ControladorRegistroEstudiante(VentanaRegistroEstudiante ventanaRegistroEstudiante, EstudianteDAO estudianteDAO,
-                                         ControladorGestionEstudiantes controladorLista, Estudiante estudianteAEditar) {
+                                         ControladorGestionEstudiantes controladorGestionEstudiantes,
+                                         Estudiante estudianteAEditar) {
         this.ventanaRegistroEstudiante = ventanaRegistroEstudiante;
         this.estudianteDAO = estudianteDAO;
-        this.controladorLista = controladorLista;
+        this.controladorGestionEstudiantes = controladorGestionEstudiantes;
         this.estudianteAEditar = estudianteAEditar;
 
         inicializarListeners();
@@ -27,8 +28,8 @@ public class ControladorRegistroEstudiante {
         ventanaRegistroEstudiante.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                if (controladorLista != null) {
-                    controladorLista.cargarEstudiantesDesdeBD();
+                if (controladorGestionEstudiantes != null) {
+                    controladorGestionEstudiantes.cargarEstudiantesDesdeBD();
                 }
             }
         });

@@ -25,7 +25,7 @@ public class ControladorLogin {
     }
 
     private void inicializarListeners() {
-        this.ventanaLogin.addIngresarButtonListener(e -> procesarAutenticacion());
+        this.ventanaLogin.addIngresarListener(e -> procesarAutenticacion());
     }
 
     private void procesarAutenticacion() {

@@ -172,7 +172,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
         });
     }
 
-    public void poblarComboBoxCategorias(List<String> nombresCategorias) {
+    public void poblarCategorias(List<String> nombresCategorias) {
         SwingUtilities.invokeLater(() -> {
             categoriaComboBox.removeAllItems();
             categoriaComboBox.addItem("Todas");

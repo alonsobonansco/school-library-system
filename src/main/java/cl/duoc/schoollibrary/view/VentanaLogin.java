@@ -86,13 +86,13 @@ public class VentanaLogin extends VentanaBase {
         return new String(contraseniaPasswordField.getPassword());
     }
 
-    public void addIngresarButtonListener(ActionListener listener) {
+    public void addIngresarListener(ActionListener listener) {
         ingresarButton.addActionListener(listener);
     }
 
     public void limpiarFormulario() {
-            correoTextField.setText("");
-            contraseniaPasswordField.setText("");
-            correoTextField.requestFocus();
+        correoTextField.setText("");
+        contraseniaPasswordField.setText("");
+        correoTextField.requestFocus();
     }
 }

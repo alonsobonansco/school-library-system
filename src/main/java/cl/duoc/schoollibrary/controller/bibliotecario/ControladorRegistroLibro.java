@@ -1,14 +1,12 @@
 package cl.duoc.schoollibrary.controller.bibliotecario;
 
-import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.controller.AppThreadPool;
 import cl.duoc.schoollibrary.model.dao.CategoriaDAO;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
 import cl.duoc.schoollibrary.model.entity.Categoria;
 import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroLibro;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,13 +33,7 @@ public class ControladorRegistroLibro {
     }
 
     private void inicializarListeners() {
-        ventanaRegistroLibro.addGuardarListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                procesarRegistroLibro();
-            }
-        });
-
+        ventanaRegistroLibro.addGuardarListener(e -> procesarRegistroLibro());
         ventanaRegistroLibro.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -53,30 +45,30 @@ public class ControladorRegistroLibro {
     }
 
     private void cargarCategoriasDesdeBD() {
-        new Thread(() -> {
-            try {
-                listaCategorias = categoriaDAO.read();
-                List<String> nombresCategorias = listaCategorias.stream()
-                        .map(Categoria::getNombre)
-                        .toList();
+        AppThreadPool.ejecutarCarga(
+                categoriaDAO::read,
+                categorias -> {
+                    this.listaCategorias = categorias;
+                    List<String> nombresCategorias = categorias.stream()
+                            .map(Categoria::getNombre)
+                            .toList();
 
-                ventanaRegistroLibro.poblarCategorias(nombresCategorias);
+                    ventanaRegistroLibro.poblarCategorias(nombresCategorias);
 
-                if (libroAEditar != null) {
-                    ventanaRegistroLibro.prellenarFormulario(
-                            libroAEditar.getTitulo(),
-                            libroAEditar.getAutor(),
-                            libroAEditar.getIsbn(),
-                            libroAEditar.getEditorial(),
-                            String.valueOf(libroAEditar.getStock()),
-                            libroAEditar.getCategoria().getNombre()
-                    );
-                }
-
-            } catch (DataAccessException e) {
-                ventanaRegistroLibro.mostrarMensajeError("Error al cargar las categorías: " + e.getMessage());
-            }
-        }).start();
+                    if (libroAEditar != null) {
+                        ventanaRegistroLibro.prellenarFormulario(
+                                libroAEditar.getTitulo(),
+                                libroAEditar.getAutor(),
+                                libroAEditar.getIsbn(),
+                                libroAEditar.getEditorial(),
+                                String.valueOf(libroAEditar.getStock()),
+                                libroAEditar.getCategoria().getNombre()
+                        );
+                    }
+                },
+                ex -> ventanaRegistroLibro.mostrarMensajeError(
+                        "Error al cargar las categorías: " + ex.getMessage())
+        );
     }
 
     private void procesarRegistroLibro() {
@@ -101,43 +93,34 @@ public class ControladorRegistroLibro {
             return;
         }
 
-        new Thread(() -> {
-            try {
-                Optional<Categoria> categoriaSeleccionada = listaCategorias.stream()
-                        .filter(c -> c.getNombre().equalsIgnoreCase(categoria))
-                        .findFirst();
+        AppThreadPool.ejecutarAccion(
+                () -> {
+                    Optional<Categoria> categoriaSeleccionada = listaCategorias.stream()
+                            .filter(c -> c.getNombre().equalsIgnoreCase(categoria))
+                            .findFirst();
 
-                if (categoriaSeleccionada.isEmpty()) {
-                    ventanaRegistroLibro.mostrarMensajeError("La categoría seleccionada no es válida.");
-                    return;
-                }
-
-                if (libroAEditar == null) {
-                    Libro nuevoLibro = new Libro(titulo, autor, isbn, editorial, stock, categoriaSeleccionada.get());
-                    libroDAO.create(nuevoLibro);
-                } else {
-                    libroAEditar.setTitulo(titulo);
-                    libroAEditar.setAutor(autor);
-                    libroAEditar.setIsbn(isbn);
-                    libroAEditar.setEditorial(editorial);
-                    libroAEditar.setStock(stock);
-                    libroAEditar.setCategoria(categoriaSeleccionada.get());
-                    libroDAO.update(libroAEditar);
-                }
-
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    ventanaRegistroLibro.mostrarMensajeConfirmacion("Libro registrado correctamente.");
-
-                    if (controladorInventarioLibros != null) {
-                        controladorInventarioLibros.cargarDatosDesdeBD();
+                    if (categoriaSeleccionada.isEmpty()) {
+                        throw new RuntimeException("La categoría seleccionada no es válida.");
                     }
 
+                    if (libroAEditar == null) {
+                        Libro nuevoLibro = new Libro(titulo, autor, isbn, editorial, stock, categoriaSeleccionada.get());
+                        libroDAO.create(nuevoLibro);
+                    } else {
+                        libroAEditar.setTitulo(titulo);
+                        libroAEditar.setAutor(autor);
+                        libroAEditar.setIsbn(isbn);
+                        libroAEditar.setEditorial(editorial);
+                        libroAEditar.setStock(stock);
+                        libroAEditar.setCategoria(categoriaSeleccionada.get());
+                        libroDAO.update(libroAEditar);
+                    }
+                },
+                () -> {
+                    ventanaRegistroLibro.mostrarMensajeConfirmacion("Libro registrado correctamente.");
                     ventanaRegistroLibro.cerrarVentana();
-                });
-
-            } catch (DataAccessException ex) {
-                ventanaRegistroLibro.mostrarMensajeError("Error al registrar el libro: " + ex.getMessage());
-            }
-        }).start();
+                },
+                ex -> ventanaRegistroLibro.mostrarMensajeError("Error al registrar el libro: " + ex.getMessage())
+        );
     }
 }

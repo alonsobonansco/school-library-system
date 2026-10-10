@@ -23,41 +23,29 @@ public class ControladorPrincipalBibliotecario {
     }
 
     private void abrirVentanaLibros() {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            VentanaInventarioLibros ventanaInventarioLibros = new VentanaInventarioLibros();
-            LibroDAO libroDAO = new LibroDAO();
-
-            new ControladorInventarioLibros(ventanaInventarioLibros, libroDAO);
-            ventanaInventarioLibros.setVisible(true);
-        });
+        VentanaInventarioLibros ventanaInventarioLibros = new VentanaInventarioLibros();
+        LibroDAO libroDAO = new LibroDAO();
+        new ControladorInventarioLibros(ventanaInventarioLibros, libroDAO);
+        ventanaInventarioLibros.setVisible(true);
     }
 
     private void abrirVentanaEstudiantes() {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            VentanaGestionEstudiantes ventanaGestionEstudiantes = new VentanaGestionEstudiantes();
-            EstudianteDAO estudianteDAO = new EstudianteDAO();
-
-            new ControladorGestionEstudiantes(ventanaGestionEstudiantes, estudianteDAO);
-            ventanaGestionEstudiantes.setVisible(true);
-        });
+        VentanaGestionEstudiantes ventanaGestionEstudiantes = new VentanaGestionEstudiantes();
+        EstudianteDAO estudianteDAO = new EstudianteDAO();
+        new ControladorGestionEstudiantes(ventanaGestionEstudiantes, estudianteDAO);
+        ventanaGestionEstudiantes.setVisible(true);
     }
 
     private void abrirVentanaPrestamos() {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            VentanaControlPrestamos ventanaControlPrestamos = new VentanaControlPrestamos();
-
-            new ControladorControlPrestamos(ventanaControlPrestamos);
-            ventanaControlPrestamos.setVisible(true);
-        });
+        VentanaControlPrestamos ventanaControlPrestamos = new VentanaControlPrestamos();
+        new ControladorControlPrestamos(ventanaControlPrestamos);
+        ventanaControlPrestamos.setVisible(true);
     }
 
     private void abrirVentanaReportes() {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            VentanaReportes ventanaReportes = new VentanaReportes();
-
-            new ControladorReportes(ventanaReportes);
-            ventanaReportes.setVisible(true);
-        });
+        VentanaReportes ventanaReportes = new VentanaReportes();
+        new ControladorReportes(ventanaReportes);
+        ventanaReportes.setVisible(true);
     }
 
     private void procesarCerrarSesion() {

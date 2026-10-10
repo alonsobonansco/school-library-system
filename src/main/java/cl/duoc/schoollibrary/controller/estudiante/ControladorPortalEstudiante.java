@@ -1,7 +1,7 @@
 package cl.duoc.schoollibrary.controller.estudiante;
 
+import cl.duoc.schoollibrary.controller.AppThreadPool;
 import cl.duoc.schoollibrary.controller.CoordinadorNavegacion;
-import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.dao.LibroDAO;
 import cl.duoc.schoollibrary.model.dao.PrestamoDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
@@ -9,8 +9,6 @@ import cl.duoc.schoollibrary.model.entity.Libro;
 import cl.duoc.schoollibrary.model.entity.Prestamo;
 import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +18,15 @@ import java.util.List;
  */
 public class ControladorPortalEstudiante {
 
-    private final VentanaPortalEstudiante vista;
+    private final VentanaPortalEstudiante ventanaPortalEstudiante;
     private final LibroDAO libroDAO;
     private final PrestamoDAO prestamoDAO;
     private final Estudiante alumnoLogueado;
     private List<Libro> listaLibrosCache = new ArrayList<>();
     private List<Prestamo> listaPrestamosCache = new ArrayList<>();
 
-    public ControladorPortalEstudiante(VentanaPortalEstudiante vista, Estudiante alumnoLogueado) {
-        this.vista = vista;
+    public ControladorPortalEstudiante(VentanaPortalEstudiante ventanaPortalEstudiante, Estudiante alumnoLogueado) {
+        this.ventanaPortalEstudiante = ventanaPortalEstudiante;
         this.alumnoLogueado = alumnoLogueado;
         this.libroDAO = new LibroDAO();
         this.prestamoDAO = new PrestamoDAO();
@@ -39,50 +37,45 @@ public class ControladorPortalEstudiante {
     }
 
     private void inicializarListeners() {
-        vista.addBusquedaDocumentListener(this::aplicarFiltrosCatalogo);
-
-        vista.addCategoriaComboListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                aplicarFiltrosCatalogo();
-            }
-        });
-
-        vista.addSolicitarButtonListener(e -> procesarSolicitudPrestamo());
-        vista.addDevolverButtonListener(e -> procesarDevolucionLibro());
-        vista.addCerrarSesionButtonListener(e -> procesarCerrarSesion());
+        ventanaPortalEstudiante.addBusquedaDocumentListener(this::aplicarFiltrosCatalogo);
+        ventanaPortalEstudiante.addCategoriaComboListener(e -> aplicarFiltrosCatalogo());
+        ventanaPortalEstudiante.addSolicitarButtonListener(e -> procesarSolicitudPrestamo());
+        ventanaPortalEstudiante.addDevolverButtonListener(e -> procesarDevolucionLibro());
+        ventanaPortalEstudiante.addCerrarSesionButtonListener(e -> procesarCerrarSesion());
     }
 
     public void cargarCatalogoLibros() {
-        new Thread(() -> {
-            try {
-                listaLibrosCache = libroDAO.read();
-                vista.actualizarTablaLibros(listaLibrosCache);
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Error al cargar catálogo: " + ex.getMessage());
-            }
-        }).start();
+        AppThreadPool.ejecutarCarga(
+                libroDAO::read,
+                libros -> {
+                    listaLibrosCache = libros;
+                    ventanaPortalEstudiante.actualizarTablaLibros(libros);
+                },
+                ex -> ventanaPortalEstudiante.mostrarMensajeError(
+                        "Error al cargar catálogo: " + ex.getMessage())
+        );
     }
 
     public void cargarPrestamosActivos() {
-        new Thread(() -> {
-            try {
-                List<Prestamo> todosLosPrestamos = prestamoDAO.read();
-
-                listaPrestamosCache = todosLosPrestamos.stream()
-                        .filter(p -> p.getEstudiante().getId() == alumnoLogueado.getId() && !p.isDevuelto())
-                        .toList();
-
-                vista.actualizarTablaPrestamos(listaPrestamosCache);
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Error al cargar tus préstamos: " + ex.getMessage());
-            }
-        }).start();
+        AppThreadPool.ejecutarCarga(
+                () -> {
+                    List<Prestamo> todosLosPrestamos = prestamoDAO.read();
+                    return todosLosPrestamos.stream()
+                            .filter(p -> p.getEstudiante().getId() == alumnoLogueado.getId() && !p.isDevuelto())
+                            .toList();
+                },
+                prestamos -> {
+                    this.listaPrestamosCache = prestamos;
+                    ventanaPortalEstudiante.actualizarTablaPrestamos(prestamos);
+                },
+                ex -> ventanaPortalEstudiante.mostrarMensajeError(
+                        "Error al cargar tus préstamos: " + ex.getMessage())
+        );
     }
 
     private void aplicarFiltrosCatalogo() {
-        String textoBuscado = vista.getTextoBusqueda().toLowerCase().trim();
-        String categoriaSeleccionada = vista.getCategoriaSeleccionada();
+        String textoBuscado = ventanaPortalEstudiante.getTextoBusqueda().toLowerCase().trim();
+        String categoriaSeleccionada = ventanaPortalEstudiante.getCategoriaSeleccionada();
 
         if (categoriaSeleccionada == null) return;
 
@@ -94,20 +87,20 @@ public class ControladorPortalEstudiante {
                         l.getCategoria().getNombre().equalsIgnoreCase(categoriaSeleccionada))
                 .toList();
 
-        vista.actualizarTablaLibros(librosFiltrados);
+        ventanaPortalEstudiante.actualizarTablaLibros(librosFiltrados);
     }
 
     private void procesarSolicitudPrestamo() {
-        int filaSeleccionada = vista.getFilaSeleccionadaLibro();
+        int filaSeleccionada = ventanaPortalEstudiante.getFilaSeleccionadaLibro();
         if (filaSeleccionada == -1) {
-            vista.mostrarMensajeError("Por favor, seleccione un libro del catálogo para solicitarlo.");
+            ventanaPortalEstudiante.mostrarMensajeError("Por favor, seleccione un libro del catálogo para solicitarlo.");
             return;
         }
 
         Libro libroSeleccionado = listaLibrosCache.get(filaSeleccionada);
 
         if (libroSeleccionado.getStock() <= 0) {
-            vista.mostrarMensajeError("Lo sentimos, el libro '" + libroSeleccionado.getTitulo() + "' se encuentra agotado.");
+            ventanaPortalEstudiante.mostrarMensajeError("Lo sentimos, el libro '" + libroSeleccionado.getTitulo() + "' se encuentra agotado.");
             return;
         }
 
@@ -116,31 +109,27 @@ public class ControladorPortalEstudiante {
 
         Prestamo nuevoPrestamo = new Prestamo(alumnoLogueado, libroSeleccionado, hoy, vencimiento, false);
 
-        new Thread(() -> {
-            try {
-                prestamoDAO.create(nuevoPrestamo);
-
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    vista.mostrarMensajeConfirmacion("¡Préstamo registrado!\nTienes hasta el " + vencimiento + " para devolverlo.");
-
+        AppThreadPool.ejecutarAccion(
+                () -> prestamoDAO.create(nuevoPrestamo),
+                () -> {
+                    ventanaPortalEstudiante.mostrarMensajeConfirmacion(
+                            "¡Préstamo registrado!\nTienes hasta el " + vencimiento + " para devolverlo.");
                     cargarCatalogoLibros();
                     cargarPrestamosActivos();
-                });
-
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError(ex.getMessage());
-            }
-        }).start();
+                },
+                (Exception ex) -> ventanaPortalEstudiante.mostrarMensajeError(ex.getMessage())
+        );
     }
 
     private void procesarDevolucionLibro() {
-        int filaSeleccionada = vista.getFilaSeleccionadaPrestamo();
+        int filaSeleccionada = ventanaPortalEstudiante.getFilaSeleccionadaPrestamo();
         if (filaSeleccionada == -1) {
-            vista.mostrarMensajeError("Debe seleccionar un préstamo activo de la tabla para marcar su devolución.");
+            ventanaPortalEstudiante.mostrarMensajeError(
+                    "Debe seleccionar un préstamo activo de la tabla para marcar su devolución.");
             return;
         }
 
-        if (!vista.confirmarEliminacion("préstamo y retornar el libro al inventario físico")) {
+        if (!ventanaPortalEstudiante.confirmarEliminacion("préstamo y retornar el libro al inventario físico")) {
             return;
         }
 
@@ -149,20 +138,16 @@ public class ControladorPortalEstudiante {
         int idPrestamo = prestamoAEditar.getId();
         int idLibro = prestamoAEditar.getLibro().getId();
 
-        new Thread(() -> {
-            try {
-                prestamoDAO.registrarDevolucion(idPrestamo, idLibro);
-
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    vista.mostrarMensajeConfirmacion("El libro ha sido devuelto al inventario de la biblioteca con éxito.");
+        AppThreadPool.ejecutarAccion(
+                () -> prestamoDAO.registrarDevolucion(idPrestamo, idLibro),
+                () -> {
+                    ventanaPortalEstudiante.mostrarMensajeConfirmacion(
+                            "El libro ha sido devuelto al inventario de la biblioteca con éxito.");
                     cargarCatalogoLibros();
                     cargarPrestamosActivos();
-                });
-
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Fallo al procesar devolución: " + ex.getMessage());
-            }
-        }).start();
+                },
+                ex -> ventanaPortalEstudiante.mostrarMensajeError("Fallo al procesar devolución: " + ex.getMessage())
+        );
     }
 
     private void procesarCerrarSesion() {

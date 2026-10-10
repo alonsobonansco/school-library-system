@@ -30,6 +30,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
 
     public VentanaPortalEstudiante() {
         super("Portal del Estudiante - Sistema de Biblioteca", 850, 550);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         inicializarComponentes();
         inicializarPestaniaCatalogo();
@@ -96,7 +97,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
         prestamosTable.getTableHeader().setReorderingAllowed(false);
         prestamosTable.getTableHeader().setResizingAllowed(false);
 
-        devolverLibroButton = new JButton("Marcar Devolución");
+        devolverLibroButton = new JButton("Devolver Libro");
         devolverLibroButton.setFont(new Font("Arial", Font.BOLD, 13));
         devolverLibroButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
@@ -107,41 +108,41 @@ public class VentanaPortalEstudiante extends VentanaBase {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.add(tituloLabel, BorderLayout.NORTH);
 
-        JPanel panelContenederLogout = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
-        panelContenederLogout.add(cerrarSesionButton);
-        panelSuperior.add(panelContenederLogout, BorderLayout.EAST);
+        JPanel panelCerrarSesion = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
+        panelCerrarSesion.add(cerrarSesionButton);
+        panelSuperior.add(panelCerrarSesion, BorderLayout.EAST);
 
         add(panelSuperior, BorderLayout.NORTH);
 
-        JPanel panelCatalogoRoot = new JPanel(new BorderLayout(10, 10));
+        JPanel panelCatalogo = new JPanel(new BorderLayout(10, 10));
 
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
         panelFiltros.add(new JLabel("Buscar Libro / ISBN:"));
         panelFiltros.add(buscarLibroTextField);
         panelFiltros.add(new JLabel("Categoría:"));
         panelFiltros.add(categoriaComboBox);
-        panelCatalogoRoot.add(panelFiltros, BorderLayout.NORTH);
+        panelCatalogo.add(panelFiltros, BorderLayout.NORTH);
 
         JScrollPane scrollLibros = new JScrollPane(librosTable);
         scrollLibros.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
-        panelCatalogoRoot.add(scrollLibros, BorderLayout.CENTER);
+        panelCatalogo.add(scrollLibros, BorderLayout.CENTER);
 
         JPanel panelBotonCatalogo = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         panelBotonCatalogo.add(solicitarPrestamoButton);
-        panelCatalogoRoot.add(panelBotonCatalogo, BorderLayout.SOUTH);
+        panelCatalogo.add(panelBotonCatalogo, BorderLayout.SOUTH);
 
-        JPanel panelPrestamosRoot = new JPanel(new BorderLayout(10, 10));
+        JPanel panelPrestamos = new JPanel(new BorderLayout(10, 10));
 
         JScrollPane scrollPrestamos = new JScrollPane(prestamosTable);
         scrollPrestamos.setBorder(BorderFactory.createEmptyBorder(15, 15, 0, 15));
-        panelPrestamosRoot.add(scrollPrestamos, BorderLayout.CENTER);
+        panelPrestamos.add(scrollPrestamos, BorderLayout.CENTER);
 
         JPanel panelBotonPrestamos = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         panelBotonPrestamos.add(devolverLibroButton);
-        panelPrestamosRoot.add(panelBotonPrestamos, BorderLayout.SOUTH);
+        panelPrestamos.add(panelBotonPrestamos, BorderLayout.SOUTH);
 
-        pestaniasPanel.addTab("Consultar Catálogo", panelCatalogoRoot);
-        pestaniasPanel.addTab("Mis Préstamos Activos", panelPrestamosRoot);
+        pestaniasPanel.addTab("Consultar Catálogo", panelCatalogo);
+        pestaniasPanel.addTab("Mis Préstamos Activos", panelPrestamos);
 
         add(pestaniasPanel, BorderLayout.CENTER);
 
@@ -149,18 +150,16 @@ public class VentanaPortalEstudiante extends VentanaBase {
     }
 
     public void establecerNombreUsuario(String nombre) {
-        SwingUtilities.invokeLater(() -> tituloLabel.setText("Bienvenid@ al Portal de Autoservicio: " + nombre));
+        tituloLabel.setText("Bienvenido/a al Portal de Autoservicio: " + nombre);
     }
 
     public void actualizarTablaLibros(List<Libro> libros) {
-        SwingUtilities.invokeLater(() -> {
-            tablaLibrosModel.setRowCount(0);
-            for (Libro l : libros) {
-                String disponibilidad = (l.getStock() > 0) ? "DISPONIBLE (" + l.getStock() + " u)" : "AGOTADO";
-                Object[] fila = {l.getTitulo(), l.getAutor(), l.getIsbn(), l.getCategoria().getNombre(), disponibilidad};
-                tablaLibrosModel.addRow(fila);
-            }
-        });
+        tablaLibrosModel.setRowCount(0);
+        for (Libro l : libros) {
+            String disponibilidad = (l.getStock() > 0) ? "DISPONIBLE (" + l.getStock() + " u)" : "AGOTADO";
+            Object[] fila = {l.getTitulo(), l.getAutor(), l.getIsbn(), l.getCategoria().getNombre(), disponibilidad};
+            tablaLibrosModel.addRow(fila);
+        }
     }
 
     public void actualizarTablaPrestamos(List<Prestamo> prestamos) {
@@ -191,6 +190,14 @@ public class VentanaPortalEstudiante extends VentanaBase {
         return (String) categoriaComboBox.getSelectedItem();
     }
 
+    public int getFilaSeleccionadaLibro() {
+        return librosTable.getSelectedRow();
+    }
+
+    public Integer getFilaSeleccionadaPrestamo() {
+        return prestamosTable.getSelectedRow() != -1 ? prestamosTable.getSelectedRow() : null;
+    }
+
     public void addBusquedaDocumentListener(Runnable accion) {
         buscarLibroTextField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
@@ -214,24 +221,15 @@ public class VentanaPortalEstudiante extends VentanaBase {
         categoriaComboBox.addActionListener(listener);
     }
 
-    public void addSolicitarButtonListener(ActionListener listener) {
+    public void addSolicitarPrestamoListener(ActionListener listener) {
         solicitarPrestamoButton.addActionListener(listener);
     }
 
-    public void addDevolverButtonListener(ActionListener listener) {
+    public void addDevolverLibroListener(ActionListener listener) {
         devolverLibroButton.addActionListener(listener);
     }
 
-    public void addCerrarSesionButtonListener(ActionListener listener) {
+    public void addCerrarSesionListener(ActionListener listener) {
         cerrarSesionButton.addActionListener(listener);
-    }
-
-    public int getFilaSeleccionadaLibro() {
-        return librosTable.getSelectedRow();
-    }
-
-    public Integer getFilaSeleccionadaPrestamo() {
-        // ?
-        return prestamosTable.getSelectedRow() != -1 ? prestamosTable.getSelectedRow() : null;
     }
 }

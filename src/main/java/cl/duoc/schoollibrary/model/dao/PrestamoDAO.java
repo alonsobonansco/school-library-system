@@ -10,15 +10,12 @@ import cl.duoc.schoollibrary.model.entity.Prestamo;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrestamoDAO {
 
-    /**
-     * Registra un préstamo en el sistema y descuenta automáticamente el stock del libro.
-     * Utiliza un bloque transaccional manual (commit/rollback) para asegurar la integridad de datos.
-     */
     public void create(Prestamo prestamo) throws DataAccessException {
         String sqlPrestamo = "INSERT INTO prestamos (id_estudiante, id_libro, fecha_prestamo, fecha_devolucion, devuelto)" +
                 " VALUES (?, ?, ?, ?, ?)";
@@ -31,7 +28,7 @@ public class PrestamoDAO {
                 int filasAfectadas = psStock.executeUpdate();
 
                 if (filasAfectadas != 1) {
-                    throw new RuntimeException("No hay stock disponible para el libro con ID: " + prestamo.getLibro().getId());
+                    throw new SQLException("No hay stock disponible para el libro con ID: " + prestamo.getLibro().getId());
                 }
             }
             try (PreparedStatement psPrestamo = conn.prepareStatement(sqlPrestamo)) {
@@ -107,7 +104,7 @@ public class PrestamoDAO {
     }
 
     public void registrarDevolucion(int idPrestamo, int idLibro) throws DataAccessException {
-        String sqlPrestamo = "UPDATE prestamos SET devuelto = TRUE WHERE id = ?";
+        String sqlPrestamo = "UPDATE prestamos SET devuelto = TRUE WHERE id = ? AND devuelto = FALSE";
         String sqlStock = "UPDATE libros SET stock = stock + 1 WHERE id = ?";
 
         DatabaseConnection.getInstance().ejecutarTransaccionVoid(conn -> {
@@ -115,13 +112,16 @@ public class PrestamoDAO {
                 psPrestamo.setInt(1, idPrestamo);
                 int filasAfectadas = psPrestamo.executeUpdate();
 
-                if (filasAfectadas == 1) {
-                    try (PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
-                        psStock.setInt(1, idLibro);
-                        psStock.executeUpdate();
+                if (filasAfectadas != 1) {
+                    throw new SQLException("No se encontró el préstamo con ID: " + idPrestamo);
+                }
+                try (PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
+                    psStock.setInt(1, idLibro);
+                    int stockActualizado = psStock.executeUpdate();
+
+                    if (stockActualizado != 1) {
+                        throw new SQLException("No se encontró el libro con ID: " + idLibro);
                     }
-                } else {
-                    throw new RuntimeException("No se encontró el préstamo con ID: " + idPrestamo);
                 }
             }
         });

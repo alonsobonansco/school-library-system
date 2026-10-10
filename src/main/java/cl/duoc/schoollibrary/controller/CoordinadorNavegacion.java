@@ -6,10 +6,12 @@ import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
-import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaPrincipalBibliotecario;
+import cl.duoc.schoollibrary.view.estudiante.VentanaPortalEstudiante;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Orquestador central del ciclo de vida y navegación de la suite de software.
@@ -20,7 +22,8 @@ public final class CoordinadorNavegacion {
     private static CoordinadorNavegacion instancia;
     private JFrame ventanaActiva;
 
-    private CoordinadorNavegacion() {}
+    private CoordinadorNavegacion() {
+    }
 
     public static synchronized CoordinadorNavegacion getInstancia() {
         if (instancia == null) {
@@ -40,6 +43,7 @@ public final class CoordinadorNavegacion {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             new ControladorLogin(vistaLogin, usuarioDAO);
 
+            cerrarProcesos(vistaLogin);
             ventanaActiva = vistaLogin;
             ventanaActiva.setVisible(true);
         });
@@ -55,6 +59,7 @@ public final class CoordinadorNavegacion {
             VentanaPortalEstudiante vistaEstudiante = new VentanaPortalEstudiante();
             new ControladorPortalEstudiante(vistaEstudiante, alumnoLogueado);
 
+            cerrarProcesos(vistaEstudiante);
             ventanaActiva = vistaEstudiante;
             ventanaActiva.setVisible(true);
         });
@@ -69,9 +74,9 @@ public final class CoordinadorNavegacion {
 
             VentanaPrincipalBibliotecario vistaAdmin = new VentanaPrincipalBibliotecario();
             vistaAdmin.establecerMensajeBienvenida(sesion.getNombre());
-
             new ControladorPrincipalBibliotecario(vistaAdmin);
 
+            cerrarProcesos(vistaAdmin);
             ventanaActiva = vistaAdmin;
             ventanaActiva.setVisible(true);
         });
@@ -82,5 +87,14 @@ public final class CoordinadorNavegacion {
             ventanaActiva.dispose();
             ventanaActiva = null;
         }
+    }
+
+    private void cerrarProcesos(JFrame ventana) {
+        ventana.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                AppThreadPool.shutdown();
+            }
+        });
     }
 }

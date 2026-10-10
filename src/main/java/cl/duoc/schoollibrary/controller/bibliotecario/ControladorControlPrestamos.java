@@ -1,24 +1,23 @@
 package cl.duoc.schoollibrary.controller.bibliotecario;
 
-import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.controller.AppThreadPool;
 import cl.duoc.schoollibrary.model.dao.PrestamoDAO;
 import cl.duoc.schoollibrary.model.entity.Prestamo;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaControlPrestamos;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroPrestamo;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControladorControlPrestamos {
 
-    private final VentanaControlPrestamos vista;
+    private final VentanaControlPrestamos ventanaControlPrestamos;
     private final PrestamoDAO prestamoDAO;
 
     private List<Prestamo> listaPrestamosCache = new ArrayList<>();
 
-    public ControladorControlPrestamos(VentanaControlPrestamos vista) {
-        this.vista = vista;
+    public ControladorControlPrestamos(VentanaControlPrestamos ventanaControlPrestamos) {
+        this.ventanaControlPrestamos = ventanaControlPrestamos;
         this.prestamoDAO = new PrestamoDAO();
 
         inicializarListeners();
@@ -26,65 +25,59 @@ public class ControladorControlPrestamos {
     }
 
     private void inicializarListeners() {
-        vista.addNuevoPrestamoListener(e -> abrirFormularioAsignacion());
-        vista.addDevolucionListener(e -> procesarDevolucionAdministrativa());
-        vista.addAtrasListener(e -> vista.cerrarVentana());
+        ventanaControlPrestamos.addNuevoPrestamoListener(e -> abrirFormularioAsignacion());
+        ventanaControlPrestamos.addDevolucionListener(e -> procesarDevolucion());
+        ventanaControlPrestamos.addAtrasListener(e -> ventanaControlPrestamos.cerrarVentana());
     }
 
     public void cargarPrestamosDesdeBD() {
-        new Thread(() -> {
-            try {
-                listaPrestamosCache = prestamoDAO.read();
-                vista.actualizarTabla(listaPrestamosCache);
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Fallo al sincronizar historial: " + ex.getMessage());
-            }
-        }).start();
+        AppThreadPool.ejecutarCarga(
+                prestamoDAO::read,
+                prestamos -> {
+                    listaPrestamosCache = prestamos;
+                    ventanaControlPrestamos.actualizarTabla(prestamos);
+                },
+                ex -> ventanaControlPrestamos.mostrarMensajeError(
+                        "Fallo al sincronizar historial: " + ex.getMessage()
+                ));
     }
 
     private void abrirFormularioAsignacion() {
-        SwingUtilities.invokeLater(() -> {
-            VentanaRegistroPrestamo ventanaReg = new VentanaRegistroPrestamo();
-
-            new ControladorRegistroPrestamo(ventanaReg, this);
-
-            ventanaReg.setVisible(true);
-        });
+        VentanaRegistroPrestamo ventanaReg = new VentanaRegistroPrestamo();
+        new ControladorRegistroPrestamo(ventanaReg, this);
+        ventanaReg.setVisible(true);
     }
 
-    private void procesarDevolucionAdministrativa() {
-        int filaSeleccionada = vista.getFilaSeleccionada();
+    private void procesarDevolucion() {
+        int filaSeleccionada = ventanaControlPrestamos.getFilaSeleccionada();
         if (filaSeleccionada == -1) {
-            vista.mostrarMensajeError("Por favor, seleccione un préstamo de la tabla para registrar su devolución.");
+            ventanaControlPrestamos.mostrarMensajeError("Por favor, seleccione un préstamo de la tabla para registrar su devolución.");
             return;
         }
 
         Prestamo prestamoAEditar = listaPrestamosCache.get(filaSeleccionada);
 
         if (prestamoAEditar.isDevuelto()) {
-            vista.mostrarMensajeError("El préstamo seleccionado ya figura como DEVUELTO en el sistema.");
+            ventanaControlPrestamos.mostrarMensajeError("El préstamo seleccionado ya figura como DEVUELTO en el sistema.");
             return;
         }
 
-        if (!vista.confirmarEliminacion("préstamo y retornar la copia al stock físico disponible")) {
+        if (!ventanaControlPrestamos.confirmarEliminacion("préstamo y retornar la copia al stock físico disponible")) {
             return;
         }
 
         int idPrestamo = prestamoAEditar.getId();
         int idLibro = prestamoAEditar.getLibro().getId();
 
-        new Thread(() -> {
-            try {
-                prestamoDAO.registrarDevolucion(idPrestamo, idLibro);
-
-                SwingUtilities.invokeLater(() -> {
-                    vista.mostrarMensajeConfirmacion("Devolución procesada con éxito.\nEl libro ha retornado al estante.");
+        AppThreadPool.ejecutarAccion(
+                () -> prestamoDAO.registrarDevolucion(idPrestamo, idLibro),
+                () -> {
+                    ventanaControlPrestamos.mostrarMensajeConfirmacion(
+                            "Devolución procesada con éxito.\nEl libro ha retornado al estante.");
                     cargarPrestamosDesdeBD();
-                });
-
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Fallo relacional al procesar devolución: " + ex.getMessage());
-            }
-        }).start();
+                },
+                ex -> ventanaControlPrestamos.mostrarMensajeError(
+                        "Fallo relacional al procesar devolución: " + ex.getMessage())
+        );
     }
 }

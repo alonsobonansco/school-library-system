@@ -1,24 +1,23 @@
 package cl.duoc.schoollibrary.controller.bibliotecario;
 
-import cl.duoc.schoollibrary.exception.DataAccessException;
+import cl.duoc.schoollibrary.controller.AppThreadPool;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionEstudiantes;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroEstudiante;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControladorGestionEstudiantes {
 
-    private final VentanaGestionEstudiantes vista;
+    private final VentanaGestionEstudiantes ventanaGestionEstudiantes;
     private final EstudianteDAO estudianteDAO;
-
     private List<Estudiante> listaEstudiantesCache = new ArrayList<>();
 
-    public ControladorGestionEstudiantes(VentanaGestionEstudiantes vista, EstudianteDAO estudianteDAO) {
-        this.vista = vista;
+    public ControladorGestionEstudiantes(VentanaGestionEstudiantes ventanaGestionEstudiantes,
+                                         EstudianteDAO estudianteDAO) {
+        this.ventanaGestionEstudiantes = ventanaGestionEstudiantes;
         this.estudianteDAO = estudianteDAO;
 
         inicializarListeners();
@@ -26,38 +25,38 @@ public class ControladorGestionEstudiantes {
     }
 
     private void inicializarListeners() {
-        vista.addBusquedaDocumentListener(this::aplicarFiltrosMemoria);
-
-        vista.addNuevoButtonListener(e -> abrirFormularioFlotante(null));
-
-        vista.addEditarButtonListener(e -> {
-            int fila = vista.getFilaSeleccionada();
+        ventanaGestionEstudiantes.addBusquedaDocumentListener(this::aplicarFiltrosMemoria);
+        ventanaGestionEstudiantes.addNuevoButtonListener(e -> abrirFormularioFlotante(null));
+        ventanaGestionEstudiantes.addEditarButtonListener(e -> {
+            int fila = ventanaGestionEstudiantes.getFilaSeleccionada();
             if (fila == -1) {
-                vista.mostrarMensajeError("Por favor, seleccione un alumno de la tabla para modificar su perfil.");
+                ventanaGestionEstudiantes.mostrarMensajeError(
+                        "Por favor, seleccione un alumno de la tabla para modificar su perfil.");
                 return;
             }
             Estudiante seleccionado = listaEstudiantesCache.get(fila);
             abrirFormularioFlotante(seleccionado);
         });
-
-        vista.addEliminarButtonListener(e -> procesarBajaEstudiante());
-
-        vista.addAtrasButtonListener(e -> vista.cerrarVentana());
+        ventanaGestionEstudiantes.addEliminarButtonListener(e -> procesarBajaEstudiante());
+        ventanaGestionEstudiantes.addAtrasButtonListener(e -> ventanaGestionEstudiantes.cerrarVentana());
     }
 
     public void cargarEstudiantesDesdeBD() {
-        new Thread(() -> {
-            try {
-                listaEstudiantesCache = estudianteDAO.read();
-                vista.actualizarTabla(listaEstudiantesCache);
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Fallo al sincronizar alumnos: " + ex.getMessage());
-            }
-        }).start();
+        AppThreadPool.ejecutarCarga(
+                estudianteDAO::read,
+                estudiantes -> {
+                    this.listaEstudiantesCache = estudiantes;
+                    // Se prefiere actualizar la tabla con la lista que se recibe.
+                    ventanaGestionEstudiantes.actualizarTabla(estudiantes);
+                },
+                ex -> ventanaGestionEstudiantes.mostrarMensajeError(
+                        "Fallo al sincronizar alumnos: " + ex.getMessage()
+                )
+        );
     }
 
     private void aplicarFiltrosMemoria() {
-        String texto = vista.getTextoBusqueda().toLowerCase().trim();
+        String texto = ventanaGestionEstudiantes.getTextoBusqueda().toLowerCase().trim();
 
         List<Estudiante> filtrados = listaEstudiantesCache.stream()
                 .filter(e -> texto.isBlank() ||
@@ -65,50 +64,48 @@ public class ControladorGestionEstudiantes {
                         e.getRut().toLowerCase().contains(texto))
                 .toList();
 
-        vista.actualizarTabla(filtrados);
+        ventanaGestionEstudiantes.actualizarTabla(filtrados);
     }
 
     private void abrirFormularioFlotante(Estudiante estudianteAEditar) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaRegistroEstudiante ventanaReg = new VentanaRegistroEstudiante();
+        VentanaRegistroEstudiante ventanaRegistroEstudiante = new VentanaRegistroEstudiante();
+        new ControladorRegistroEstudiante(
+                ventanaRegistroEstudiante, estudianteDAO, this, estudianteAEditar);
 
-            new ControladorRegistroEstudiante(ventanaReg, estudianteDAO, this, estudianteAEditar);
+        if (estudianteAEditar != null) {
+            ventanaRegistroEstudiante.prellenarFormulario(
+                    estudianteAEditar.getRut(),
+                    estudianteAEditar.getNombre(),
+                    estudianteAEditar.getCurso(),
+                    estudianteAEditar.getCorreo()
+            );
+        }
 
-            if (estudianteAEditar != null) {
-                ventanaReg.prellenarFormulario(
-                        estudianteAEditar.getRut(),
-                        estudianteAEditar.getNombre(),
-                        estudianteAEditar.getCurso(),
-                        estudianteAEditar.getCorreo()
-                );
-            }
-
-            ventanaReg.setVisible(true);
-        });
+        ventanaRegistroEstudiante.setVisible(true);
     }
 
     private void procesarBajaEstudiante() {
-        Integer idEstudiante = vista.getIdEstudianteSeleccionado();
+        Integer idEstudiante = ventanaGestionEstudiantes.getIdEstudianteSeleccionado();
         if (idEstudiante == null) {
-            vista.mostrarMensajeError("Debe seleccionar un estudiante de la tabla para darle de baja.");
+            ventanaGestionEstudiantes.mostrarMensajeError(
+                    "Debe seleccionar un estudiante de la tabla para darle de baja.");
             return;
         }
 
-        if (!vista.confirmarEliminacion("estudiante seleccionado del sistema escolar")) {
+        if (!ventanaGestionEstudiantes.confirmarEliminacion("estudiante seleccionado del sistema escolar")) {
             return;
         }
 
-        new Thread(() -> {
-            try {
-                estudianteDAO.delete(idEstudiante);
-
-                SwingUtilities.invokeLater(() -> {
-                    vista.mostrarMensajeConfirmacion("El estudiante ha sido dado de baja exitosamente.");
+        AppThreadPool.ejecutarAccion(
+                () -> estudianteDAO.delete(idEstudiante),
+                () -> {
+                    ventanaGestionEstudiantes.mostrarMensajeConfirmacion(
+                            "El estudiante ha sido dado de baja exitosamente.");
                     cargarEstudiantesDesdeBD();
-                });
-            } catch (DataAccessException ex) {
-                vista.mostrarMensajeError("Error al eliminar registro: " + ex.getMessage());
-            }
-        }).start();
+                },
+                ex -> ventanaGestionEstudiantes.mostrarMensajeError(
+                        "Error al eliminar registro: " + ex.getMessage()
+                )
+        );
     }
 }

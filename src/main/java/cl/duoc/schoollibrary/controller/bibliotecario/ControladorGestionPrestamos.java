@@ -6,6 +6,8 @@ import cl.duoc.schoollibrary.model.entity.Prestamo;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaGestionPrestamos;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroPrestamo;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,10 @@ public class ControladorGestionPrestamos {
     }
 
     private void inicializarListeners() {
-        ventanaGestionPrestamos.addRegistrarPrestamoListener(e -> abrirFormularioAsignacion());
+        ventanaGestionPrestamos.addRegistrarPrestamoListener(e -> {
+            ventanaGestionPrestamos.setAccionesHabilitadas(false);
+            abrirFormularioAsignacion();
+        });
         ventanaGestionPrestamos.addRegistrarDevolucionListener(e -> procesarDevolucion());
         ventanaGestionPrestamos.addVolverAtrasListener(e -> ventanaGestionPrestamos.cerrarVentana());
     }
@@ -42,9 +47,15 @@ public class ControladorGestionPrestamos {
     }
 
     private void abrirFormularioAsignacion() {
-        VentanaRegistroPrestamo ventanaReg = new VentanaRegistroPrestamo();
-        new ControladorRegistroPrestamo(ventanaReg, this);
-        ventanaReg.setVisible(true);
+        VentanaRegistroPrestamo ventanaRegistroPrestamo = new VentanaRegistroPrestamo();
+        ventanaRegistroPrestamo.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                ventanaGestionPrestamos.setAccionesHabilitadas(true);
+            }
+        });
+        new ControladorRegistroPrestamo(ventanaRegistroPrestamo, this);
+        ventanaRegistroPrestamo.setVisible(true);
     }
 
     private void procesarDevolucion() {
@@ -68,15 +79,21 @@ public class ControladorGestionPrestamos {
         int idPrestamo = prestamoAEditar.getId();
         int idLibro = prestamoAEditar.getLibro().getId();
 
+        ventanaGestionPrestamos.setAccionesHabilitadas(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> prestamoDAO.registrarDevolucion(idPrestamo, idLibro),
                 () -> {
                     ventanaGestionPrestamos.mostrarMensajeConfirmacion(
                             "Devolución procesada con éxito.\nEl libro ha retornado al estante.");
                     cargarPrestamosDesdeBD();
+                    ventanaGestionPrestamos.setAccionesHabilitadas(true);
                 },
-                ex -> ventanaGestionPrestamos.mostrarMensajeError(
-                        "Fallo relacional al procesar devolución: " + ex.getMessage())
+                ex -> {
+                    ventanaGestionPrestamos.mostrarMensajeError(
+                            "Fallo relacional al procesar devolución: " + ex.getMessage());
+                    ventanaGestionPrestamos.setAccionesHabilitadas(true);
+                }
         );
     }
 }

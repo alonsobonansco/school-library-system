@@ -1,6 +1,5 @@
 package cl.duoc.schoollibrary.controller;
 
-import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.dao.UsuarioDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
@@ -8,8 +7,6 @@ import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 import cl.duoc.schoollibrary.view.VentanaLogin;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,18 +14,18 @@ public class ControladorLogin {
 
     private final VentanaLogin ventanaLogin;
     private final UsuarioDAO usuarioDAO;
-    private EstudianteDAO estudianteDAO;
+    private final EstudianteDAO estudianteDAO;
 
     public ControladorLogin(VentanaLogin ventanaLogin, UsuarioDAO usuarioDAO) {
         this.ventanaLogin = ventanaLogin;
         this.usuarioDAO = usuarioDAO;
+        this.estudianteDAO = new EstudianteDAO();
 
-        this.ventanaLogin.addIngresarButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                procesarAutenticacion();
-            }
-        });
+        inicializarListeners();
+    }
+
+    private void inicializarListeners() {
+        this.ventanaLogin.addIngresarButtonListener(e -> procesarAutenticacion());
     }
 
     private void procesarAutenticacion() {
@@ -40,52 +37,54 @@ public class ControladorLogin {
             return;
         }
 
-        new Thread(() -> {
-            try {
-                List<Usuario> usuarios = usuarioDAO.read();
+        AppThreadPool.ejecutarCarga(
+                () -> {
+                    List<Usuario> usuarios = usuarioDAO.read();
 
-                Optional<Usuario> usuarioEncontrado = usuarios.stream()
-                        .filter(u -> u.getCorreo().trim().equalsIgnoreCase(correo.trim())
-                                && u.getContrasenia().trim().equals(contrasenia.trim()))
-                        .findFirst();
+                    Optional<Usuario> usuarioEncontrado = usuarios.stream()
+                            .filter(u -> u.getCorreo().trim().equalsIgnoreCase(correo)
+                                    && u.getContrasenia().trim().equals(contrasenia))
+                            .findFirst();
 
-                if (usuarioEncontrado.isPresent()) {
+                    if (usuarioEncontrado.isEmpty()) {
+                        return Optional.empty();
+                    }
+
                     Usuario usuario = usuarioEncontrado.get();
 
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido " +
-                                "al Sistema," + usuario.getNombre());
+                    if (usuario.getRol() == Rol.estudiante) {
+                        List<Estudiante> estudiantes = estudianteDAO.read();
 
-                        if (usuario.getRol() == Rol.bibliotecario) {
-                            CoordinadorNavegacion.getInstancia().mostrarPrincipalBibliotecario(usuario);
+                        Optional<Estudiante> estudianteEncontrado = estudiantes.stream()
+                                .filter(e -> e.getCorreo().trim().equalsIgnoreCase(usuario.getCorreo().trim()))
+                                .findFirst();
 
-                        } else {
-                            try {
-                                EstudianteDAO estudianteDAO = new EstudianteDAO();
-                                List<Estudiante> estudiantes = estudianteDAO.read();
+                        if (estudianteEncontrado.isPresent()) return estudianteEncontrado.get();
+                    }
 
-                                Optional<Estudiante> estudianteEncontrado = estudiantes.stream()
-                                        .filter(e -> e.getCorreo().
-                                                trim().equalsIgnoreCase(usuario.getCorreo().trim()))
-                                        .findFirst();
+                    return usuario;
+                },
+                perfilAutenticado -> {
+                    if (perfilAutenticado instanceof Optional && ((Optional<?>) perfilAutenticado).isEmpty()) {
+                        ventanaLogin.mostrarMensajeError("Correo o contraseña incorrectos.");
+                        ventanaLogin.limpiarFormulario();
+                        return;
+                    }
 
-                                estudianteEncontrado.ifPresent(
-                                        e -> CoordinadorNavegacion.getInstancia().mostrarPortalEstudiante(e));
-                            } catch (DataAccessException ex) {
-                                ventanaLogin.mostrarMensajeError("Error al acceder a la base de datos: " + ex.getMessage());
-                            }
-                        }
-
+                    if (perfilAutenticado instanceof Usuario usuarioAdmin) {
+                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido al Sistema, " + usuarioAdmin.getNombre());
+                        CoordinadorNavegacion.getInstancia().mostrarPrincipalBibliotecario(usuarioAdmin);
                         ventanaLogin.cerrarVentana();
-                    });
-                } else {
-                    ventanaLogin.mostrarMensajeError("Correo o contraseña incorrectos");
-                    ventanaLogin.limpiarFormulario();
+                    } else if (perfilAutenticado instanceof Estudiante estudianteAlumno) {
+                        ventanaLogin.mostrarMensajeConfirmacion("¡Acceso concedido!\nBienvenido al Portal, " + estudianteAlumno.getNombre());
+                        CoordinadorNavegacion.getInstancia().mostrarPortalEstudiante(estudianteAlumno);
+                        ventanaLogin.cerrarVentana();
+                    }
+                },
+                ex -> {
+                    ventanaLogin.mostrarMensajeError("Error al acceder a la base de datos: " + ex.getMessage());
                 }
 
-            } catch (DataAccessException ex) {
-                ventanaLogin.mostrarMensajeError("Error al acceder a la base de datos: " + ex.getMessage());
-            }
-        }).start();
+        );
     }
 }

@@ -1,9 +1,16 @@
 package cl.duoc.schoollibrary.view;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 public abstract class VentanaBase extends JFrame {
+
+    protected static final Font FUENTE_TITULO = new Font("Arial", Font.BOLD, 18);
+    protected static final Font FUENTE_LABEL = new Font("Arial", Font.BOLD, 12);
+    protected static final Font FUENTE_CAMPO = new Font("Arial", Font.PLAIN, 12);
+    protected static final Font FUENTE_BOTON = new Font("Arial", Font.BOLD, 12);
+    protected static final Cursor CURSOR_CLICK = new Cursor(Cursor.HAND_CURSOR);
 
     public VentanaBase(String titulo, int ancho, int alto) {
         setTitle(titulo);
@@ -15,11 +22,11 @@ public abstract class VentanaBase extends JFrame {
     }
 
     public void mostrarMensajeConfirmacion(String mensaje) {
-            JOptionPane.showMessageDialog(this, mensaje, "Proceso Exitoso", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, "Proceso Exitoso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void mostrarMensajeError(String mensaje) {
-            JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public boolean confirmarEliminacion(String mensaje) {

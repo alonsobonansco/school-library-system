@@ -22,10 +22,10 @@ public class VentanaLogin extends VentanaBase {
 
     private void inicializarComponentes() {
         tituloLabel = new JLabel("Biblioteca Escolar", SwingConstants.CENTER);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        tituloLabel.setFont(FUENTE_TITULO.deriveFont(24f));
         tituloLabel.setBorder(BorderFactory.createEmptyBorder(25, 10, 10, 10));
 
-        Font fuente = new Font("Arial", Font.PLAIN, 14);
+        Font fuente = FUENTE_CAMPO.deriveFont(14f);
 
         correoTextField = new JTextField();
         correoTextField.setFont(fuente);
@@ -34,9 +34,9 @@ public class VentanaLogin extends VentanaBase {
         contraseniaPasswordField.setFont(fuente);
 
         ingresarButton = new JButton("Ingresar al Sistema");
-        ingresarButton.setFont(fuente);
+        ingresarButton.setFont(FUENTE_BOTON.deriveFont(14f));
         // Para que al pasar el mouse sobre el botón cambie el cursor a una mano, indicando que es clickeable
-        ingresarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        ingresarButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -53,7 +53,7 @@ public class VentanaLogin extends VentanaBase {
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel correoLabel = new JLabel("Correo Electrónico:");
-        correoLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        correoLabel.setFont(FUENTE_LABEL.deriveFont(13f));
         panelCentral.add(correoLabel, gbc);
 
         gbc.gridx = 0;
@@ -63,7 +63,7 @@ public class VentanaLogin extends VentanaBase {
         gbc.gridx = 0;
         gbc.gridy = 2;
         JLabel contraseniaLabel = new JLabel("Contraseña:");
-        contraseniaLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        contraseniaLabel.setFont(FUENTE_LABEL.deriveFont(13f));
         panelCentral.add(contraseniaLabel, gbc);
 
         gbc.gridx = 0;

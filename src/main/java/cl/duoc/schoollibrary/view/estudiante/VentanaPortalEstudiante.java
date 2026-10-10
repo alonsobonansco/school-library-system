@@ -40,21 +40,22 @@ public class VentanaPortalEstudiante extends VentanaBase {
 
     private void inicializarComponentes() {
         tituloLabel = new JLabel("Bienvenido al Portal de Autoservicio", SwingConstants.LEFT);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        tituloLabel.setFont(FUENTE_TITULO.deriveFont(16f));
         tituloLabel.setBorder(BorderFactory.createEmptyBorder(15, 20, 5, 20));
 
         pestaniasPanel = new JTabbedPane();
-        pestaniasPanel.setFont(new Font("Arial", Font.BOLD, 13));
+        pestaniasPanel.setFont(FUENTE_BOTON.deriveFont(13f));
 
         cerrarSesionButton = new JButton("Cerrar Sesión");
-        cerrarSesionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cerrarSesionButton.setFont(FUENTE_BOTON);
+        cerrarSesionButton.setCursor(CURSOR_CLICK);
     }
 
     private void inicializarPestaniaCatalogo() {
         buscarLibroTextField = new JTextField(20);
-        buscarLibroTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        buscarLibroTextField.setFont(FUENTE_CAMPO.deriveFont(14f));
         categoriaComboBox = new JComboBox<>();
-        categoriaComboBox.setFont(new Font("Arial", Font.PLAIN, 13));
+        categoriaComboBox.setFont(FUENTE_CAMPO.deriveFont(13f));
 
         String[] columnasLibros = {"Título", "Autor", "ISBN", "Categoría", "Disponibilidad"};
         tablaLibrosModel = new DefaultTableModel(columnasLibros, 0) {
@@ -65,7 +66,7 @@ public class VentanaPortalEstudiante extends VentanaBase {
         };
 
         librosTable = new JTable(tablaLibrosModel);
-        librosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        librosTable.setFont(FUENTE_CAMPO.deriveFont(13f));
         librosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         librosTable.getTableHeader().setReorderingAllowed(false);
         librosTable.getTableHeader().setResizingAllowed(false);
@@ -78,8 +79,8 @@ public class VentanaPortalEstudiante extends VentanaBase {
         librosTable.getColumnModel().getColumn(4).setPreferredWidth(120);
 
         solicitarPrestamoButton = new JButton("Solicitar Préstamo");
-        solicitarPrestamoButton.setFont(new Font("Arial", Font.BOLD, 13));
-        solicitarPrestamoButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        solicitarPrestamoButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        solicitarPrestamoButton.setCursor(CURSOR_CLICK);
     }
 
     private void inicializarPestaniaMisPrestamos() {
@@ -92,14 +93,14 @@ public class VentanaPortalEstudiante extends VentanaBase {
         };
 
         prestamosTable = new JTable(tablaPrestamosModel);
-        prestamosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        prestamosTable.setFont(FUENTE_CAMPO.deriveFont(13f));
         prestamosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         prestamosTable.getTableHeader().setReorderingAllowed(false);
         prestamosTable.getTableHeader().setResizingAllowed(false);
 
         devolverLibroButton = new JButton("Devolver Libro");
-        devolverLibroButton.setFont(new Font("Arial", Font.BOLD, 13));
-        devolverLibroButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        devolverLibroButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        devolverLibroButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -117,10 +118,17 @@ public class VentanaPortalEstudiante extends VentanaBase {
         JPanel panelCatalogo = new JPanel(new BorderLayout(10, 10));
 
         JPanel panelFiltros = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
-        panelFiltros.add(new JLabel("Buscar Libro / ISBN:"));
+
+        JLabel buscarLabel = new JLabel("Buscar Libro / ISBN:");
+        buscarLabel.setFont(FUENTE_LABEL.deriveFont(13f));
+        panelFiltros.add(buscarLabel);
         panelFiltros.add(buscarLibroTextField);
-        panelFiltros.add(new JLabel("Categoría:"));
+
+        JLabel categoriaLabel = new JLabel("Categoría:");
+        categoriaLabel.setFont(FUENTE_LABEL.deriveFont(13f));
+        panelFiltros.add(categoriaLabel);
         panelFiltros.add(categoriaComboBox);
+
         panelCatalogo.add(panelFiltros, BorderLayout.NORTH);
 
         JScrollPane scrollLibros = new JScrollPane(librosTable);
@@ -145,8 +153,6 @@ public class VentanaPortalEstudiante extends VentanaBase {
         pestaniasPanel.addTab("Mis Préstamos Activos", panelPrestamos);
 
         add(pestaniasPanel, BorderLayout.CENTER);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void establecerNombreUsuario(String nombre) {
@@ -163,23 +169,19 @@ public class VentanaPortalEstudiante extends VentanaBase {
     }
 
     public void actualizarTablaPrestamos(List<Prestamo> prestamos) {
-        SwingUtilities.invokeLater(() -> {
-            tablaPrestamosModel.setRowCount(0);
-            for (Prestamo p : prestamos) {
-                Object[] fila = {p.getId(), p.getLibro().getTitulo(), p.getFechaPrestamo(), p.getFechaDevolucion()};
-                tablaPrestamosModel.addRow(fila);
-            }
-        });
+        tablaPrestamosModel.setRowCount(0);
+        for (Prestamo p : prestamos) {
+            Object[] fila = {p.getId(), p.getLibro().getTitulo(), p.getFechaPrestamo(), p.getFechaDevolucion()};
+            tablaPrestamosModel.addRow(fila);
+        }
     }
 
     public void poblarCategorias(List<String> nombresCategorias) {
-        SwingUtilities.invokeLater(() -> {
-            categoriaComboBox.removeAllItems();
-            categoriaComboBox.addItem("Todas");
-            for (String cat : nombresCategorias) {
-                categoriaComboBox.addItem(cat);
-            }
-        });
+        categoriaComboBox.removeAllItems();
+        categoriaComboBox.addItem("Todas");
+        for (String categoria : nombresCategorias) {
+            categoriaComboBox.addItem(categoria);
+        }
     }
 
     public String getTextoBusqueda() {

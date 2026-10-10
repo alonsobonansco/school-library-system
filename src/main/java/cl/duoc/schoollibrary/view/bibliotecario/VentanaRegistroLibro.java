@@ -29,32 +29,30 @@ public class VentanaRegistroLibro extends VentanaBase {
 
     private void inicializarComponentes() {
         tituloLabel = new JLabel("Información del Libro", SwingConstants.CENTER);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        tituloLabel.setFont(FUENTE_TITULO);
         tituloLabel.setBorder(BorderFactory.createEmptyBorder(15, 10, 5, 10));
 
-        Font fuenteCampos = new Font("Arial", Font.PLAIN, 12);
         tituloTextField = new JTextField(15);
-        tituloTextField.setFont(fuenteCampos);
+        tituloTextField.setFont(FUENTE_CAMPO);
         autorTextField = new JTextField(15);
-        autorTextField.setFont(fuenteCampos);
+        autorTextField.setFont(FUENTE_CAMPO);
         isbnTextField = new JTextField(15);
-        isbnTextField.setFont(fuenteCampos);
+        isbnTextField.setFont(FUENTE_CAMPO);
         editorialTextField = new JTextField(15);
-        editorialTextField.setFont(fuenteCampos);
+        editorialTextField.setFont(FUENTE_CAMPO);
         stockTextField = new JTextField(15);
-        stockTextField.setFont(fuenteCampos);
+        stockTextField.setFont(FUENTE_CAMPO);
 
         categoriaComboBox = new JComboBox<>();
-        categoriaComboBox.setFont(fuenteCampos);
+        categoriaComboBox.setFont(FUENTE_CAMPO);
 
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 12);
         guardarButton = new JButton("Guardar");
-        guardarButton.setFont(fuenteBotones);
-        guardarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        guardarButton.setFont(FUENTE_BOTON);
+        guardarButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON);
+        atrasButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -68,29 +66,27 @@ public class VentanaRegistroLibro extends VentanaBase {
         gbc.insets = new Insets(4, 8, 4, 8);
         gbc.weightx = 1.0;
 
-        Font fuente = new Font("Arial", Font.BOLD, 12);
-
-        agregarComponenteForm(panelFormulario, new JLabel("Título:"), gbc, 0, 0, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("Título:"), gbc, 0, 0, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(tituloTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Autor:"), gbc, 0, 1, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("Autor:"), gbc, 0, 1, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(autorTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("ISBN:"), gbc, 0, 2, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("ISBN:"), gbc, 0, 2, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(isbnTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Editorial:"), gbc, 0, 3, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("Editorial:"), gbc, 0, 3, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(editorialTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Stock:"), gbc, 0, 4, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("Stock:"), gbc, 0, 4, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(stockTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Categoría:"), gbc, 0, 5, fuente);
+        agregarComponenteForm(panelFormulario, new JLabel("Categoría:"), gbc, 0, 5, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(categoriaComboBox, gbc);
 

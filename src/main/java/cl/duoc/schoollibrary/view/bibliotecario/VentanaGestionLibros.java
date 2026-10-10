@@ -37,33 +37,27 @@ public class VentanaGestionLibros extends VentanaBase {
         categoriaComboBox.setFont(new Font("Arial", Font.PLAIN, 13));
 
         String[] columnas = {"ID", "Título", "Autor", "ISBN", "Editorial", "Stock", "Categoría"};
-        librosTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        librosTableModel = crearModeloTablaNoEditable(columnas);
 
         librosTable = new JTable(librosTableModel);
-        librosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        librosTable.setFont(FUENTE_CAMPO.deriveFont(13f));
         librosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
         agregarButton = new JButton("Añadir Libro");
-        agregarButton.setFont(fuenteBotones);
-        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        agregarButton.setCursor(CURSOR_CLICK);
 
         editarButton = new JButton("Editar Seleccionado");
-        editarButton.setFont(fuenteBotones);
-        editarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        editarButton.setCursor(CURSOR_CLICK);
 
         eliminarButton = new JButton("Eliminar Catálogo");
-        eliminarButton.setFont(fuenteBotones);
-        eliminarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        eliminarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        eliminarButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        atrasButton.setCursor(CURSOR_CLICK);
 
         librosTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         librosTable.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -79,13 +73,14 @@ public class VentanaGestionLibros extends VentanaBase {
         setLayout(new BorderLayout(10, 10));
 
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+
         JLabel buscarLabel = new JLabel("Buscar por Título / ISBN:");
-        buscarLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        buscarLabel.setFont(FUENTE_LABEL.deriveFont(13f));
         panelSuperior.add(buscarLabel);
         panelSuperior.add(buscarTextField);
 
         JLabel categoriaLabel = new JLabel("Categoría:");
-        categoriaLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        categoriaLabel.setFont(FUENTE_LABEL.deriveFont(13f));
         panelSuperior.add(categoriaLabel);
         panelSuperior.add(categoriaComboBox);
         add(panelSuperior, BorderLayout.NORTH);

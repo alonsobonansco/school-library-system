@@ -18,7 +18,7 @@ public class VentanaPortalBibliotecario extends VentanaBase {
     private JMenuItem itemPrestamos;
     private JMenuItem itemReportes;
     private JMenuItem itemCerrarSesion;
-    private JLabel lblPlaceholder;
+    private JLabel textoFondoLabel;
 
     public VentanaPortalBibliotecario() {
         super("Panel de Control Administrador - Sistema de Biblioteca", 850, 550);
@@ -31,7 +31,7 @@ public class VentanaPortalBibliotecario extends VentanaBase {
 
     private void inicializarComponentes() {
         tituloLabel = new JLabel("Consola de Gestión Biblioteca Escolar", SwingConstants.CENTER);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        tituloLabel.setFont(FUENTE_TITULO.deriveFont(22f));
         tituloLabel.setBorder(BorderFactory.createEmptyBorder(30, 10, 30, 10));
     }
 
@@ -44,11 +44,12 @@ public class VentanaPortalBibliotecario extends VentanaBase {
         itemReportes = new JMenuItem("Reportes y Estadísticas");
         itemCerrarSesion = new JMenuItem("Cerrar Sesión");
 
-        Font fuenteMenu = new Font("Arial", Font.PLAIN, 13);
+        Font fuenteMenu = FUENTE_CAMPO.deriveFont(13f);
         itemLibros.setFont(fuenteMenu);
         itemEstudiantes.setFont(fuenteMenu);
         itemPrestamos.setFont(fuenteMenu);
         itemReportes.setFont(fuenteMenu);
+        itemCerrarSesion.setFont(fuenteMenu);
 
         menuBar.add(itemLibros);
         menuBar.add(itemEstudiantes);
@@ -66,22 +67,18 @@ public class VentanaPortalBibliotecario extends VentanaBase {
         JPanel panelCentral = new JPanel(new BorderLayout());
         panelCentral.setBorder(BorderFactory.createEmptyBorder(0, 40, 40, 40));
 
-        lblPlaceholder = new JLabel("", SwingConstants.CENTER);
-        lblPlaceholder.setFont(new Font("Arial", Font.ITALIC, 14));
-        lblPlaceholder.setForeground(Color.GRAY);
-        panelCentral.add(lblPlaceholder, BorderLayout.CENTER);
+        textoFondoLabel = new JLabel("", SwingConstants.CENTER);
+        textoFondoLabel.setFont(FUENTE_CAMPO.deriveFont(Font.ITALIC, 14f));
+        textoFondoLabel.setForeground(Color.GRAY);
+        panelCentral.add(textoFondoLabel, BorderLayout.CENTER);
 
         add(panelCentral, BorderLayout.CENTER);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void establecerMensajeFondo(String nombreAdmin) {
-        SwingUtilities.invokeLater(() -> {
-            lblPlaceholder.setText(
-                    "Bienvenido/a al sistema, " + nombreAdmin + ". " +
-                            "Seleccione una opción del menú superior para comenzar a operar.");
-        });
+        textoFondoLabel.setText(
+                "Bienvenido/a al sistema, " + nombreAdmin + ". " +
+                        "Seleccione una opción del menú superior para comenzar a operar.");
     }
 
     public void addLibrosMenuListener(ActionListener listener) {

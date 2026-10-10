@@ -23,28 +23,25 @@ public class VentanaRegistroEstudiante extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        Font fuenteCampos = new Font("Arial", Font.PLAIN, 12);
-
         rutTextField = new JTextField(15);
-        rutTextField.setFont(fuenteCampos);
+        rutTextField.setFont(FUENTE_CAMPO);
 
         nombreTextField = new JTextField(15);
-        nombreTextField.setFont(fuenteCampos);
+        nombreTextField.setFont(FUENTE_CAMPO);
 
         cursoTextField = new JTextField(15);
-        cursoTextField.setFont(fuenteCampos);
+        cursoTextField.setFont(FUENTE_CAMPO);
 
         correoTextField = new JTextField(15);
-        correoTextField.setFont(fuenteCampos);
+        correoTextField.setFont(FUENTE_CAMPO);
 
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 12);
         guardarButton = new JButton("Guardar");
-        guardarButton.setFont(fuenteBotones);
-        guardarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        guardarButton.setFont(FUENTE_BOTON);
+        guardarButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON);
+        atrasButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -56,21 +53,19 @@ public class VentanaRegistroEstudiante extends VentanaBase {
         gbc.insets = new Insets(6, 8, 6, 8);
         gbc.weightx = 1.0;
 
-        Font fuenteLabels = new Font("Arial", Font.BOLD, 12);
-
-        agregarComponenteForm(panelFormulario, new JLabel("RUT:"), gbc, 0, 0, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("RUT:"), gbc, 0, 0, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(rutTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Nombre Completo:"), gbc, 0, 1, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Nombre Completo:"), gbc, 0, 1, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(nombreTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Curso:"), gbc, 0, 2, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Curso:"), gbc, 0, 2, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(cursoTextField, gbc);
 
-        agregarComponenteForm(panelFormulario, new JLabel("Correo Electrónico:"), gbc, 0, 3, fuenteLabels);
+        agregarComponenteForm(panelFormulario, new JLabel("Correo Electrónico:"), gbc, 0, 3, FUENTE_LABEL);
         gbc.gridx = 1;
         panelFormulario.add(correoTextField, gbc);
 

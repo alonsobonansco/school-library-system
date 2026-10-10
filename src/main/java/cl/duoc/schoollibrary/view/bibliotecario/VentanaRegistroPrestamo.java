@@ -26,20 +26,18 @@ public class VentanaRegistroPrestamo extends VentanaBase {
 
     private void inicializarComponentes() {
         estudiantesComboBox = new JComboBox<>();
-        estudiantesComboBox.setFont(new Font("Arial", Font.PLAIN, 12));
+        estudiantesComboBox.setFont(FUENTE_CAMPO);
 
         librosComboBox = new JComboBox<>();
-        librosComboBox.setFont(new Font("Arial", Font.PLAIN, 12));
-
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 12);
+        librosComboBox.setFont(FUENTE_CAMPO);
 
         guardarButton = new JButton("Registrar Préstamo");
-        guardarButton.setFont(fuenteBotones);
-        guardarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        guardarButton.setFont(FUENTE_BOTON);
+        guardarButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Cancelar");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON);
+        atrasButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -51,30 +49,28 @@ public class VentanaRegistroPrestamo extends VentanaBase {
         gbc.insets = new Insets(10, 8, 10, 8);
         gbc.weightx = 1.0;
 
-        Font fuenteLabels = new Font("Arial", Font.BOLD, 12);
-
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel lblEst = new JLabel("Seleccionar Alumno:");
-        lblEst.setFont(fuenteLabels);
-        panelFormulario.add(lblEst, gbc);
+        JLabel alumnoLabel = new JLabel("Seleccionar Alumno:");
+        alumnoLabel.setFont(FUENTE_LABEL);
+        panelFormulario.add(alumnoLabel, gbc);
         gbc.gridx = 1;
         panelFormulario.add(estudiantesComboBox, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel lblLib = new JLabel("Seleccionar Libro:");
-        lblLib.setFont(fuenteLabels);
-        panelFormulario.add(lblLib, gbc);
+        JLabel librosLabel = new JLabel("Seleccionar Libro:");
+        librosLabel.setFont(FUENTE_LABEL);
+        panelFormulario.add(librosLabel, gbc);
         gbc.gridx = 1;
         panelFormulario.add(librosComboBox, gbc);
 
         add(panelFormulario, BorderLayout.CENTER);
 
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 15));
-        panel.add(guardarButton);
-        panel.add(atrasButton);
-        add(panel, BorderLayout.SOUTH);
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 15));
+        panelBotones.add(guardarButton);
+        panelBotones.add(atrasButton);
+        add(panelBotones, BorderLayout.SOUTH);
     }
 
     public void poblarEstudiantes(List<Estudiante> estudiantes) {

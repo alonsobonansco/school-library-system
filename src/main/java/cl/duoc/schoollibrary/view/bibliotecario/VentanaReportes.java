@@ -31,45 +31,30 @@ public class VentanaReportes extends VentanaBase {
 
     private void inicializarComponentes() {
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(new Font("Arial", Font.BOLD, 12));
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON);
+        atrasButton.setCursor(CURSOR_CLICK);
 
         String[] columnasTopLibros = {"Título Libro", "Cantidad Préstamos"};
-        topLibrosTableModel = new DefaultTableModel(columnasTopLibros, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        topLibrosTableModel = crearModeloTablaNoEditable(columnasTopLibros);
         topLibrosTable = new JTable(topLibrosTableModel);
         configurarEstiloTabla(topLibrosTable, new int[]{180, 60});
 
         estudiantesComboBox = new JComboBox<>();
-        estudiantesComboBox.setFont(new Font("Arial", Font.PLAIN, 12));
+        estudiantesComboBox.setFont(FUENTE_CAMPO);
 
         String[] columnasHistorialEstudiante = {"Título Libro", "Estado"};
-        historialEstudianteTableModel = new DefaultTableModel(columnasHistorialEstudiante, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        historialEstudianteTableModel = crearModeloTablaNoEditable(columnasHistorialEstudiante);
         historialEstudianteTable = new JTable(historialEstudianteTableModel);
         configurarEstiloTabla(historialEstudianteTable, new int[]{160, 80});
 
         String[] columnasLibrosActivos = {"ID", "Título Libro", "Alumno Responsable", "Vencimiento"};
-        librosActivosTableModel = new DefaultTableModel(columnasLibrosActivos, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        librosActivosTableModel = crearModeloTablaNoEditable(columnasLibrosActivos);
         librosActivosTable = new JTable(librosActivosTableModel);
         configurarEstiloTabla(librosActivosTable, new int[]{40, 240, 150, 140});
     }
 
     private void configurarEstiloTabla(JTable tabla, int[] anchos) {
-        tabla.setFont(new Font("Arial", Font.PLAIN, 12));
+        tabla.setFont(FUENTE_CAMPO);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         tabla.getTableHeader().setReorderingAllowed(false);
@@ -87,7 +72,7 @@ public class VentanaReportes extends VentanaBase {
         JPanel panelTitulo = new JPanel(new BorderLayout());
         panelTitulo.setBorder(BorderFactory.createEmptyBorder(15, 20, 5, 20));
         JLabel tituloLabel = new JLabel("Panel de Inteligencia y Análisis de Datos", SwingConstants.LEFT);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        tituloLabel.setFont(FUENTE_TITULO.deriveFont(16f));
         panelTitulo.add(tituloLabel, BorderLayout.WEST);
         panelTitulo.add(atrasButton, BorderLayout.EAST);
         add(panelTitulo, BorderLayout.NORTH);
@@ -102,7 +87,10 @@ public class VentanaReportes extends VentanaBase {
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Historial por Estudiante"));
 
         JPanel panelFiltroEstudiante = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        panelFiltroEstudiante.add(new JLabel("Estudiante:"));
+
+        JLabel estudianteLabel = new JLabel("Estudiante:");
+        estudianteLabel.setFont(FUENTE_LABEL);
+        panelFiltroEstudiante.add(estudianteLabel);
         panelFiltroEstudiante.add(estudiantesComboBox);
         panelHistorialEstudiante.add(panelFiltroEstudiante, BorderLayout.NORTH);
         panelHistorialEstudiante.add(new JScrollPane(historialEstudianteTable), BorderLayout.CENTER);

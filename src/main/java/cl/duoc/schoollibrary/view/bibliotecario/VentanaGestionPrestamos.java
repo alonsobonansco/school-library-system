@@ -25,16 +25,12 @@ public class VentanaGestionPrestamos extends VentanaBase {
     }
 
     private void inicializarComponentes() {
-        String[] columnas = {"ID", "RUT Alumno", "Nombre Alumno", "Título del Libro", "Fecha Salida", "Fecha Vencimiento", "Estado"};
-        prestamosTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        String[] columnas = {
+                "ID", "RUT Alumno", "Nombre Alumno", "Título del Libro", "Fecha Salida", "Fecha Vencimiento", "Estado"};
+        prestamosTableModel = crearModeloTablaNoEditable(columnas);
 
         prestamosTable = new JTable(prestamosTableModel);
-        prestamosTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        prestamosTable.setFont(FUENTE_CAMPO);
         prestamosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         prestamosTable.getTableHeader().setReorderingAllowed(false);
@@ -49,19 +45,17 @@ public class VentanaGestionPrestamos extends VentanaBase {
         prestamosTable.getColumnModel().getColumn(5).setPreferredWidth(130);
         prestamosTable.getColumnModel().getColumn(6).setPreferredWidth(100);
 
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
-
         agregarButton = new JButton("Asignar Nuevo Préstamo");
-        agregarButton.setFont(fuenteBotones);
-        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton.setFont(FUENTE_BOTON);
+        agregarButton.setCursor(CURSOR_CLICK);
 
         registrarDevolucionButton = new JButton("Registrar Devolución");
-        registrarDevolucionButton.setFont(fuenteBotones);
-        registrarDevolucionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registrarDevolucionButton.setFont(FUENTE_BOTON);
+        registrarDevolucionButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON);
+        atrasButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {
@@ -71,7 +65,7 @@ public class VentanaGestionPrestamos extends VentanaBase {
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(15, 15, 5, 15));
 
         JLabel lblTituloSeccion = new JLabel("Historial de Operaciones Vigentes e Históricas");
-        lblTituloSeccion.setFont(new Font("Arial", Font.BOLD, 14));
+        lblTituloSeccion.setFont(FUENTE_TITULO.deriveFont(14f));
         panelSuperior.add(lblTituloSeccion, BorderLayout.WEST);
         add(panelSuperior, BorderLayout.NORTH);
 

@@ -35,18 +35,13 @@ public class VentanaGestionEstudiantes extends VentanaBase {
 
     private void inicializarComponentes() {
         buscarTextField = new JTextField(20);
-        buscarTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        buscarTextField.setFont(FUENTE_CAMPO.deriveFont(14f));
 
         String[] columnas = {"ID", "RUT", "Nombre Completo", "Curso", "Correo Electrónico"};
-        estudiantesTableModel = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        estudiantesTableModel = crearModeloTablaNoEditable(columnas);
 
         estudiantesTable = new JTable(estudiantesTableModel);
-        estudiantesTable.setFont(new Font("Arial", Font.PLAIN, 13));
+        estudiantesTable.setFont(FUENTE_CAMPO.deriveFont(13f));
         estudiantesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         estudiantesTable.getTableHeader().setReorderingAllowed(false);
@@ -59,22 +54,21 @@ public class VentanaGestionEstudiantes extends VentanaBase {
         estudiantesTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         estudiantesTable.getColumnModel().getColumn(4).setPreferredWidth(230);
 
-        Font fuenteBotones = new Font("Arial", Font.BOLD, 13);
         agregarButton = new JButton("Registrar Alumno");
-        agregarButton.setFont(fuenteBotones);
-        agregarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        agregarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        agregarButton.setCursor(CURSOR_CLICK);
 
         editarButton = new JButton("Editar Perfil");
-        editarButton.setFont(fuenteBotones);
-        editarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        editarButton.setCursor(CURSOR_CLICK);
 
         eliminarButton = new JButton("Dar de Baja");
-        eliminarButton.setFont(fuenteBotones);
-        eliminarButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        eliminarButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        eliminarButton.setCursor(CURSOR_CLICK);
 
         atrasButton = new JButton("Atrás");
-        atrasButton.setFont(fuenteBotones);
-        atrasButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        atrasButton.setFont(FUENTE_BOTON.deriveFont(13f));
+        atrasButton.setCursor(CURSOR_CLICK);
     }
 
     private void construirLayout() {

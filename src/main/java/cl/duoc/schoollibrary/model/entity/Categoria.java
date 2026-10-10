@@ -34,12 +34,4 @@ public class Categoria {
     public void setNombre(String nombre) {
         this.nombre = Validator.validarTexto(nombre, "nombre de categoría", 100);
     }
-
-    @Override
-    public String toString() {
-        return "Categoria{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                '}';
-    }
 }

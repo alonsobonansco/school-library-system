@@ -234,4 +234,8 @@ public class VentanaPortalEstudiante extends VentanaBase {
     public void addCerrarSesionListener(ActionListener listener) {
         cerrarSesionButton.addActionListener(listener);
     }
+
+    public void setFormularioHabilitado(boolean habilitado) {
+        devolverLibroButton.setEnabled(habilitado);
+    }
 }

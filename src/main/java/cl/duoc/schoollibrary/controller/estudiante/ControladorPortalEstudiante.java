@@ -157,6 +157,8 @@ public class ControladorPortalEstudiante {
         int idPrestamo = prestamoAEditar.getId();
         int idLibro = prestamoAEditar.getLibro().getId();
 
+        ventanaPortalEstudiante.setFormularioHabilitado(false);
+
         AppThreadPool.ejecutarAccion(
                 () -> prestamoDAO.registrarDevolucion(idPrestamo, idLibro),
                 () -> {
@@ -164,9 +166,13 @@ public class ControladorPortalEstudiante {
                             "El libro ha sido devuelto al inventario de la biblioteca con éxito.");
                     cargarLibrosDesdeBD();
                     cargarPrestamosActivos();
+                    ventanaPortalEstudiante.setFormularioHabilitado(true);
                 },
-                ex -> ventanaPortalEstudiante.mostrarMensajeError(
-                        "Fallo al procesar devolución: " + ex.getMessage())
+                ex -> {
+                    ventanaPortalEstudiante.mostrarMensajeError(
+                            "Fallo al procesar devolución: " + ex.getMessage());
+                    ventanaPortalEstudiante.setFormularioHabilitado(true);
+                }
         );
     }
 

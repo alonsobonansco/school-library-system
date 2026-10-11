@@ -5,6 +5,9 @@ import cl.duoc.schoollibrary.model.dao.EstudianteDAO;
 import cl.duoc.schoollibrary.model.entity.Estudiante;
 import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroEstudiante;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 public class ControladorRegistroEstudiante {
 
     private final VentanaRegistroEstudiante ventanaRegistroEstudiante;
@@ -25,9 +28,9 @@ public class ControladorRegistroEstudiante {
 
     private void inicializarListeners() {
         ventanaRegistroEstudiante.addGuardarListener(e -> procesarGuardadoEstudiante());
-        ventanaRegistroEstudiante.addWindowListener(new java.awt.event.WindowAdapter() {
+        ventanaRegistroEstudiante.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(java.awt.event.WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
                 if (controladorGestionEstudiantes != null) {
                     controladorGestionEstudiantes.cargarEstudiantesDesdeBD();
                 }

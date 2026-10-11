@@ -113,4 +113,10 @@ public class VentanaGestionPrestamos extends VentanaBase {
     public void addVolverAtrasListener(ActionListener listener) {
         atrasButton.addActionListener(listener);
     }
+
+    public void setAccionesHabilitadas(boolean habilitado) {
+        agregarButton.setEnabled(habilitado);
+        registrarDevolucionButton.setEnabled(habilitado);
+        atrasButton.setEnabled(habilitado);
+    }
 }

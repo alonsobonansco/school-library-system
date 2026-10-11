@@ -100,4 +100,12 @@ public class VentanaPortalBibliotecario extends VentanaBase {
     public void addCerrarSesionMenuListener(ActionListener listener) {
         itemCerrarSesion.addActionListener(listener);
     }
+
+    public void setMenuItemsHabilitados(boolean habilitado) {
+        itemLibros.setEnabled(habilitado);
+        itemEstudiantes.setEnabled(habilitado);
+        itemPrestamos.setEnabled(habilitado);
+        itemReportes.setEnabled(habilitado);
+        itemCerrarSesion.setEnabled(habilitado);
+    }
 }

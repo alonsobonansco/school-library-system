@@ -8,6 +8,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+/**
+ * Motor central de persistencia y conexión relacional bajo el patrón Singleton.
+ * Centraliza el socket físico de MySQL y provee un embudo de sincronización (Mutex)
+ * para garantizar la seguridad de los hilos background de la suite.
+ */
 public final class DatabaseConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
@@ -22,6 +27,9 @@ public final class DatabaseConnection {
     private DatabaseConnection() {
     }
 
+    /**
+     * Retorna la instancia única del coordinador de conexión.
+     */
     public static synchronized DatabaseConnection getInstance() {
         if (instancia == null) {
             instancia = new DatabaseConnection();
@@ -29,6 +37,17 @@ public final class DatabaseConnection {
         return instancia;
     }
 
+    /**
+     * Envuelve y ejecuta un bloque de instrucciones SQL que alteran datos (CUD).
+     * Controla el ciclo de vida del auto-commit, serializa el acceso mediante el objeto lock
+     * y gestiona de forma automática los rollbacks transaccionales en caso de fallo.
+     *
+     * @param operacion Lambda o bloque funcional que contiene las consultas JDBC.
+     * @param <T>       Tipo de entidad o resultado polimórfico esperado por el DAO.
+     * @return El resultado procesado de la operación transaccional.
+     * @throws RestriccionIntegridadException Si el motor detecta una violación de claves foráneas.
+     * @throws DataAccessException            Si ocurre un fallo técnico o de red en el driver.
+     */
     public <T> T ejecutarTransaccion(ConnectionOperation<T> operacion) throws DataAccessException {
         synchronized (lock) {
             Connection conn = null;
@@ -69,6 +88,10 @@ public final class DatabaseConnection {
         }
     }
 
+    /**
+     * Variación funcional de ejecutarTransaccion diseñada para operaciones
+     * de escritura que no necesitan retornar ningún dato (Void).
+     */
     public void ejecutarTransaccionVoid(ConnectionOperationVoid operacion) throws DataAccessException {
         ejecutarTransaccion(conn -> {
             operacion.ejecutar(conn);
@@ -76,6 +99,13 @@ public final class DatabaseConnection {
         });
     }
 
+    /**
+     * Envuelve y ejecuta consultas de lectura pura (Read/Select) sobre el socket.
+     * Mantiene el auto-commit activo por eficiencia y serializa el tráfico mediante el lock central.
+     *
+     * @param operacion Lambda de lectura JDBC.
+     * @return El objeto o colección mapeada desde la base de datos.
+     */
     public <T> T ejecutarConsulta(ConnectionOperation<T> operacion) throws DataAccessException {
         synchronized (lock) {
             try {
@@ -89,6 +119,9 @@ public final class DatabaseConnection {
         }
     }
 
+    /**
+     * Inicializa o recupera de forma perezosa (Lazy) la conexión física compartida.
+     */
     private Connection obtenerConexion() throws SQLException {
         if (conexion == null || conexion.isClosed()) {
             conexion = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -98,11 +131,17 @@ public final class DatabaseConnection {
         return conexion;
     }
 
+    /**
+     * Contrato polimórfico para inyectar operaciones JDBC con tipo de retorno.
+     */
     @FunctionalInterface
     public interface ConnectionOperation<T> {
         T ejecutar(Connection connection) throws SQLException;
     }
 
+    /**
+     * Contrato polimórfico para inyectar operaciones JDBC de ejecución plana sin retorno.
+     */
     @FunctionalInterface
     public interface ConnectionOperationVoid {
         void ejecutar(Connection connection) throws SQLException;

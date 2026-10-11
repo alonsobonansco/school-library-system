@@ -4,6 +4,11 @@ import cl.duoc.schoollibrary.util.Validator;
 
 import java.time.LocalDate;
 
+/**
+ * Entidad de dominio que modela el ciclo de vida transaccional de un préstamo de libro.
+ * Incorpora un diseño de validación invariante en sus constructores y mutadores para asegurar
+ * que ninguna instancia pueda existir en memoria en un estado corrupto o inconsistente.
+ */
 public class Prestamo {
 
     private int id;

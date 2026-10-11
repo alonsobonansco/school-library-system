@@ -9,6 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * Consola gráfica de administración y control del historial de préstamos y devoluciones.
+ * Centraliza el renderizado matricial de registros mediante cuadrículas inmutables (JTable)
+ * y provee compuertas semánticas de bloqueo temporales sobre el panel de control inferior
+ * para garantizar la sincronía operativa durante escrituras y cargas asíncronas.
+ */
 public class VentanaGestionPrestamos extends VentanaBase {
 
     private JTable prestamosTable;

@@ -1,5 +1,10 @@
 package cl.duoc.schoollibrary.util;
 
+/**
+ * Suite central defensiva encargada de validar restricciones semánticas de datos.
+ * Provee un esquema reactivo Fail-Fast que aborta flujos de ejecución anómalos
+ * lanzando excepciones de control antes de permitir que la corrupción de datos escale.
+ */
 public final class Validator {
 
     private Validator() {
@@ -39,6 +44,16 @@ public final class Validator {
         return valor;
     }
 
+    /**
+     * Evalúa de forma genérica la existencia física de una referencia objetual.
+     * Utilizado masivamente para validar la inyección de dependencias y agregaciones de entidades.
+     *
+     * @param objeto      Instancia o puntero de memoria a evaluar.
+     * @param nombreCampo Etiqueta semántica del atributo evaluado para personalizar el mensaje de error.
+     * @param <T>         Tipo genérico de la entidad en evaluación.
+     * @return El mismo objeto verificado para permitir asignaciones en línea limpias.
+     * @throws IllegalArgumentException Si el puntero de memoria es nulo.
+     */
     public static <T> T validarObjetoNoNulo(T objeto, String nombreCampo) {
         if (objeto == null) {
             throw new IllegalArgumentException("El campo " + nombreCampo + " no puede ser nulo.");

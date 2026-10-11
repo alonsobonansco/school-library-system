@@ -8,6 +8,12 @@ import java.awt.event.ActionListener;
 
 import java.util.List;
 
+/**
+ * Formulario modular de registro y modificación de ejemplares del catálogo bibliográfico.
+ * Implementa una distribución matemática basada en GridBagLayout para estructurar
+ * las cajas de texto relacionales e incorpora capacidades duales de prellenado para actuar
+ * de forma polimórfica en flujos tanto de creación de nuevos registros como de edición.
+ */
 public class VentanaRegistroLibro extends VentanaBase {
 
     private JLabel tituloLabel;

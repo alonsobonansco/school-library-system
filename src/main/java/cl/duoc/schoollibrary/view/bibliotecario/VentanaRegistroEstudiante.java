@@ -6,6 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Formulario modular de registro y modificación de perfiles de estudiantes.
+ * Implementa una distribución basada en GridBagLayout para alinear de forma simétrica
+ * los campos de entrada de texto e incorpora capacidades de prellenado para actuar
+ * de forma polimórfica tanto en flujos de creación como de edición.
+ */
 public class VentanaRegistroEstudiante extends VentanaBase {
 
     private JTextField rutTextField;

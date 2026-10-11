@@ -8,6 +8,12 @@ import cl.duoc.schoollibrary.view.bibliotecario.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Cerebro administrativo encargado de coordinar las rutas de navegación global
+ * y la instanciación de consolas de gestión secundaria para el perfil Bibliotecario.
+ * Bloquea mecánicamente el acceso a los sub-módulos durante las transiciones para impedir
+ * la apertura redundante de ventanas duplicadas en la interfaz de usuario.
+ */
 public class ControladorPortalBibliotecario {
 
     private final VentanaPortalBibliotecario ventanaPortalBibliotecario;

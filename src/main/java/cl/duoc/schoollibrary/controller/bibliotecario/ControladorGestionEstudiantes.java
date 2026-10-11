@@ -12,6 +12,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cerebro administrativo encargado de coordinar la lectura, filtrado reactivo
+ * en memoria y operaciones destructivas del padrón de estudiantes.
+ */
 public class ControladorGestionEstudiantes {
 
     private final VentanaGestionEstudiantes ventanaGestionEstudiantes;
@@ -97,6 +101,11 @@ public class ControladorGestionEstudiantes {
         ventanaRegistroEstudiante.setVisible(true);
     }
 
+    /**
+     * Ejecuta la baja lógica o física del alumno por clave primaria.
+     * Aplica el freno de mano mecánico en el panel de control, delega el borrado al pool asíncrono
+     * y evalúa mediante polimorfismo si la base de datos rebotó por restricciones de integridad.
+     */
     private void procesarBajaEstudiante() {
         Integer idEstudiante = ventanaGestionEstudiantes.getIdEstudianteSeleccionado();
         if (idEstudiante == null) {

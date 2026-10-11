@@ -11,6 +11,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cerebro administrativo encargado de gestionar el flujo relacional del historial
+ * de asignación de libros y procesamiento de devoluciones físicas.
+ */
 public class ControladorGestionPrestamos {
 
     private final VentanaGestionPrestamos ventanaGestionPrestamos;
@@ -58,6 +62,12 @@ public class ControladorGestionPrestamos {
         ventanaRegistroPrestamo.setVisible(true);
     }
 
+    /**
+     * Procesa de forma asíncrona el retorno físico e inventariado de un libro prestado.
+     * Valida el estado actual del registro en la caché de memoria RAM, aplica el freno de mano
+     * mecánico en el panel de control y despacha la mutación relacional al pool de hilos secundario,
+     * re-incrementando de forma atómica el stock disponible en el estante.
+     */
     private void procesarDevolucion() {
         int filaSeleccionada = ventanaGestionPrestamos.getFilaSeleccionada();
         if (filaSeleccionada == -1) {

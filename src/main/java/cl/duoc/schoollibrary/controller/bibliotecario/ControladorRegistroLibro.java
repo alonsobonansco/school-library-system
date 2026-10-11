@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Cerebro operativo encargado de coordinar la creación y actualización (CRUD)
+ * de las fichas de libros interactuando asíncronamente con la capa de datos.
+ */
 public class ControladorRegistroLibro {
 
     private final VentanaRegistroLibro ventanaRegistroLibro;
@@ -72,6 +76,11 @@ public class ControladorRegistroLibro {
         );
     }
 
+    /**
+     * Extrae de forma segura las cadenas de texto del formulario y gestiona el flujo asíncrono de persistencia.
+     * Implementa una validación secuencial defensiva (Fail-Fast) para interceptar errores de formato numérico y stock
+     * menor o igual a cero antes de despachar el comando de guardado relacional de forma asíncrona al pool de hilos.
+     */
     private void procesarRegistroLibro() {
         String titulo = ventanaRegistroLibro.getTituloInput();
         String autor = ventanaRegistroLibro.getAutorInput();

@@ -11,6 +11,12 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Consola gráfica de analítica de datos e inteligencia de biblioteca.
+ * Implementa una distribución combinada de paneles divididos (JSplitPane) y grillas (GridLayout)
+ * para segmentar visualmente el ranking histórico de títulos, el filtrado cruzado por alumno
+ * y el monitoreo en tiempo real de deudas activas con alertas de atraso cronológico.
+ */
 public class VentanaReportes extends VentanaBase {
 
     private JTable topLibrosTable;

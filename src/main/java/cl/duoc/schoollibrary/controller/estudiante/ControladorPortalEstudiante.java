@@ -16,7 +16,8 @@ import java.util.List;
 
 /**
  * Controlador centralizado y unificado para el portal de autoservicio del estudiante.
- * Gestiona de forma síncrona el estado de la sesión, consultas en caché y transacciones.
+ * Gestiona los estados de sesión del alumno, búsquedas filtradas en memoria reactiva
+ * y la canalización asíncrona de solicitudes de retiro y devoluciones físicas.
  */
 public class ControladorPortalEstudiante {
 
@@ -108,6 +109,11 @@ public class ControladorPortalEstudiante {
         ventanaPortalEstudiante.actualizarTablaLibros(librosFiltrados);
     }
 
+    /**
+     * Procesa de forma asíncrona la reserva de un libro del catálogo.
+     * Evalúa límites de stock en memoria RAM y delega al hilo obrero la ejecución del préstamo.
+     * Calcula los plazos de vencimiento basándose de forma inmutable en el reloj del sistema (`LocalDate`).
+     */
     private void procesarSolicitudPrestamo() {
         int filaSeleccionada = ventanaPortalEstudiante.getFilaSeleccionadaLibro();
         if (filaSeleccionada == -1) {
@@ -140,6 +146,11 @@ public class ControladorPortalEstudiante {
         );
     }
 
+    /**
+     * Procesa el retorno físico e inventariado de un libro seleccionado.
+     * Aplica el freno de mano mecánico en la vista, despacha la consulta mutadora al pool secundario
+     * y utiliza SwingUtilities de forma indirecta para refrescar las tablas sin congelar la pantalla .
+     */
     private void procesarDevolucionLibro() {
         int filaSeleccionada = ventanaPortalEstudiante.getFilaSeleccionadaPrestamo();
         if (filaSeleccionada == -1) {

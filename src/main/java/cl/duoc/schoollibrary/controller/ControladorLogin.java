@@ -10,6 +10,11 @@ import cl.duoc.schoollibrary.view.VentanaLogin;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Coordinador de seguridad encargado de validar las credenciales de acceso.
+ * Autentica usuarios fuera del hilo de la interfaz gráfica y rutea el destino de navegación
+ * de forma dinámica según el rol del perfil devuelto por la persistencia.
+ */
 public class ControladorLogin {
 
     private final VentanaLogin ventanaLogin;
@@ -28,6 +33,11 @@ public class ControladorLogin {
         this.ventanaLogin.addIngresarListener(e -> procesarAutenticacion());
     }
 
+    /**
+     * Gatilla el flujo asíncrono de verificación de credenciales.
+     * Lee las cajas de texto de la vista, desvía la consulta de lectura masiva a un hilo secundario
+     * y evalúa mediante polimorfismo de subtipado si la sesión corresponde a un Bibliotecario o un Alumno.
+     */
     private void procesarAutenticacion() {
         String correo = ventanaLogin.getCorreoInput();
         String contrasenia = ventanaLogin.getContraseniaInput();

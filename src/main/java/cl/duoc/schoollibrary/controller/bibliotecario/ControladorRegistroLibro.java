@@ -88,9 +88,13 @@ public class ControladorRegistroLibro {
         int stock;
         try {
             stock = Integer.parseInt(stockStr);
-            if (stock < 0) throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            ventanaRegistroLibro.mostrarMensajeError("El stock no puede ser negativo.");
+            ventanaRegistroLibro.mostrarMensajeError("El stock ingresado debe ser un número entero válido.");
+            return;
+        }
+
+        if (stock <= 0) {
+            ventanaRegistroLibro.mostrarMensajeError("El stock inicial debe ser mayor que cero para registrar el libro.");
             return;
         }
 

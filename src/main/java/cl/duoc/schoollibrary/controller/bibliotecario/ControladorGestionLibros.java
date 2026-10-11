@@ -108,6 +108,12 @@ public class ControladorGestionLibros {
         ventanaRegistro.setVisible(true);
     }
 
+    /**
+     * Procesa de forma asíncrona la baja física de un título dentro de la base de datos.
+     * Congela instantáneamente los controles del panel para evitar duplicaciones visuales,
+     * despacha la tarea destructiva al pool secundario y evalúa mediante herencia relacional
+     * si el registro se encuentra actualmente retenido por transacciones de préstamo activas.
+     */
     private void procesarEliminacionCatalogo() {
         // Integer permite retornar null cuando no se selecciona una fila, a diferencia de int (primitivo).
         Integer idLibro = ventanaGestionLibros.getIdLibroSeleccionado();

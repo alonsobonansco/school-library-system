@@ -12,15 +12,16 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
- * Panel de control centralizado para la administración del padrón de estudiantes.
- * Incorpora el motor de escucha DocumentListener y bloqueo de cabeceras inmutables.
+ * Consola gráfica de administración para el padrón e historial de estudiantes.
+ * Implementa un esquema de búsqueda reactiva en tiempo real mediante DocumentListeners e incorpora
+ * compuertas semánticas de bloqueo temporales sobre el panel de control inferior para garantizar
+ * la sincronía de la cuadrícula de datos durante mutaciones y operaciones asíncronas.
  */
 public class VentanaGestionEstudiantes extends VentanaBase {
 
     private JTextField buscarTextField;
     private JTable estudiantesTable;
     private DefaultTableModel estudiantesTableModel;
-
     private JButton agregarButton;
     private JButton editarButton;
     private JButton eliminarButton;

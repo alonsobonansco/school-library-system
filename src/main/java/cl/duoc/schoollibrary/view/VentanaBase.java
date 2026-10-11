@@ -4,7 +4,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-
+/**
+ * Plantilla maestra y componente base de renderizado gráfico (Template Window Pattern).
+ * Centraliza de forma unificada los tokens de diseño estético (fuentes y cursores)
+ * y encapsula los métodos polimórficos de mensajería modal y confirmaciones binarias
+ * para asegurar la consistencia visual y operativa de toda la suite.
+ */
 public abstract class VentanaBase extends JFrame {
 
     protected static final Font FUENTE_TITULO = new Font("Arial", Font.BOLD, 18);
@@ -22,6 +27,15 @@ public abstract class VentanaBase extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
+    /**
+     * Instancia un modelo de datos estructurado para JTable.
+     * Sobreescribe el comportamiento nativo del motor de Swing mediante clases anónimas
+     * para bloquear la edición directa sobre las celdas, garantizando que la mutación
+     * de registros ocurra exclusivamente a través de los flujos de control autorizados.
+     *
+     * @param columnas Matriz de cadenas de texto con las cabeceras de la cuadrícula.
+     * @return Una instancia optimizada e inmutable de DefaultTableModel.
+     */
     protected DefaultTableModel crearModeloTablaNoEditable(String[] columnas) {
         return new DefaultTableModel(columnas, 0) {
             @Override

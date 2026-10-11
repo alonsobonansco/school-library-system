@@ -14,8 +14,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente de persistencia transaccional (DAO) encargado del flujo operativo de préstamos.
+ * Cohesiona operaciones complejas multi-tabla que afectan simultáneamente al historial lúdico
+ * y al inventario físico de ejemplares disponibles en los estantes.
+ */
 public class PrestamoDAO {
-
+    /**
+     * Registra una nueva asignación de libro.
+     * Ejecuta una verificación y descuento de stock simultáneo en la tabla de libros.
+     * Si no se detectan filas afectadas (stock agotado en paralelo), interrumpe el flujo
+     * y fuerza un rollback relacional completo para mantener la consistencia de datos.
+     *
+     * @param prestamo Instancia con las entidades e identificadores a enlazar.
+     * @throws DataAccessException Si ocurre una colisión de red o se agota el stock físico.
+     */
     public void create(Prestamo prestamo) throws DataAccessException {
         String sqlPrestamo = "INSERT INTO prestamos (id_estudiante, id_libro, fecha_prestamo, fecha_devolucion, devuelto)" +
                 " VALUES (?, ?, ?, ?, ?)";
@@ -103,6 +116,15 @@ public class PrestamoDAO {
         });
     }
 
+    /**
+     * Procesa la devolución y retorno de inventario físico.
+     * Conmuta de forma segura el estado lógico del préstamo a DEVUELTO (siempre que estuviera activo),
+     * e inmediatamente re-incrementa en una unidad el stock físico del libro en la estantería.
+     *
+     * @param idPrestamo Clave primaria de la asignación.
+     * @param idLibro    Clave primaria del libro a re-incrementar.
+     * @throws DataAccessException Si el préstamo ya fue devuelto o los registros no concuerdan.
+     */
     public void registrarDevolucion(int idPrestamo, int idLibro) throws DataAccessException {
         String sqlPrestamo = "UPDATE prestamos SET devuelto = TRUE WHERE id = ? AND devuelto = FALSE";
         String sqlStock = "UPDATE libros SET stock = stock + 1 WHERE id = ?";

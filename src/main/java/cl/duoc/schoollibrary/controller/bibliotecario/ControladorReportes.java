@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+/**
+ * Cerebro administrativo encargado de generar reportes analíticos y estadísticos
+ * sobre el historial de préstamos, devoluciones y actividad de los estudiantes.
+ */
 public class ControladorReportes {
 
     private final VentanaReportes ventanaReportes;
@@ -35,6 +38,12 @@ public class ControladorReportes {
         ventanaReportes.addComboAlumnoListener(e -> filtrarHistorialAlumnoEnMemoria());
     }
 
+    /**
+     * Coordina el procesamiento y la carga asíncrona de los datos analíticos del sistema.
+     * Consolida múltiples lecturas desde la persistencia y ejecuta agrupamientos reactivos en memoria
+     * mediante Streams y operaciones lambda para estructurar los rankings métricos de títulos más solicitados,
+     * despachando el resultado empaquetado de forma segura de vuelta al hilo de la interfaz gráfica.
+     */
     private void cargarDatosAnaliticos() {
         AppThreadPool.ejecutarCarga(
                 () -> {

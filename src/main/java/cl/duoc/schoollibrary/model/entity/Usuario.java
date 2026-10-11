@@ -3,6 +3,11 @@ package cl.duoc.schoollibrary.model.entity;
 import cl.duoc.schoollibrary.util.RutValidator;
 import cl.duoc.schoollibrary.util.Validator;
 
+/**
+ * Entidad de dominio que modela el perfil de acceso, credenciales y privilegios de un usuario.
+ * Centraliza la validación defensiva invariante de credenciales de seguridad, correos y RUN/RUT,
+ * asegurando la consistencia del estado de autenticación antes de interactuar con la capa de persistencia.
+ */
 public class Usuario {
 
     private int id;

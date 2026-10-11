@@ -2,6 +2,11 @@ package cl.duoc.schoollibrary.model.entity;
 
 import cl.duoc.schoollibrary.util.Validator;
 
+/**
+ * Entidad de dominio que modela las propiedades bibliográficas e inventario físico de un libro.
+ * Centraliza la validación defensiva invariante de sus campos textuales y restringe el stock
+ * a rangos estrictamente positivos antes de consolidar cualquier mutación en las capas de datos.
+ */
 public class Libro {
 
     private int id;

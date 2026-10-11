@@ -10,6 +10,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente de persistencia encargado del mapeo relacional (DAO) de la entidad Usuario.
+ * Centraliza el acceso CRUD al padrón de cuentas y credenciales del sistema, abstrayendo las
+ * consultas JDBC crudas y aislando la lógica de conversión de enums de roles para proteger
+ * la pureza de las capas de negocio y control superiores.
+ */
 public class UsuarioDAO {
 
     public void create(Usuario usuario) throws DataAccessException {

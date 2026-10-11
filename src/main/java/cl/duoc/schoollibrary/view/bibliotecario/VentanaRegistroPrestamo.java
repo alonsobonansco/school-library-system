@@ -9,7 +9,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-
+/**
+ * Formulario modal de asignación y registro de nuevos préstamos bibliotecarios.
+ * Implementa una distribución matemática basada en GridBagLayout para estructurar
+ * las cajas de selección relacional de alumnos y libros, incorporando métodos semánticos
+ * para congelar los gatillos de envío durante los procesos asíncronos de persistencia.
+ */
 public class VentanaRegistroPrestamo extends VentanaBase {
 
     private JComboBox<Estudiante> estudiantesComboBox;

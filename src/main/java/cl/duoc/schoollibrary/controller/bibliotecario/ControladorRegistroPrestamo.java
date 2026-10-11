@@ -12,6 +12,10 @@ import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroPrestamo;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Cerebro administrativo encargado de coordinar la asignación manual de préstamos
+ * de libros, poblando comboboxes relacionales y ejecutando la inserción asíncrona.
+ */
 public class ControladorRegistroPrestamo {
 
     private final VentanaRegistroPrestamo ventanaRegistroPrestamo;
@@ -67,6 +71,11 @@ public class ControladorRegistroPrestamo {
         );
     }
 
+    /**
+     * Captura las instancias de entidades seleccionadas en el formulario visual y gatilla el préstamo.
+     * Calcula los plazos de vencimiento basándose de forma inmutable en el reloj del sistema (`LocalDate`),
+     * congela mecánicamente los controles para mitigar spams de clicks y delega de forma asíncrona la mutación.
+     */
     private void procesarAsignacionPrestamo() {
         Estudiante estudianteSeleccionado = (Estudiante) ventanaRegistroPrestamo.getEstudiantesCombo().getSelectedItem();
         Libro libroSeleccionado = (Libro) ventanaRegistroPrestamo.getLibrosCombo().getSelectedItem();

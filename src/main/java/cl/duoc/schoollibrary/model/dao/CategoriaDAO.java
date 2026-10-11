@@ -9,6 +9,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente de persistencia encargado del mapeo relacional (DAO) de la entidad Categoría.
+ * Centraliza el acceso CRUD al maestro de clasificaciones literarias del sistema, abstrayendo
+ * las consultas JDBC crudas y aislando la lógica de lectura para alimentar de forma segura
+ * los filtros reactivos de la interfaz gráfica.
+ */
 public class CategoriaDAO {
 
     public void create(Categoria categoria) throws DataAccessException {

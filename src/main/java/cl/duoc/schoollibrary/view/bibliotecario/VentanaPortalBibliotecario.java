@@ -7,8 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Pantalla raíz e interfaz principal para el Administrador / Bibliotecario.
- * Provee la barra de navegación global de la suite mediante JMenuBar.
+ * Consola raíz de navegación global para el perfil Bibliotecario.
+ * Actúa como el panel de control maestro e implementa una barra de menús integrada (JMenuBar)
+ * vinculada a métodos semánticos explícitos encargados de congelar de forma atómica los ganchos
+ * de enrutamiento, impidiendo la inflación redundante de múltiples ventanas de gestión hijas.
  */
 public class VentanaPortalBibliotecario extends VentanaBase {
 

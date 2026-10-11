@@ -11,6 +11,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * Consola gráfica de administración para el catálogo e inventario físico de libros.
+ * Implementa un esquema de búsqueda reactiva en tiempo real mediante DocumentListeners e incorpora
+ * compuertas semánticas de bloqueo temporales sobre el panel de control inferior para garantizar
+ * la sincronía de la cuadrícula de datos durante mutaciones y operaciones asíncronas.
+ */
 public class VentanaGestionLibros extends VentanaBase {
 
     private JTextField buscarTextField;

@@ -12,6 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente de persistencia encargado del mapeo relacional (DAO) de la entidad Libro.
+ * Centraliza las consultas SQL crudas y aísla la lógica JDBC delegando la ejecución física
+ * al motor central DatabaseConnection a través de contratos funcionales, impidiendo la fuga
+ * de recursos o conexiones abiertas hacia las capas superiores del sistema.
+ */
 public class LibroDAO {
 
     public void create(Libro libro) throws DataAccessException {

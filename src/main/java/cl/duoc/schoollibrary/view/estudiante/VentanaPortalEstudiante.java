@@ -11,8 +11,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
- * Interfaz principal y portal de autoservicio exclusivo para usuarios con rol Estudiante.
- * Centraliza la consulta de catálogo y el historial de préstamos activos mediante pestañas.
+ * Consola gráfica de autoservicio para el perfil Estudiante.
+ * Implementa una distribución de paneles por pestañas (Tabbed Layout) para unificar
+ * el catálogo reactivo de consultas bibliográficas y el panel operacional de préstamos.
  */
 public class VentanaPortalEstudiante extends VentanaBase {
 

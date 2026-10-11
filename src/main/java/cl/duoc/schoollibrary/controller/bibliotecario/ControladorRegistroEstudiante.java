@@ -8,6 +8,10 @@ import cl.duoc.schoollibrary.view.bibliotecario.VentanaRegistroEstudiante;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Cerebro operativo encargado de coordinar la creación y actualización (CRUD)
+ * de las fichas de estudiantes interactuando asíncronamente con la capa de datos.
+ */
 public class ControladorRegistroEstudiante {
 
     private final VentanaRegistroEstudiante ventanaRegistroEstudiante;
@@ -39,6 +43,11 @@ public class ControladorRegistroEstudiante {
         ventanaRegistroEstudiante.addVolverAtrasListener(e -> ventanaRegistroEstudiante.cerrarVentana());
     }
 
+    /**
+     * Extrae de forma segura las cadenas de texto del formulario y gestiona el flujo asíncrono de persistencia.
+     * Evalúa la nulidad del objeto de referencia para conmutar de forma dinámica entre un comando de inserción (CREATE)
+     * o una actualización relacional (UPDATE), aplicando un blindaje de controles mecánicos contra spams de clics dobles.
+     */
     private void procesarGuardadoEstudiante() {
         String rut = ventanaRegistroEstudiante.getRutInput();
         String nombre = ventanaRegistroEstudiante.getNombreInput();

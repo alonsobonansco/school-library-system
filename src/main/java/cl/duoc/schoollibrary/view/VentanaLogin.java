@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Formulario de autenticación inicial y control de acceso (Gateway Login Screen).
+ * Implementa una distribución basada en GridBagLayout para estructurar simétricamente
+ * los componentes de captura de credenciales y campos de texto protegidos de contraseña,
+ * actuando como el portal de seguridad inicial antes de disparar los hilos de validación asíncronos.
+ */
 public class VentanaLogin extends VentanaBase {
 
     private JLabel tituloLabel;

@@ -3,6 +3,11 @@ package cl.duoc.schoollibrary.model.entity;
 import cl.duoc.schoollibrary.util.RutValidator;
 import cl.duoc.schoollibrary.util.Validator;
 
+/**
+ * Entidad de dominio que modela el perfil de identificación y contacto de un alumno.
+ * Centraliza el acoplamiento directo de validaciones de sintaxis y formato para RUT y correo electrónico,
+ * actuando como un escudo protector invariante antes de registrar o alterar perfiles en la persistencia.
+ */
 public class Estudiante {
 
     private int id;

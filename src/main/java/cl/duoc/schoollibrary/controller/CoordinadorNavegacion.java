@@ -15,7 +15,8 @@ import java.awt.event.WindowEvent;
 
 /**
  * Orquestador central del ciclo de vida y navegación de la suite de software.
- * Centraliza las transiciones y la inyección de dependencias de nivel raíz.
+ * Centraliza las transiciones, gestiona la ventana activa en memoria RAM
+ * e inyecta las dependencias de nivel raíz bajo el patrón Singleton.
  */
 public final class CoordinadorNavegacion {
 
@@ -25,6 +26,9 @@ public final class CoordinadorNavegacion {
     private CoordinadorNavegacion() {
     }
 
+    /**
+     * Retorna la instancia única del coordinador de rutas globales.
+     */
     public static synchronized CoordinadorNavegacion getInstancia() {
         if (instancia == null) {
             instancia = new CoordinadorNavegacion();
@@ -33,7 +37,9 @@ public final class CoordinadorNavegacion {
     }
 
     /**
-     * Levanta un Login fresco limpiando cualquier rastro de pantallas previas.
+     * Levanta el formulario de Login de forma segura en el EDT.
+     * Destruye de la memoria RAM cualquier ventana previa activa, instancia los componentes
+     * de autenticación iniciales y acopla el gancho de cierre definitivo de la JVM.
      */
     public void mostrarLogin() {
         SwingUtilities.invokeLater(() -> {
@@ -50,7 +56,11 @@ public final class CoordinadorNavegacion {
     }
 
     /**
-     * Cierra la ventana activa e hidrata el portal del alumno.
+     * Transiciona el contexto de ejecución hacia el Portal del Alumno.
+     * Descarga la pantalla anterior e hidrata de forma asíncrona la vista principal del estudiante
+     * inyectándole los privilegios y metadatos del registro de sesión correspondiente.
+     *
+     * @param alumnoLogueado Entidad del estudiante autenticado que gobernará las búsquedas y préstamos.
      */
     public void mostrarPortalEstudiante(Estudiante alumnoLogueado) {
         SwingUtilities.invokeLater(() -> {
@@ -66,7 +76,11 @@ public final class CoordinadorNavegacion {
     }
 
     /**
-     * Cierra la ventana activa e hidrata la consola administrativa.
+     * Transiciona el contexto de ejecución hacia la Consola Administrativa.
+     * Cierra el Login, levanta el panel del Bibliotecario e inicializa los sub-controladores
+     * de gestión interna para libros, alumnos e historiales analíticos.
+     *
+     * @param sesion Entidad de usuario administrativo logueado en la plataforma.
      */
     public void mostrarPrincipalBibliotecario(Usuario sesion) {
         SwingUtilities.invokeLater(() -> {

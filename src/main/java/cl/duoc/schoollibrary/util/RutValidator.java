@@ -1,11 +1,24 @@
 package cl.duoc.schoollibrary.util;
 
+/**
+ * Motor utilitario especializado en la sanitización y validación formal de RUN/RUT chilenos.
+ * Implementa la verificación aritmética estricta del algoritmo del Módulo 11 de forma inmutable.
+ */
 public final class RutValidator {
 
     private RutValidator() {
         throw new UnsupportedOperationException("Clase utilitaria no instanciable.");
     }
 
+    /**
+     * Procesa, sanitiza y valida estructuralmente un RUT.
+     * Remueve impurezas de texto (puntos y espacios), inyecta el guión delimitador de forma automática
+     * y evalúa la firma digital contrastándola contra el dígito verificador calculado.
+     *
+     * @param rut Cadena de texto cruda ingresada en el campo de la interfaz gráfica.
+     * @return El RUT completamente sanitizado, normalizado en mayúsculas y formateado (ej: "12345678-K").
+     * @throws IllegalArgumentException Si el formato es inválido o el dígito verificador es incorrecto.
+     */
     public static String validarRut(String rut) {
 
         if (rut == null || rut.isBlank()) {

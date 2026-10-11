@@ -11,6 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente de persistencia encargado del mapeo relacional (DAO) de la entidad Estudiante.
+ * Centraliza las consultas SQL crudas y aísla la lógica JDBC delegando la ejecución física
+ * al motor central DatabaseConnection a través de contratos funcionales, impidiendo la fuga
+ * de recursos o conexiones abiertas hacia las capas superiores del sistema.
+ */
 public class EstudianteDAO {
 
     public void create(Estudiante estudiante) throws DataAccessException {
@@ -69,6 +75,16 @@ public class EstudianteDAO {
         });
     }
 
+    /**
+     * Ejecuta la baja física del alumno por clave primaria.
+     * Captura de forma aislada las excepciones numéricas nativas de restricción relacional (Error 1451)
+     * generadas por préstamos o deudas activas e históricas, y las traduce de forma polimórfica
+     * a la excepción de dominio RestriccionIntegridadException.
+     *
+     * @param idEstudiante Clave primaria única del registro de alumno a remover.
+     * @throws RestriccionIntegridadException Si el estudiante posee deudas o préstamos vinculados en el sistema.
+     * @throws DataAccessException            Si ocurre un fallo técnico o de red en el driver.
+     */
     public void delete(int idEstudiante) throws DataAccessException {
         String sql = "DELETE FROM estudiantes WHERE id = ?";
 

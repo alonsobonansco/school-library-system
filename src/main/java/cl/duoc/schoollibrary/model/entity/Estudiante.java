@@ -11,7 +11,8 @@ public class Estudiante {
     private String curso;
     private String correo;
 
-    public Estudiante() {}
+    public Estudiante() {
+    }
 
     public Estudiante(int id, String nombre, String rut, String curso, String correo) {
         this.id = id;

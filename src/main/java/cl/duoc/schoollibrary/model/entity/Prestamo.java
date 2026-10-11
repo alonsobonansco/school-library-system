@@ -13,7 +13,8 @@ public class Prestamo {
     private LocalDate fechaDevolucion;
     private boolean devuelto = false;
 
-    public Prestamo() {}
+    public Prestamo() {
+    }
 
     public Prestamo(int id, Estudiante estudiante, Libro libro,
                     LocalDate fechaPrestamo, LocalDate fechaDevolucion, boolean devuelto) {

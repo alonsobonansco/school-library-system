@@ -13,8 +13,8 @@ public final class RutValidator {
         }
 
         String rutSanitizado = rut.replace(".", "")
-                                  .replace(" ", "")
-                                  .trim().toUpperCase();
+                .replace(" ", "")
+                .trim().toUpperCase();
 
         if (!rutSanitizado.contains("-") && rutSanitizado.length() > 7) {
             rutSanitizado = rutSanitizado.substring(0, rutSanitizado.length() - 1)

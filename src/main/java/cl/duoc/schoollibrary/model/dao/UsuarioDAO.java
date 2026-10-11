@@ -5,7 +5,6 @@ import cl.duoc.schoollibrary.exception.DataAccessException;
 import cl.duoc.schoollibrary.model.entity.Rol;
 import cl.duoc.schoollibrary.model.entity.Usuario;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;

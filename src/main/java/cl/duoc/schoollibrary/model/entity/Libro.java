@@ -12,7 +12,8 @@ public class Libro {
     private int stock;
     private Categoria categoria;
 
-    public Libro() {}
+    public Libro() {
+    }
 
     public Libro(int id, String titulo, String autor,
                  String isbn, String editorial, int stock, Categoria categoria) {

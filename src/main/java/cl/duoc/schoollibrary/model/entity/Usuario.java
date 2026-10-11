@@ -13,7 +13,8 @@ public class Usuario {
     private Rol rol;
 
     // Constructor vacío para posibles usos posteriores.
-    public Usuario() {}
+    public Usuario() {
+    }
 
     // Constructor con ID
     public Usuario(int id, String nombre, String rut, String correo, String contrasenia, Rol rol) {
